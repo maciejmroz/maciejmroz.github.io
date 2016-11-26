@@ -2,18 +2,18 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Maciej Mróz Personal Blog</title>
-    <link>https://www.maciejmroz.com/tags/databases/index.xml</link>
+    <link>/tags/databases/index.xml</link>
     <description>Recent content on Maciej Mróz Personal Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <atom:link href="https://www.maciejmroz.com/tags/databases/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="/tags/databases/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>The structure in unstructured data</title>
-      <link>https://www.maciejmroz.com/2013/03/09/the-structure-in-unstructured-data/</link>
+      <link>/2013/03/09/the-structure-in-unstructured-data/</link>
       <pubDate>Sat, 09 Mar 2013 00:00:00 +0000</pubDate>
       
-      <guid>https://www.maciejmroz.com/2013/03/09/the-structure-in-unstructured-data/</guid>
+      <guid>/2013/03/09/the-structure-in-unstructured-data/</guid>
       <description>&lt;p&gt;Working with data is something I personally consider one of the coolest things one can do right now in the tech industry. Typically when someone thinks or talks about &amp;ldquo;Big Data&amp;rdquo; it implies petabyte data sets and Hadoop clusters spanning 100+ nodes. The truth is, even a lot smaller data and humbler infrastructure can provide great insights and drive the product/service innovation. To me its really a lot closer to &amp;ldquo;Smart Data&amp;rdquo; than &amp;ldquo;Big Data&amp;rdquo; - it doesn&amp;rsquo;t matter how big your data set is, but how much you are able to do with it, and how quickly.&lt;/p&gt;
 
 &lt;p&gt;In my workplace we run our own data gathering, storage, and processing. Our own code, our own infrastructure. Managed, architected, and even partially implemented by yours truly. What is special about our system is that compared to most commercial systems, we allow our products to report pretty much arbitrary data. There are very basic guidelines that must be met for standard metrics to work, but what is actually possible goes way beyond that. Product teams have access to raw data and can create their own processing tools if they want/need to. They can also use Hive to query the data if they want to - very often you can just brute force your answer from data, so why not do it? Programmer&amp;rsquo;s time is expensive, after all.&lt;/p&gt;

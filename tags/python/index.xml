@@ -2,27 +2,27 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Maciej Mróz Personal Blog</title>
-    <link>https://www.maciejmroz.com/tags/python/index.xml</link>
+    <link>/tags/python/index.xml</link>
     <description>Recent content on Maciej Mróz Personal Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <atom:link href="https://www.maciejmroz.com/tags/python/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="/tags/python/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>What can one day of coding bring?</title>
-      <link>https://www.maciejmroz.com/2012/12/01/what-can-one-day-of-coding-bring/</link>
+      <link>/2012/12/01/what-can-one-day-of-coding-bring/</link>
       <pubDate>Sat, 01 Dec 2012 00:00:00 +0000</pubDate>
       
-      <guid>https://www.maciejmroz.com/2012/12/01/what-can-one-day-of-coding-bring/</guid>
+      <guid>/2012/12/01/what-can-one-day-of-coding-bring/</guid>
       <description>&lt;p&gt;We&amp;rsquo;ve had our first internal hackaton recently at Ganymede. We don&amp;rsquo;t have &amp;ldquo;20% time&amp;rdquo; rule or anything like that, so the entire thing was a huge experiment. What we did was to take not one, but two days (Thursday and Friday) off our normal schedule to allow people do some cool stuff.Obviosly, because we are a game development company, most teams decided to a game. With all my responsibilities, I did not commit to any team, but decided to do small project on my own - to last minute I did not actually know if I would be tied up in other stuff or not. Some things can wait, some can not :(&lt;/p&gt;
 
 &lt;p&gt;Fortunately, I was able to spend some time coding along with the rest of the company. I thank our hackaton for just that - an opportunity to actually write code. With all the work on project management, product management, process, and other organizational responsibilities (like, making our little code fest actually happen :) ) I tend to forget how great if feels to actually create something instead of just helping others do it. What did I do? Nothing truly innovative. I am crazy about iOS game called Super Hexagon, and I just wanted similar gameplay. These &amp;ldquo;one mistake&amp;rdquo; games (Temple Run is another great example) have addictive quality hard to find anywhere else.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;https://www.maciejmroz.com/img/revhex.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/img/revhex.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;There is no title screen and no highscore list. There is no network play, and no Facebook spamming. There are no achievements. Just the game you can play&amp;hellip;&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;https://www.maciejmroz.com/img/revhex_end.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/img/revhex_end.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;&amp;hellip; over and over :) The entire thing was written in Python using Cocos2D library. Graphics was done by one of our artists who was kind enough to do it on almost last minute, despite being involved with other project.&lt;/p&gt;
 </description>

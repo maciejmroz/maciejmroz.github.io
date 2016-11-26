@@ -2,18 +2,18 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Maciej Mróz Personal Blog</title>
-    <link>https://www.maciejmroz.com/tags/microsoft/index.xml</link>
+    <link>/tags/microsoft/index.xml</link>
     <description>Recent content on Maciej Mróz Personal Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <atom:link href="https://www.maciejmroz.com/tags/microsoft/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="/tags/microsoft/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>The next console generation ain&#39;t what it used to be</title>
-      <link>https://www.maciejmroz.com/2012/04/17/the-next-console-generation-aint-what-it-used-to-be/</link>
+      <link>/2012/04/17/the-next-console-generation-aint-what-it-used-to-be/</link>
       <pubDate>Tue, 17 Apr 2012 00:00:00 +0000</pubDate>
       
-      <guid>https://www.maciejmroz.com/2012/04/17/the-next-console-generation-aint-what-it-used-to-be/</guid>
+      <guid>/2012/04/17/the-next-console-generation-aint-what-it-used-to-be/</guid>
       <description>&lt;p&gt;The next generation of consoles will most likely come by the end of year 2013. One intersting question arise: how it &lt;strong&gt;should&lt;/strong&gt; look like? Disclaimer: by &amp;ldquo;should&amp;rdquo; I mean &amp;ldquo;actually makes business sense for both platform holders and developers&amp;rdquo; and not &amp;ldquo;what hardcore gamers would like to see&amp;rdquo;. These meanings are at quite a big conflict, as we shall see later :)&lt;/p&gt;
 
 &lt;p&gt;In order to think about next gen we have to take deeper look at the general trends in the entertainment industry. Some of these trends were not significant at X360/PS3 launch, some did not even exist at the time. The world has radically changed in the past few years, invalidating many assumptions entire console industry was built on. As a reminder, the classic console business model is based on selling hardware at a loss in order to build userbase and later getting the money back in the form of licensing fees (which implies absolute control over platform). Traditionally, consoles were very powerful at release - comparable to very good gaming PC. Other than cost optimizations and physical layout, during lifetime of a console hardware specifications are fixed.&lt;/p&gt;

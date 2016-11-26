@@ -2,18 +2,18 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Maciej Mróz Personal Blog</title>
-    <link>https://www.maciejmroz.com/categories/server-side/index.xml</link>
+    <link>/categories/server-side/index.xml</link>
     <description>Recent content on Maciej Mróz Personal Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <atom:link href="https://www.maciejmroz.com/categories/server-side/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="/categories/server-side/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Beyond virtualization</title>
-      <link>https://www.maciejmroz.com/2015/01/01/beyond-virtualization/</link>
+      <link>/2015/01/01/beyond-virtualization/</link>
       <pubDate>Thu, 01 Jan 2015 00:00:00 +0000</pubDate>
       
-      <guid>https://www.maciejmroz.com/2015/01/01/beyond-virtualization/</guid>
+      <guid>/2015/01/01/beyond-virtualization/</guid>
       <description>&lt;p&gt;I guess it&amp;rsquo;s time to sum up recent trends in how we build, deploy, and operate complex server side software. Virtualization and cloud computing have been with us for quite a while but right now the era of containers is coming, with entire Docker ecosystem paving the way. You might want to ask a very valid question: &amp;ldquo;What&amp;rsquo;s in it for me?&amp;rdquo; :) I will focus on business implications of the technology. But let&amp;rsquo;s set the context first.&lt;/p&gt;
 
 &lt;p&gt;The explosion of cloud computing in recent years literally changed the way we think. Well, you probably could treat Amazon EC2 instances as if they were ordinary machines, but &amp;ldquo;in the cloud&amp;rdquo;. That of course would be &lt;strong&gt;totally&lt;/strong&gt; missing the point. The key advantages of cloud computing are on the intersection of operations, software architecture and development - these cannot be realized without moving to true DevOps. Trying to slap &amp;ldquo;cloud computing&amp;rdquo; sticker on top of existing organization with IT/Operations/Development (add more if needed to fit your case) silos will not give anyone much value. Once you change your approach, you suddenly get the true benefits:&lt;/p&gt;
@@ -52,10 +52,10 @@ The real cloud computing usage scenarios could look like this:&lt;/li&gt;
     
     <item>
       <title>Functional programming trojan horse</title>
-      <link>https://www.maciejmroz.com/2013/09/22/functional-programming-trojan-horse/</link>
+      <link>/2013/09/22/functional-programming-trojan-horse/</link>
       <pubDate>Sun, 22 Sep 2013 00:00:00 +0000</pubDate>
       
-      <guid>https://www.maciejmroz.com/2013/09/22/functional-programming-trojan-horse/</guid>
+      <guid>/2013/09/22/functional-programming-trojan-horse/</guid>
       <description>
 
 &lt;p&gt;All of game server code at my current company is using C++, and we are still starting new projects using existing C++ framework. I gave a presentation on our server architecture a few months ago, available &lt;a href=&#34;http://www.slideshare.net/maciejmroz/architektura-serwera-gier-online&#34;&gt;here&lt;/a&gt; (it&amp;rsquo;s in Polish, it was local event here in Kraków). After giving the presentation I was approached by a guy (sorry, don&amp;rsquo;t remember the name) who said something like: &amp;ldquo;It&amp;rsquo;s cool you did all that in C++. It&amp;rsquo;d be interesting to see you talk next year about how you rewritten the whole thing in Java :)&amp;ldquo;. I instantly answered: &amp;ldquo;Right now I&amp;rsquo;d do it with Scala and Akka&amp;rdquo;.&lt;/p&gt;
@@ -128,10 +128,10 @@ The first very important and very commonly used thing is Option generic type. Op
     
     <item>
       <title>Is virtualization a failure of operating systems?</title>
-      <link>https://www.maciejmroz.com/2012/12/19/is-virtualization-a-failure-of-operating-systems/</link>
+      <link>/2012/12/19/is-virtualization-a-failure-of-operating-systems/</link>
       <pubDate>Wed, 19 Dec 2012 00:00:00 +0000</pubDate>
       
-      <guid>https://www.maciejmroz.com/2012/12/19/is-virtualization-a-failure-of-operating-systems/</guid>
+      <guid>/2012/12/19/is-virtualization-a-failure-of-operating-systems/</guid>
       <description>&lt;p&gt;One thing has hit me while watching of this year&amp;rsquo;s LinuxCon Europe presentations - one of reasons virtualization exists in the first place is operating system inability to properly isolate the applications from each other. Look at it this way: the role of operating systems is abstracting the physical hardware from the applications. And what is the role of hypervisor? Abstracting the hardware from the opertaing system(s) … Which makes the operating system an application running under the hypervisor, doesn&amp;rsquo;t it?&lt;/p&gt;
 
 &lt;p&gt;Now, let&amp;rsquo;s think of it from other angle - why are we using virtualization? We are virtualizing applications, and operating system is only a required intermediary. Typical workload of virtual machine is exactly one application (in general case this is one-to-many relationship, because often single application spans multiple VMs). We do this partly to achieve good utilization of physical hardware, but also to achieve isolation at the level close to &amp;ldquo;physical box per every application&amp;rdquo;. Not as secure, but conceptually equivalent.&lt;/p&gt;
@@ -142,10 +142,10 @@ The first very important and very commonly used thing is Option generic type. Op
     
     <item>
       <title>Enter the Node.js</title>
-      <link>https://www.maciejmroz.com/2012/07/07/enter-the-node-js/</link>
+      <link>/2012/07/07/enter-the-node-js/</link>
       <pubDate>Sat, 07 Jul 2012 00:00:00 +0000</pubDate>
       
-      <guid>https://www.maciejmroz.com/2012/07/07/enter-the-node-js/</guid>
+      <guid>/2012/07/07/enter-the-node-js/</guid>
       <description>
 
 &lt;p&gt;The title says it all, but I probably still should paint some background to this article. Imagine a system where you need very high performance, you need it yesterday, and you don&amp;rsquo;t have infinite funds to simply throw more hardware at the problem. Very important component in this system is a web server. Very simple requests, always generated by code (while system in question does not provide data to end users, you can think of AJAX - definitely there&amp;rsquo;s a similarity). So I have a webserver in question. Apache + PHP, running on a virtual machine. I quickly written a Python script that emulated the workload webserver was supposed to have (fuzzed POST requests in specific format). I did back of the envelope calculations of the performance the web server has to meet. As it turned out, Apache + PHP running on a virtual machine was at very, very small percentage of what I needed.&lt;/p&gt;

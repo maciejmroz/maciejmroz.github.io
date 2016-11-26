@@ -2,18 +2,18 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Maciej Mróz Personal Blog</title>
-    <link>https://www.maciejmroz.com/tags/c&#43;&#43;/index.xml</link>
+    <link>/tags/c&#43;&#43;/index.xml</link>
     <description>Recent content on Maciej Mróz Personal Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <atom:link href="https://www.maciejmroz.com/tags/c&#43;&#43;/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="/tags/c&#43;&#43;/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>C&#43;&#43;11 Goodness</title>
-      <link>https://www.maciejmroz.com/2013/05/04/c11-goodness/</link>
+      <link>/2013/05/04/c11-goodness/</link>
       <pubDate>Sat, 04 May 2013 00:00:00 +0000</pubDate>
       
-      <guid>https://www.maciejmroz.com/2013/05/04/c11-goodness/</guid>
+      <guid>/2013/05/04/c11-goodness/</guid>
       <description>&lt;p&gt;While most of my programming life used to be centered around C++, nowadays I do not really spend much time with the language at work (other than doing code reviews). I remain big fan of C++. Despite the fact it&amp;rsquo;s not very fashionable language, it is extremely efficient and quite flexible. What&amp;rsquo;s even more important it&amp;rsquo;s continuing to evolve, and it evolves in the right direction. I took some time to try out the C++11 features refactoring small private project, and it really looks good.&lt;/p&gt;
 
 &lt;p&gt;First of all: lambdas. This feature alone is a killer. C++ used to have &amp;ldquo;sort of lambdas&amp;rdquo; in the form of boost::lambda library, but this library was insanely hard to use beyond simple use cases, the syntax was alien, and when it broke the compiler errors were cryptic. It didn&amp;rsquo;t stop me from trying to use it, only to come up with the conclusion it doesn&amp;rsquo;t really improve my productivity in any way. I never used boost::lambda in any production code. C++11 lambdas are not like that. The lambda function body is written using normal C++ syntax. It&amp;rsquo;s ordinary code, just as readable as any other code. There&amp;rsquo;s no complex template voodoo happening. It looks just like any other function except for special syntax used to define it in place. If you do something wrong in the lambda, the compiler errors are what anyone would expect them to be. Ok, it&amp;rsquo;s all nice, but why all the fuss about anonymous functions? Because they are much more than just that! Using the variable capture specification you can create real closures. That&amp;rsquo;s closures as in: &amp;ldquo;Lisp has closures&amp;rdquo;. It means you can access enclosing state in the lambda body. All these small functors that proliferate like crazy when writing STL code are just not necessary any more! As a side note, you don&amp;rsquo;t have to use bind, either, because lambdas are perfectly fine as &amp;ldquo;glue code&amp;rdquo;! We get cleaner, shorter and more maintainable code, all thanks to the fact that compiler does what had to be done manually in the past. It doesn&amp;rsquo;t matter if it&amp;rsquo;s writing new code, or refactoring part of existing application. Lambdas offer real gains to productivity.&lt;/p&gt;

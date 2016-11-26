@@ -2,18 +2,18 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Maciej Mróz Personal Blog</title>
-    <link>https://www.maciejmroz.com/tags/economy/index.xml</link>
+    <link>/tags/economy/index.xml</link>
     <description>Recent content on Maciej Mróz Personal Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <atom:link href="https://www.maciejmroz.com/tags/economy/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="/tags/economy/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Simulating loot based virtual economy</title>
-      <link>https://www.maciejmroz.com/2013/01/04/simulating-loot-based-virtual-economy/</link>
+      <link>/2013/01/04/simulating-loot-based-virtual-economy/</link>
       <pubDate>Fri, 04 Jan 2013 00:00:00 +0000</pubDate>
       
-      <guid>https://www.maciejmroz.com/2013/01/04/simulating-loot-based-virtual-economy/</guid>
+      <guid>/2013/01/04/simulating-loot-based-virtual-economy/</guid>
       <description>
 
 &lt;p&gt;Just like many others, in 2012 I spent significant amount of time playing Diablo 3. While I enjoyed the experience a lot, playing the game also pushed me to think about its design. What I found most interesting was random loot system and auction house. Because of that, I recently started to think if I can produce simplified model of virtual currency economy in a game with random loot. Now, one very important caveat: I did not try to model Blizzard’s game. Diablo 3 is a very complex design with many variables, and for a technical designers/monetization guys at Blizzard was surely a big challenge. My model does not try to be complete, but rather give an insight into how an economy like that can behave, and perhaps give some ideas on how such economy can be regulated. It’s more like first step to making a game like that :)&lt;/p&gt;
@@ -69,11 +69,11 @@
 
 &lt;p&gt;I implemented this model in C++ and run the simulation for 10 000 players, over 365 cycles. Results are quite interesting, although they raise more questions than they answer. A first thing to do would be to look at player progression through game as time passes. In the model, average tier of items used by players is likely a good measure:&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;https://www.maciejmroz.com/img/loot_economy/average_tier.png&#34; alt=&#34;average_tier&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/img/loot_economy/average_tier.png&#34; alt=&#34;average_tier&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;Looks nice, right? Player should progress quickly at first, and then the progress should gradually slow down. Well, it’s only an average. From single player perspective the picture is completely different. Lets look at how many players managed to do at least one upgrade in the simulation cycle:&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;https://www.maciejmroz.com/img/loot_economy/upgrade_count.png&#34; alt=&#34;upgrade_count&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/img/loot_economy/upgrade_count.png&#34; alt=&#34;upgrade_count&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;Ooops! This really hurts! We see bad things happening:&lt;/p&gt;
 
@@ -84,11 +84,11 @@
 
 &lt;p&gt;Now the game economy. Here’s a graph of transaction count:&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;https://www.maciejmroz.com/img/loot_economy/total_tr_count.png&#34; alt=&#34;total_tr_count&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/img/loot_economy/total_tr_count.png&#34; alt=&#34;total_tr_count&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;There are some similarities, although overall shape is more dramatic :( Eventually number of transactions, just like upgrade count goes down to near zero. One would think looking at this graph that game economy becomes dead in time. Not so fast! Let’s look at transaction volume (sum of all transactions in simulation cycle):&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;https://www.maciejmroz.com/img/loot_economy/total_tr_volume.png&#34; alt=&#34;total_tr_volume&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/img/loot_economy/total_tr_volume.png&#34; alt=&#34;total_tr_volume&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;Looks different, doesn’t it? Having few transactions does not mean the economy is dead. The transaction volume also seems to go through cycles, but every cycle seems to have its maximum higher than previous one! The question is: does anyone want a virtual economy like this one?&lt;/p&gt;
 
@@ -97,19 +97,19 @@ The simulation used to produce graphs above definitely deserves deeper look into
 
 &lt;p&gt;I divided the graphs into two separate sets, one for tiers 0-4, and one for tiers 5-9. The reason for this division is very simple: economy for items of tiers 0-4 was dead after &amp;lt;50 simulation cycles. Transaction count:&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;https://www.maciejmroz.com/img/loot_economy/tier_04_tr_count.png&#34; alt=&#34;tier_04_tr_count&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/img/loot_economy/tier_04_tr_count.png&#34; alt=&#34;tier_04_tr_count&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;Item tiers 0 and 1 don’t even register on the graph, they were never traded. Another interesting thing about this graph is that once transaction count reaches peak value, it goes down even faster. This is essentially a market crash for items of this tier.&lt;/p&gt;
 
 &lt;p&gt;Now lets look at average price of items:&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;https://www.maciejmroz.com/img/loot_economy/tier_04_avg_prices.png&#34; alt=&#34;tier_04_avg_prices&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/img/loot_economy/tier_04_avg_prices.png&#34; alt=&#34;tier_04_avg_prices&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;Prices started to fall down long before anything bad was visible in transaction count graph. Maximum transaction count for items of tier 4 happens long after value of these items hits its low.&lt;/p&gt;
 
 &lt;p&gt;This is all reflected in transaction volume split by item tier:&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;https://www.maciejmroz.com/img/loot_economy/tier_04_tr_volume.png&#34; alt=&#34;tier_04_tr_volume&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/img/loot_economy/tier_04_tr_volume.png&#34; alt=&#34;tier_04_tr_volume&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;This is already a good indication into why total transaction volume graph looks the way it looks: it’s result of stacking data from separate tiers. While economy as a whole is alive, market for items of specific tiers grows and dies.&lt;/p&gt;
 
@@ -117,13 +117,13 @@ The simulation used to produce graphs above definitely deserves deeper look into
 
 &lt;p&gt;Transaction count:&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;https://www.maciejmroz.com/img/loot_economy/tier_59_tr_count.png&#34; alt=&#34;tier_59_tr_count&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/img/loot_economy/tier_59_tr_count.png&#34; alt=&#34;tier_59_tr_count&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;The story repeats itself. It doesn’t look good: what we can see on tiers 5 and 6 is that their transaction count gradually goes up, but after reaching their peak they essentially become untradeable over night.&lt;/p&gt;
 
 &lt;p&gt;How about average prices?&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;https://www.maciejmroz.com/img/loot_economy/tier_59_avg_prices.png&#34; alt=&#34;tier_59_avg_prices&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/img/loot_economy/tier_59_avg_prices.png&#34; alt=&#34;tier_59_avg_prices&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;Again, transaction count peak happens long after price plateau is reached. One interesting thing: the prices of tiers diverge slowly. It’s more like they grow together but then lower tier just lets it go and stays behind. There isn’t really much difference in pricing between tier 8 and 9 on this graph. These items are best by and are acquired „at any cost”.&lt;/p&gt;
 
@@ -131,7 +131,7 @@ The simulation used to produce graphs above definitely deserves deeper look into
 
 &lt;p&gt;Finally, transaction volume graph is not really suprising:&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;https://www.maciejmroz.com/img/loot_economy/tier_59_tr_volume.png&#34; alt=&#34;tier_59_tr_volume&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/img/loot_economy/tier_59_tr_volume.png&#34; alt=&#34;tier_59_tr_volume&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;Again we see waves that go up, each one slower, but with higher peak. Given long enough time it would likely happen with higher item tiers.&lt;/p&gt;
 

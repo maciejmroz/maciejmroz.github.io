@@ -2,18 +2,18 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Maciej Mróz Personal Blog</title>
-    <link>https://www.maciejmroz.com/tags/copyright/index.xml</link>
+    <link>/tags/copyright/index.xml</link>
     <description>Recent content on Maciej Mróz Personal Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <atom:link href="https://www.maciejmroz.com/tags/copyright/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="/tags/copyright/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>It’s time for Culture 2.0</title>
-      <link>https://www.maciejmroz.com/2012/01/23/its-time-for-culture-2-0/</link>
+      <link>/2012/01/23/its-time-for-culture-2-0/</link>
       <pubDate>Mon, 23 Jan 2012 00:00:00 +0000</pubDate>
       
-      <guid>https://www.maciejmroz.com/2012/01/23/its-time-for-culture-2-0/</guid>
+      <guid>/2012/01/23/its-time-for-culture-2-0/</guid>
       <description>&lt;p&gt;In the USA, SOPA is dead. Poland (and other countries) might not be so lucky with the ACTA. But let’s assume for a while it goes down, too. It’s a good thing, right? I am not so sure about that.&lt;/p&gt;
 
 &lt;p&gt;First, I absolutely agree that intellectual property should be enforced. What I don’t like about the law and the agreement mentioned above is who is responsible for the enforcing, and who is held responsible for the breach of intellectual property. Because that’s the real problem, not the concept of intellectual property in general (here’s where I do not agree with The Pirate Bay people who seem to have no respect for any IP).&lt;/p&gt;

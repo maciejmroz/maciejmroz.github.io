@@ -2,18 +2,18 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Maciej Mróz Personal Blog</title>
-    <link>https://www.maciejmroz.com/tags/blog/index.xml</link>
+    <link>/tags/blog/index.xml</link>
     <description>Recent content on Maciej Mróz Personal Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <atom:link href="https://www.maciejmroz.com/tags/blog/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="/tags/blog/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Onswipe - entering the era of tablet publishing</title>
-      <link>https://www.maciejmroz.com/2012/01/04/onswipe-entering-the-era-of-tablet-publishing/</link>
+      <link>/2012/01/04/onswipe-entering-the-era-of-tablet-publishing/</link>
       <pubDate>Wed, 04 Jan 2012 00:00:00 +0000</pubDate>
       
-      <guid>https://www.maciejmroz.com/2012/01/04/onswipe-entering-the-era-of-tablet-publishing/</guid>
+      <guid>/2012/01/04/onswipe-entering-the-era-of-tablet-publishing/</guid>
       <description>&lt;p&gt;Classic web is dying, even if slowly. I will write longer post about that soon. In the meantime, try to use Flipboard for a while … and you will notice that classic portals/blogs are just dinosaurs. They might not know it yet but it doesn&amp;rsquo;t change the facts.&lt;/p&gt;
 
 &lt;p&gt;If you are using WordPress, there is a cure called &lt;a href=&#34;http://www.onswipe.com&#34;&gt;Onswipe&lt;/a&gt;. It&amp;rsquo;s not perfect (in fact it is buggy as hell) but shows a lot of promise. Onswipe is a WordPress plugin that provides Flipboard-like experience on an IPad using HTML5. Enter this blog from an iPad, and you will enter completely different world. I suppose it should also work on Android tablets, after all it&amp;rsquo;s just HTML. Onswipe is interesting for two resons. The first reason (and the reason for it&amp;rsquo;s existence) is that it essentially changes website into an &lt;strong&gt;application&lt;/strong&gt;. The second reason it is interesting is because these guys got &lt;a href=&#34;http://venturebeat.com/2011/06/03/onswipe-funding/&#34;&gt;$5M in funding&lt;/a&gt; to write a WordPress plugin :) Which leads to following conclusions:&lt;/p&gt;
@@ -27,20 +27,20 @@
     
     <item>
       <title>Reboot, this time only visual :)</title>
-      <link>https://www.maciejmroz.com/2011/04/17/reboot-this-time-only-visual/</link>
+      <link>/2011/04/17/reboot-this-time-only-visual/</link>
       <pubDate>Sun, 17 Apr 2011 00:00:00 +0000</pubDate>
       
-      <guid>https://www.maciejmroz.com/2011/04/17/reboot-this-time-only-visual/</guid>
+      <guid>/2011/04/17/reboot-this-time-only-visual/</guid>
       <description>&lt;p&gt;I just got the invoice for the domain, and decided that if I&amp;rsquo;m paying for it it might at least look half-decent. I no web designer, for me it&amp;rsquo;s mostly difference between &amp;ldquo;it sucks&amp;rdquo; and &amp;ldquo;ok&amp;rdquo;, with rare addition (&amp;lt;1%) of &amp;ldquo;awesome&amp;rdquo;. This theme is &amp;ldquo;ok&amp;rdquo; and I doubt I&amp;rsquo;m going to heavily tweak it, if at all. I am also doing some experiments with Facebook integration - sharing links to post is the first to go, later hopefully commenting with Facebook account and some sort of &amp;ldquo;fanpage connect&amp;rdquo; so that anything appearing here gets automatically propagated to my FB profile.&lt;/p&gt;
 </description>
     </item>
     
     <item>
       <title>Hacked :(</title>
-      <link>https://www.maciejmroz.com/2010/09/09/hacked/</link>
+      <link>/2010/09/09/hacked/</link>
       <pubDate>Thu, 09 Sep 2010 00:00:00 +0000</pubDate>
       
-      <guid>https://www.maciejmroz.com/2010/09/09/hacked/</guid>
+      <guid>/2010/09/09/hacked/</guid>
       <description>&lt;p&gt;It had to happen eventually. What can one expect when running ages old WordPress installation? Anyway, someone has injected malicious JavaScript code at the end of every single post. So I deleted everything. Perhaps I overreacted a bit &amp;hellip; I have most of this stuff backed up but I am not going to waste my time recovering the backups. Life goes on.&lt;/p&gt;
 </description>
     </item>

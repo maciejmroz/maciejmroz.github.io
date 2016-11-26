@@ -2,18 +2,18 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Maciej Mróz Personal Blog</title>
-    <link>https://www.maciejmroz.com/tags/apple/index.xml</link>
+    <link>/tags/apple/index.xml</link>
     <description>Recent content on Maciej Mróz Personal Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <atom:link href="https://www.maciejmroz.com/tags/apple/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="/tags/apple/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>The next console generation ain&#39;t what it used to be</title>
-      <link>https://www.maciejmroz.com/2012/04/17/the-next-console-generation-aint-what-it-used-to-be/</link>
+      <link>/2012/04/17/the-next-console-generation-aint-what-it-used-to-be/</link>
       <pubDate>Tue, 17 Apr 2012 00:00:00 +0000</pubDate>
       
-      <guid>https://www.maciejmroz.com/2012/04/17/the-next-console-generation-aint-what-it-used-to-be/</guid>
+      <guid>/2012/04/17/the-next-console-generation-aint-what-it-used-to-be/</guid>
       <description>&lt;p&gt;The next generation of consoles will most likely come by the end of year 2013. One intersting question arise: how it &lt;strong&gt;should&lt;/strong&gt; look like? Disclaimer: by &amp;ldquo;should&amp;rdquo; I mean &amp;ldquo;actually makes business sense for both platform holders and developers&amp;rdquo; and not &amp;ldquo;what hardcore gamers would like to see&amp;rdquo;. These meanings are at quite a big conflict, as we shall see later :)&lt;/p&gt;
 
 &lt;p&gt;In order to think about next gen we have to take deeper look at the general trends in the entertainment industry. Some of these trends were not significant at X360/PS3 launch, some did not even exist at the time. The world has radically changed in the past few years, invalidating many assumptions entire console industry was built on. As a reminder, the classic console business model is based on selling hardware at a loss in order to build userbase and later getting the money back in the form of licensing fees (which implies absolute control over platform). Traditionally, consoles were very powerful at release - comparable to very good gaming PC. Other than cost optimizations and physical layout, during lifetime of a console hardware specifications are fixed.&lt;/p&gt;
@@ -32,10 +32,10 @@
     
     <item>
       <title>Is the era of dedicated gaming devices coming to an end?</title>
-      <link>https://www.maciejmroz.com/2012/02/22/is-the-era-of-dedicated-gaming-devices-coming-to-an-end/</link>
+      <link>/2012/02/22/is-the-era-of-dedicated-gaming-devices-coming-to-an-end/</link>
       <pubDate>Wed, 22 Feb 2012 00:00:00 +0000</pubDate>
       
-      <guid>https://www.maciejmroz.com/2012/02/22/is-the-era-of-dedicated-gaming-devices-coming-to-an-end/</guid>
+      <guid>/2012/02/22/is-the-era-of-dedicated-gaming-devices-coming-to-an-end/</guid>
       <description>&lt;p&gt;Today was the day when PlayStation Vita launched worldwide. I had the chance to play most of the launch games already during GDC Europe last August and I think that both hardware and launch lineup are impressive. But I didn&amp;rsquo;t buy PS Vita on launch. It&amp;rsquo;s probably a very sad day for Sony, bacause &amp;ldquo;PlayStation&amp;rdquo; is my religion (on Facebook, at least :) ).&lt;/p&gt;
 
 &lt;p&gt;What happended? I faced the truth - mainstream mobile gaming is already on Android and iOS, and a lot of titles are released every day. I know that every single developer out there is working on these platforms, and they don&amp;rsquo;t mind selling the game for $1-$5. You can&amp;rsquo;t possibly deny the trends - these devices are the new player in the console market. Just a few months ago I have written (on this blog) that there&amp;rsquo;s not much danger to Vita from the iOS/Android camp. I hate to admit that, but I might have been wrong. Yes, phones and tablets might lose on overall experience, but at the same time they win hands down when it goes to price and convenience. I actually found myself playing games on both iPhone and iPad in past six months or so. And I enjoyed doing it, at least for a short while.&lt;/p&gt;
@@ -48,10 +48,10 @@
     
     <item>
       <title>What will happen to Nintendo after the Wii, and more</title>
-      <link>https://www.maciejmroz.com/2011/04/16/what-will-happen-to-nintendo-after-the-wii-and-more/</link>
+      <link>/2011/04/16/what-will-happen-to-nintendo-after-the-wii-and-more/</link>
       <pubDate>Sat, 16 Apr 2011 00:00:00 +0000</pubDate>
       
-      <guid>https://www.maciejmroz.com/2011/04/16/what-will-happen-to-nintendo-after-the-wii-and-more/</guid>
+      <guid>/2011/04/16/what-will-happen-to-nintendo-after-the-wii-and-more/</guid>
       <description>&lt;p&gt;Wii is nearing the end of life. Sure, there is huge installed base of consoles, but I bet that average Wii user does not buy as many games as PS3 or X360 user. Which means that from publisher/developer point of view overall value of all the Nintendo consoles out there is not as great as raw numbers would suggest. Sony and Microsoft are both doing well, and Nintendo is no longer outselling them. It is very likely that in 2011 Wii end up in the third place in terms of new consoles sold. I am sure Nintendo is aware of that.&lt;/p&gt;
 
 &lt;p&gt;However, the biggest threat to Nintendo right now is not Sony or Microsoft, but Apple. &amp;ldquo;Hey, but we are talking Wii, not 3DS, remember?&amp;rdquo;. I certainly do. I also remember that Apple TV runs iOS and Apple A4 chip. Apple did not open it to developers. Yet. And how long do you think before that happens? A5 is a lot more powerful chip, add a real controller and you end up with &amp;hellip; something resembling &amp;ldquo;Wii HD&amp;rdquo;? Apple mobile hardware is far away from catching up to PS3/X360 now, but because Nintendo sells what effectively is GameCube 1.5, they do not have the horsepower advantage. All that Apple really needs to get the ball rolling is to create wireless controller for Apple TV. A touch pad, perhaps with analog sticks and a few extra buttons? Perhaps ability to use iPhone/iPod Touch as a controller? This wouldn&amp;rsquo;t be exactly &amp;ldquo;game console&amp;rdquo;, more &amp;ldquo;a device to run apps on the TV&amp;rdquo;. With ton of games among them. A device that you can plug under your TV, that you can play games on, and one that does not come from any of the &amp;ldquo;big three&amp;rdquo;.&lt;/p&gt;
@@ -66,20 +66,20 @@
     
     <item>
       <title>What to expect from iPad 2</title>
-      <link>https://www.maciejmroz.com/2011/01/20/what-to-expect-from-ipad-2/</link>
+      <link>/2011/01/20/what-to-expect-from-ipad-2/</link>
       <pubDate>Thu, 20 Jan 2011 00:00:00 +0000</pubDate>
       
-      <guid>https://www.maciejmroz.com/2011/01/20/what-to-expect-from-ipad-2/</guid>
+      <guid>/2011/01/20/what-to-expect-from-ipad-2/</guid>
       <description>&lt;p&gt;Before CES, I&amp;rsquo;d say &amp;ldquo;not much&amp;rdquo;. The thing is, today Apple owns the tablet market (if defined as dedicated hardware running dedicated OS), there is almost no competition out there. But it is on the horizon. Take Motorola Xoom as an example. Hardware specs are way beyond iPad 1.0, and if Android 3.0 is going to be that good as people claim, Apple is going to be in real trouble if they release underpowered device. And there will be more and more Android tablets as we go deeper into 2011 &amp;hellip; My guesses for iPad 2 are: SD card slot, front facing camera, and 1GB of RAM. SD card slot is fairly cheap way to greatly improve the device, and is very much in line with intended use - something that would replace laptop for basic photo management tasks. Front facing camera - not much point to discuss. Memory is more interesting - a month ago I&amp;rsquo;d bet on 512 MB, exactly the same as in iPhone 4. But after CES it just sounds cheap and limited. Apple has tradition of selling as little as they can for as much as possible, but I don&amp;rsquo;t really think they can get away with that. I think this is very moderate spec that should be considered basis for more. Retina display? Dual core CPU? Faster GPU? USB slot? They need another iPhone 4, and this time without the antennagate. Right now, after CES, anything is possible.&lt;/p&gt;
 </description>
     </item>
     
     <item>
       <title>Apple Tablet</title>
-      <link>https://www.maciejmroz.com/2010/02/06/apple-ipad-first-thoughts/</link>
+      <link>/2010/02/06/apple-ipad-first-thoughts/</link>
       <pubDate>Sat, 06 Feb 2010 11:52:02 +0100</pubDate>
       
-      <guid>https://www.maciejmroz.com/2010/02/06/apple-ipad-first-thoughts/</guid>
+      <guid>/2010/02/06/apple-ipad-first-thoughts/</guid>
       <description>&lt;p&gt;Apple tablet is no longer a mystery. The question now is whether it meets the expectations or fits any real needs :) Basically it is an oversized iPhone - 1024x768 multitouch display, 16-64 GB of flash memory, 1 GHz custom CPU, WiFi, Bluetooth etc, and it runs iPhone OS. I already have an iPhone. Is iPad going to perform better enough to justify buying additional device?&lt;/p&gt;
 
 &lt;p&gt;GMail support with push in the iPhone is most of the time sufficient for me. I rarely reply to mails directly from my iPhone, though. If something requires longer answer I usually just use normal computer for that. iPads bigger screen (and bigger virtual keyboard as a result) will surely improve experience here. I can actually imagine writing emails using this thing. Web browsing is where iPad is going to be a lot better than iPhone simply because of screen size and CPU performance (one of the things I noticed immediately at Apple videos is how smooth it runs, it&amp;rsquo;s super fast!). Web and mail if work well might alone be a selling point for people who don&amp;rsquo;t keep &lt;sup&gt;24&lt;/sup&gt;&amp;frasl;&lt;sub&gt;7&lt;/sub&gt; computer at home and actually do turn it on and off. In that scenario iPad is going to be very useful, offering browsing and mail experience very close to &amp;ldquo;full&amp;rdquo; but with instant access.&lt;/p&gt;
