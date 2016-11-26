@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Maciej Mróz Personal Blog</title>
+    <link>https://www.maciejmroz.com/tags/wordpress/index.xml</link>
+    <description>Recent content on Maciej Mróz Personal Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <atom:link href="https://www.maciejmroz.com/tags/wordpress/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Hacked :(</title>
+      <link>https://www.maciejmroz.com/2010/09/09/hacked/</link>
+      <pubDate>Thu, 09 Sep 2010 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.maciejmroz.com/2010/09/09/hacked/</guid>
+      <description>&lt;p&gt;It had to happen eventually. What can one expect when running ages old WordPress installation? Anyway, someone has injected malicious JavaScript code at the end of every single post. So I deleted everything. Perhaps I overreacted a bit &amp;hellip; I have most of this stuff backed up but I am not going to waste my time recovering the backups. Life goes on.&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

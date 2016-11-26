@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Demoscene-rsses on Maciej Mróz Personal Blog</title>
+    <link>https://www.maciejmroz.com/demoscene/index.xml</link>
+    <description>Recent content in Demoscene-rsses on Maciej Mróz Personal Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 02 Mar 2007 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://www.maciejmroz.com/demoscene/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Demoscene</title>
+      <link>https://www.maciejmroz.com/demoscene/</link>
+      <pubDate>Fri, 02 Mar 2007 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.maciejmroz.com/demoscene/</guid>
+      <description>
+
+&lt;p&gt;This section of page is about demoscene stuff stuff that I did. I am still doing some non-commercial coding, but don&amp;rsquo;t really have much to do with computer graphics any more ) Will I ever come back to write another demoscene production? Who knows :)&lt;/p&gt;
+
+&lt;h2 id=&#34;liquid-forms&#34;&gt;Liquid Forms&lt;/h2&gt;
+
+&lt;p&gt;This demo was released at Abstract 2004 party (&lt;a href=&#34;http://www.pouet.net/prod.php?which=13787&#34;&gt;pouet.net link&lt;/a&gt;), and ranked 2nd. This is the first real demo using LiquidReality engine (I don&amp;rsquo;t really count block.pl demo, which was rushed out and extremely buggy). The &amp;ldquo;liquid&amp;rdquo; stuff was the whole idea behind the demo - thus many distortion effects and so on. Here the most tasty thing - screenshots and the demo itself. All screens were taken in 1600x1200 resolution using 1024x1024 rendertarget resolution - at these settings demo still runs smoothly on X800 Pro :)&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://www.maciejmroz.com/images/lf_screen1.png&#34;&gt;&lt;img src=&#34;https://www.maciejmroz.com/images/lf_screen1min.png&#34;&gt;&lt;/a&gt;
+
+&lt;a href=&#34;https://www.maciejmroz.com/images/lf_screen2.png&#34;&gt;&lt;img src=&#34;https://www.maciejmroz.com/images/lf_screen2min.png&#34;&gt;&lt;/a&gt;
+
+&lt;a href=&#34;https://www.maciejmroz.com/images/lf_screen3.png&#34;&gt;&lt;img src=&#34;https://www.maciejmroz.com/images/lf_screen3min.png&#34;&gt;&lt;/a&gt;
+
+&lt;a href=&#34;https://www.maciejmroz.com/images/lf_screen4.png&#34;&gt;&lt;img src=&#34;https://www.maciejmroz.com/images/lf_screen4min.png&#34;&gt;&lt;/a&gt;
+&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://www.maciejmroz.com/images/lf_screen5.png&#34;&gt;&lt;img src=&#34;https://www.maciejmroz.com/images/lf_screen5min.png&#34;&gt;&lt;/a&gt;
+
+&lt;a href=&#34;https://www.maciejmroz.com/images/lf_screen6.png&#34;&gt;&lt;img src=&#34;https://www.maciejmroz.com/images/lf_screen6min.png&#34;&gt;&lt;/a&gt;
+
+&lt;a href=&#34;https://www.maciejmroz.com/images/lf_screen7.png&#34;&gt;&lt;img src=&#34;https://www.maciejmroz.com/images/lf_screen7min.png&#34;&gt;&lt;/a&gt;
+
+&lt;a href=&#34;https://www.maciejmroz.com/images/lf_screen8.png&#34;&gt;&lt;img src=&#34;https://www.maciejmroz.com/images/lf_screen8min.png&#34;&gt;&lt;/a&gt;
+&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://www.maciejmroz.com/images/lf_screen9.png&#34;&gt;&lt;img src=&#34;https://www.maciejmroz.com/images/lf_screen9min.png&#34;&gt;&lt;/a&gt;
+
+&lt;a href=&#34;https://www.maciejmroz.com/images/lf_screen10.png&#34;&gt;&lt;img src=&#34;https://www.maciejmroz.com/images/lf_screen10min.png&#34;&gt;&lt;/a&gt;
+
+&lt;a href=&#34;https://www.maciejmroz.com/images/lf_screen11.png&#34;&gt;&lt;img src=&#34;https://www.maciejmroz.com/images/lf_screen11min.png&#34;&gt;&lt;/a&gt;
+
+&lt;a href=&#34;https://www.maciejmroz.com/images/lf_screen12.png&#34;&gt;&lt;img src=&#34;https://www.maciejmroz.com/images/lf_screen12min.png&#34;&gt;&lt;/a&gt;
+&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://www.maciejmroz.com/images/lf_screen13.png&#34;&gt;&lt;img src=&#34;https://www.maciejmroz.com/images/lf_screen13min.png&#34;&gt;&lt;/a&gt;
+
+&lt;a href=&#34;https://www.maciejmroz.com/images/lf_screen14.png&#34;&gt;&lt;img src=&#34;https://www.maciejmroz.com/images/lf_screen14min.png&#34;&gt;&lt;/a&gt;
+
+&lt;a href=&#34;https://www.maciejmroz.com/images/lf_screen15.png&#34;&gt;&lt;img src=&#34;https://www.maciejmroz.com/images/lf_screen15min.png&#34;&gt;&lt;/a&gt;
+
+&lt;a href=&#34;https://www.maciejmroz.com/images/lf_screen16.png&#34;&gt;&lt;img src=&#34;https://www.maciejmroz.com/images/lf_screen16min.png&#34;&gt;&lt;/a&gt;
+&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://www.maciejmroz.com/images/lf_screen17.png&#34;&gt;&lt;img src=&#34;https://www.maciejmroz.com/images/lf_screen17min.png&#34;&gt;&lt;/a&gt;
+
+&lt;a href=&#34;https://www.maciejmroz.com/images/lf_screen18.png&#34;&gt;&lt;img src=&#34;https://www.maciejmroz.com/images/lf_screen18min.png&#34;&gt;&lt;/a&gt;
+
+&lt;a href=&#34;https://www.maciejmroz.com/images/lf_screen19.png&#34;&gt;&lt;img src=&#34;https://www.maciejmroz.com/images/lf_screen19min.png&#34;&gt;&lt;/a&gt;
+
+&lt;a href=&#34;https://www.maciejmroz.com/images/lf_screen20.png&#34;&gt;&lt;img src=&#34;https://www.maciejmroz.com/images/lf_screen20min.png&#34;&gt;&lt;/a&gt;
+&lt;/p&gt;
+
+&lt;p&gt;Get the demo from &lt;a href=&#34;ftp://ftp.scene.org/pub/parties/2004/abstract04/demo/lf.zip&#34;&gt;scene.org&lt;/a&gt; (roughly 12.5 MB download). To run it you&amp;rsquo;ll need dx9.0c and graphics board with pixel shaders 1.1 (1.4 recommended for full quality). Real eye-candy starts at 1024x1024 rendertarget resolution - and that requires &lt;strong&gt;plenty&lt;/strong&gt; of fillrate :)&lt;/p&gt;
+
+&lt;h2 id=&#34;optical&#34;&gt;Optical&lt;/h2&gt;
+
+&lt;p&gt;This demo was first presented at Mekka&amp;amp;Symposium 2001 demo party. Placed 10th - everyone at Addict expected better result but demo was showing visual artifacts on lots of effects on competition machine. Generally happens on Win9x based machines &amp;hellip; the only thing I can say about it is USE TRUE OPERATING SYSTEM! Well, stuff like that happens, especially when coding in a hurry (not talking about using leaked beta drivers &amp;hellip;) Another thing I have learned with this demo is to put &amp;ldquo;anti-9x&amp;rdquo; protection in all my new code. You can download final version that features: mp3 soundtrack (cut off from party version because of 8MB size limit), hardware compatibility fixes, speed optimizations and so on. Because of driver bug demo crashes on ATI Radeon 8500 causing machine to freeze (this is actually confirmed by ATI to be fixed in future). Also ATI hardware has shown some bugs in this final version that were not present when coding on NVIDIA hardware. However, I see no point in realeasing any updates (I have version that supports ATI_fragment_shader and ATI_pn_triangles also fixing those minor bugs mentioned) before demo stops crashing on Radeon 8500 boards.&lt;br /&gt;
+Optical &lt;em&gt;requires&lt;/em&gt; that your card supports 32 bit rendering and stencil buffer - quite common funtionality as of today.&lt;br /&gt;
+Some last minute info: It looks like with newest Catalyst drivers it manages to go the end of demo without crashing. There are still visual problems but I hope I will be able to work around them and release &lt;strong&gt;true final&lt;/strong&gt;. The problem is that I do not really like playing with 3 years old code (approx., some parts definitely older) - it is just like cleaning your room: you know you have to do it but you push it away into future as far as possible :)&lt;br /&gt;
+&lt;a href=&#34;https://www.maciejmroz.com/optical_f.zip&#34;&gt; Download Optical (final version - approx. 11 MB)&lt;/a&gt;&lt;br /&gt;
+And now some screenshots (all taken at 640x480 on my old Geforce 2MX from party version):&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://www.maciejmroz.com/images/screen00.jpg&#34;&gt;&lt;img src=&#34;https://www.maciejmroz.com/images/screen00min.jpg&#34;&gt;&lt;/a&gt;
+
+&lt;a href=&#34;https://www.maciejmroz.com/images/screen01.jpg&#34;&gt;&lt;img src=&#34;https://www.maciejmroz.com/images/screen01min.jpg&#34;&gt;&lt;/a&gt;
+
+&lt;a href=&#34;https://www.maciejmroz.com/images/screen02.jpg&#34;&gt;&lt;img src=&#34;https://www.maciejmroz.com/images/screen02min.jpg&#34;&gt;&lt;/a&gt;
+
+&lt;a href=&#34;https://www.maciejmroz.com/images/screen03.jpg&#34;&gt;&lt;img src=&#34;https://www.maciejmroz.com/images/screen03min.jpg&#34;&gt;&lt;/a&gt;
+&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://www.maciejmroz.com/images/screen04.jpg&#34;&gt;&lt;img src=&#34;https://www.maciejmroz.com/images/screen04min.jpg&#34;&gt;&lt;/a&gt;
+
+&lt;a href=&#34;https://www.maciejmroz.com/images/screen05.jpg&#34;&gt;&lt;img src=&#34;https://www.maciejmroz.com/images/screen05min.jpg&#34;&gt;&lt;/a&gt;
+
+&lt;a href=&#34;https://www.maciejmroz.com/images/screen06.jpg&#34;&gt;&lt;img src=&#34;https://www.maciejmroz.com/images/screen06min.jpg&#34;&gt;&lt;/a&gt;
+
+&lt;a href=&#34;https://www.maciejmroz.com/images/screen07.jpg&#34;&gt;&lt;img src=&#34;https://www.maciejmroz.com/images/screen07min.jpg&#34;&gt;&lt;/a&gt;
+&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://www.maciejmroz.com/images/screen08.jpg&#34;&gt;&lt;img src=&#34;https://www.maciejmroz.com/images/screen08min.jpg&#34;&gt;&lt;/a&gt;
+
+&lt;a href=&#34;https://www.maciejmroz.com/images/screen09.jpg&#34;&gt;&lt;img src=&#34;https://www.maciejmroz.com/images/screen09min.jpg&#34;&gt;&lt;/a&gt;
+
+&lt;a href=&#34;https://www.maciejmroz.com/images/screen10.jpg&#34;&gt;&lt;img src=&#34;https://www.maciejmroz.com/images/screen10min.jpg&#34;&gt;&lt;/a&gt;
+
+&lt;a href=&#34;https://www.maciejmroz.com/images/screen11.jpg&#34;&gt;&lt;img src=&#34;https://www.maciejmroz.com/images/screen11min.jpg&#34;&gt;&lt;/a&gt;
+&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

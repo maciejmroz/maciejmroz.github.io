@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width,minimum-scale=1,maximum-scale=1">
+
+  
+  
+  <link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+  <link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+  
+
+  
+  <title>The demise of spinning disks</title>
+
+  
+  
+  <link rel="stylesheet" href="https://www.maciejmroz.com/css/hugo-octopress.css">
+
+  
+  
+
+  
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+
+  
+  <link href="https://www.maciejmroz.com/favicon.png" rel="icon">
+
+  
+  
+  
+
+  
+
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+
+  <meta name="author" content="Maciej Mróz">
+
+  
+  <meta name="generator" content="Hugo 0.17" />
+
+  
+  
+
+</head>
+<body>
+
+
+<header role="banner"><hgroup>
+  
+  <h1><a href="https://www.maciejmroz.com/">Maciej Mróz Personal Blog</a></h1>
+    <h2>Because why not</h2>
+</hgroup></header>
+
+
+<nav role="navigation">
+
+<ul class="main-navigation">
+  
+  
+    
+      <li><a href="https://www.maciejmroz.com/" title="Blog">Blog</a></li>
+    
+  
+    
+      <li><a href="https://www.maciejmroz.com/demoscene" title="Demoscene" >Demoscene</a></li>
+    
+  
+</ul>
+
+
+<ul class="subscription">
+  
+
+</ul>
+
+
+</nav>
+
+
+<div id="main">
+  <div id="content">
+    <div>
+      <article class="hentry" role="article">
+
+        
+        
+
+<header>
+    <p class="meta">Mar 18, 2012
+         - 5 minute read 
+        
+
+        
+        
+        
+            - <a class="label" href="https://www.maciejmroz.com/categories/technology/">Technology </a><a class="label" href="https://www.maciejmroz.com/categories/storage/">Storage </a>
+        
+    </p>
+    <h1 class="entry-title">
+         The demise of spinning disks 
+    </h1>
+</header>
+
+
+        <div class="entry-content">
+          
+          
+          
+          <p>It was quite some time ago when my company started using Fusion-IO (enterprise SSDs) on our database servers. We are happily using them till this day. The great part is that we could scale vertically and leave software layer unchanged. Even better: we <strong>still</strong> have room for growth, despite getting more users and our application stack getting more and more demanding. We were one of the first to switch to SSDs on server side - so right now it&rsquo;s interesting that this idea propagated so quickly. We got to the point where people start loudly saying &ldquo;disk is the new tape&rdquo;. And it really is.</p>
+
+<p>The gap between CPU speed and external memory has been widening for a long time, and got to the point of being simply ridiculous. It&rsquo;s worth noting that it&rsquo;s not only about gap between CPU and disk drive but also about gap between CPU and DRAM (which is slightly less known fact). For CPU accessing L1 cache takes single digit amount of clock cycles. Subsequent levels of memory hierarchy are slower and slower. Accessing main memory gets us into area of hundereds to even 1000+ CPU cycles (this is strongly architecture dependent). This is very bad and low level programmers have been battling this issue for a long time now. One of approaches is using access patterns that minimize CPU cache misses and using low level prefetch instructions. We are essentally talking about linearizing access to memory that is supposed to be &ldquo;random access&rdquo;. If latency is the problem in case of DRAM, how bad it is in case of disk drives? Very, very bad.</p>
+
+<p>Let&rsquo;s start with simple analogy. I need something and:</p>
+
+<ul>
+<li>it happens to be in my room (that&rsquo;s my L1 cache) - it takes a few seconds to get what I need</li>
+<li>ok, it&rsquo;s not on my desk (I have to hit DRAM) - it takes a few minutes to get what I need, an equivalent to, say, walking to a neighbor and borrowing something</li>
+<li>hmmm, actually my neighbor doesn&rsquo;t have it and I have to hit the store - how much would it take if the store was the disk?</li>
+</ul>
+
+<p>This is where 99% of people totally fail at estimation saying something like &ldquo;few hours&rdquo;. The real answer is: much, much longer.</p>
+
+<p>Let&rsquo;s assume that DRAM latency is at 100 ns (so about 300 clock cycles of 3GHz CPU), and average disk seek time is 6 ms (a very fast disk!). The difference is 60 000 times! We are not talking about &ldquo;get into a car and drive to the store&rdquo;. In our hypothetical scenario we are actually talking about <strong>months</strong>! But it&rsquo;s only part of the story, because it&rsquo;s not just about latency - it&rsquo;s also about parallelism.</p>
+
+<p>For a hard disk drive latency determines the upper number of random I/O operations per second because disk has to do everything serially. The serial nature of HDDs is the real problem and source of pain as CPUs are becoming more and more parallel, putting more and more processing power into roughly the same space. Because CPU throughput is skyrocketing (high end Xeon E7 is 10 cores/20 threads), we need more and more I/O operations per second. Single hard disk cannot provide these, and will never be able to :( In fact, most of server side programming nowadays revolves around optimizing for I/O (in general), not for CPU. This happens at many levels - operating system kernel, file systems, database storage engines, applications &hellip; Tons of software engineering work was performed just to hide simple fact that the disks cannot keep up. Interesting consequence is the proliferation of Hadoop (and other implementations of MapReduce) as an alternative to relational databases in many data processing tasks. Hadoop takes what&rsquo;s good about disks (cheap bandwidth) and gets rid of the latency problem by streaming all the data, instead of randomly accessing it.</p>
+
+<p>SSDs still have latency of ~0.1 ms - it a lot faster than HDDs, but at the same time a lot slower than DRAM &hellip; What&rsquo;s special about SSDs is not the access time - it&rsquo;s the parallelism. Enterprise SSDs offer hundreds of thousands of I/O operations per second - the difference here is a lot bigger than the difference in access times. Additionally, while the performance of disk drives is not really improving any more, Flash memory based solutions have huge room for improvement - and their I/O performance is going to improve as fast or even faster than CPU performance. One very simple reason for that is that right now we are still trying to access them through traditional file I/O interfaces that weren&rsquo;t meant for this kind of usage &hellip; In fact, when we start treating SSDs for what they really are, a memory, and forget about block device+filesystem nonsense, we are going to see massive performance gains. It&rsquo;s already happening in the form of Auto Commit Memory technology from Fusion-IO. Surely more will follow, because right now interfaces and API layers are huge source of inefficiency. Also, it&rsquo;s good to know that NAND Flash is not the last word in technologies of non-volatile memory and there are others on the horizon (although I am not aware of any commercial applications right now). We are heading towards a world where speed gap between HDD and SSD is measured in thousands of times, and getting wider every day.</p>
+
+<p>Unfortunately, because it&rsquo;s a revolutionary shift, the price of Flash memory does not go down as fast as one might want it to. Simply speaking, now <strong>everyone</strong> wants all of their hot data to be in Flash memory. Massive demand for Flash memory in consumer electronics does not make things any better - Apple is likely sucking in significant chunk of world production :) Interesting question is: where are the SSDs in the cloud? Recently, as it turns out, Amazon used a lot of these to launch DynamoDB. Which from my point of view creates interesting problem - because it becomes essentially impossible to build comparable service on &ldquo;raw&rdquo; EC2. That means getting locked into AWS. Will Amazon introduce some sort of &ldquo;high I/O EBS&rdquo;? I am sure I am not the only one interested in such product.</p>
+
+        </div>
+        
+
+<footer>
+  <p class="meta">
+    <span class="byline author vcard">Posted by <span class="fn">Maciej Mróz</span></span>
+    
+    <time>Mar 18, 2012</time>
+    
+      <span class="categories">
+        Tags:
+        
+          <a class="category" href="https://www.maciejmroz.com/tags/hdd">HDD</a>  <a class="category" href="https://www.maciejmroz.com/tags/ssd">SSD</a>  <a class="category" href="https://www.maciejmroz.com/tags/server-side">Server Side</a>  
+    
+    </span>
+  </p>
+
+  
+  
+
+  
+
+  <p class="meta">
+    
+        <a class="basic-alignment left" href="https://www.maciejmroz.com/2012/03/04/if-you-havent-noticed-opengl-api-is-alive-and-kicking/" title="If you haven&#39;t noticed, OpenGL API is alive and kicking">If you haven&#39;t noticed, OpenGL API is alive and kicking</a>
+    
+
+    
+      <a class="basic-alignment right" href="https://www.maciejmroz.com/2012/04/17/the-next-console-generation-aint-what-it-used-to-be/" title="The next console generation ain&#39;t what it used to be">The next console generation ain&#39;t what it used to be</a>
+    
+  </p>
+  
+</footer>
+
+      </article>
+    </div>
+    
+
+<aside class="sidebar thirds">
+  <section class="first odd">
+
+    
+      <h1>About me</h1>
+    
+
+    <p>
+      
+        I&rsquo;m just a geek, interested in technology, product development &amp; management, game industry and other geeky stuff.
+      
+    </p>
+  </section>
+
+
+
+  
+  <ul class="sidebar-nav">
+    <li class="sidebar-nav-item">
+      <a target="_blank" href="https://github.com/maciejmroz/" title="https://github.com/maciejmroz/"><i class="fa fa-github fa-3x"></i></a>
+      
+      
+      <a target="_blank" href="https://twitter.com/maciejmroz/" title="https://twitter.com/maciejmroz/"><i class="fa fa-twitter fa-3x"></i></a>
+       
+      <a target="_blank" href="https://www.linkedin.com/in/mrozmaciej/" title="https://www.linkedin.com/in/mrozmaciej/"><i class="fa fa-linkedin fa-3x"></i></a>
+      
+      
+      <a target="_blank" href="https://www.facebook.com/maciej.mroz/" title="https://www.facebook.com/maciej.mroz/"><i class="fa fa-facebook fa-3x"></i></a>
+      
+      
+
+    
+    
+    </li>
+  </ul>
+
+  
+
+  
+    
+      <section class="odd">
+        
+          <h1>Categories</h1>
+        
+        
+          <li>
+            <a href="https://www.maciejmroz.com/categories/game-development/" title="Game Development" >Game Development</a>
+          </li>
+        
+          <li>
+            <a href="https://www.maciejmroz.com/categories/game-industry/" title="Game Industry" >Game Industry</a>
+          </li>
+        
+          <li>
+            <a href="https://www.maciejmroz.com/categories/product-management/" title="Product Management" >Product Management</a>
+          </li>
+        
+          <li>
+            <a href="https://www.maciejmroz.com/categories/programming/" title="Programming" >Programming</a>
+          </li>
+        
+          <li>
+            <a href="https://www.maciejmroz.com/categories/server-side/" title="Server Side" >Server Side</a>
+          </li>
+        
+          <li>
+            <a href="https://www.maciejmroz.com/categories/technology/" title="Technology" >Technology</a>
+          </li>
+        
+      </section>
+    
+  
+
+  
+  
+  
+    
+      <section class="even">
+        <h1>Recent Posts</h1>
+        <ul id="recent_posts">
+          
+            <li class="post">
+              <a href="/2015/01/01/beyond-virtualization/">Beyond virtualization</a>
+            </li>
+          
+            <li class="post">
+              <a href="/2014/11/04/ltv-of-a-service/">LTV of a service</a>
+            </li>
+          
+            <li class="post">
+              <a href="/2013/09/22/functional-programming-trojan-horse/">Functional programming trojan horse</a>
+            </li>
+          
+            <li class="post">
+              <a href="/2013/09/09/am-i-a-marketing-person-now/">Am I a marketing person now?</a>
+            </li>
+          
+            <li class="post">
+              <a href="/2013/05/04/c11-goodness/">C&#43;&#43;11 Goodness</a>
+            </li>
+          
+            <li class="post">
+              <a href="/2013/03/09/the-structure-in-unstructured-data/">The structure in unstructured data</a>
+            </li>
+          
+        </ul>
+      </section>
+    
+  
+
+</aside>
+
+  </div>
+</div>
+
+<footer role="contentinfo">
+  <p>Copyright &copy; 2016 Maciej Mróz - <a href="https://www.maciejmroz.com/license/">License</a> -
+  <span class="credit">Powered by <a target="_blank" href="https://gohugo.io">Hugo</a> and <a target="_blank" href="https://github.com/parsiya/hugo-octopress/">Hugo-Octopress</a> theme.
+</p>
+
+</footer>
+
+
+<script>
+  var _gaq=[['_setAccount','UA-88050305-1'],['_trackPageview']];
+  (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+  g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+  s.parentNode.insertBefore(g,s)}(document,'script'));
+</script>
+
+</body>
+</html>
+

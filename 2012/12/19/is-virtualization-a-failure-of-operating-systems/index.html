@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width,minimum-scale=1,maximum-scale=1">
+
+  
+  
+  <link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+  <link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+  
+
+  
+  <title>Is virtualization a failure of operating systems?</title>
+
+  
+  
+  <link rel="stylesheet" href="https://www.maciejmroz.com/css/hugo-octopress.css">
+
+  
+  
+
+  
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+
+  
+  <link href="https://www.maciejmroz.com/favicon.png" rel="icon">
+
+  
+  
+  
+
+  
+
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+
+  <meta name="author" content="Maciej Mróz">
+
+  
+  <meta name="generator" content="Hugo 0.17" />
+
+  
+  
+
+</head>
+<body>
+
+
+<header role="banner"><hgroup>
+  
+  <h1><a href="https://www.maciejmroz.com/">Maciej Mróz Personal Blog</a></h1>
+    <h2>Because why not</h2>
+</hgroup></header>
+
+
+<nav role="navigation">
+
+<ul class="main-navigation">
+  
+  
+    
+      <li><a href="https://www.maciejmroz.com/" title="Blog">Blog</a></li>
+    
+  
+    
+      <li><a href="https://www.maciejmroz.com/demoscene" title="Demoscene" >Demoscene</a></li>
+    
+  
+</ul>
+
+
+<ul class="subscription">
+  
+
+</ul>
+
+
+</nav>
+
+
+<div id="main">
+  <div id="content">
+    <div>
+      <article class="hentry" role="article">
+
+        
+        
+
+<header>
+    <p class="meta">Dec 19, 2012
+         - 2 minute read 
+        
+
+        
+        
+        
+            - <a class="label" href="https://www.maciejmroz.com/categories/technology/">Technology </a><a class="label" href="https://www.maciejmroz.com/categories/server-side/">Server Side </a>
+        
+    </p>
+    <h1 class="entry-title">
+         Is virtualization a failure of operating systems? 
+    </h1>
+</header>
+
+
+        <div class="entry-content">
+          
+          
+          
+          <p>One thing has hit me while watching of this year&rsquo;s LinuxCon Europe presentations - one of reasons virtualization exists in the first place is operating system inability to properly isolate the applications from each other. Look at it this way: the role of operating systems is abstracting the physical hardware from the applications. And what is the role of hypervisor? Abstracting the hardware from the opertaing system(s) … Which makes the operating system an application running under the hypervisor, doesn&rsquo;t it?</p>
+
+<p>Now, let&rsquo;s think of it from other angle - why are we using virtualization? We are virtualizing applications, and operating system is only a required intermediary. Typical workload of virtual machine is exactly one application (in general case this is one-to-many relationship, because often single application spans multiple VMs). We do this partly to achieve good utilization of physical hardware, but also to achieve isolation at the level close to &ldquo;physical box per every application&rdquo;. Not as secure, but conceptually equivalent.</p>
+
+<p>In fact, this level of isolation is desireable on the desktop, too. VM to run untrusted USB stick? Seems like a good idea, and that&rsquo;s only one of possible use cases. If we are running entire operating system just to run one application, isn&rsquo;t it a waste? What can run under the hypervisor doesn&rsquo;t really have to be a complete operating system. There are projects like Erlang on Xen (<a href="http://erlangonxen.org">erlangonxen.org</a>) or Mirage that seem to skip the OS and talk straight to the hypervisor API - I am not familiar with the implementation details of these projects, but that seems to be general idea. And that makes hypervisor … an operating system. An operating system that opens up plethora of new and exciting possibilities, and one much better fit for todays world - but still an operating system.</p>
+
+        </div>
+        
+
+<footer>
+  <p class="meta">
+    <span class="byline author vcard">Posted by <span class="fn">Maciej Mróz</span></span>
+    
+    <time>Dec 19, 2012</time>
+    
+      <span class="categories">
+        Tags:
+        
+          <a class="category" href="https://www.maciejmroz.com/tags/vierualization">Vierualization</a>  
+    
+    </span>
+  </p>
+
+  
+  
+
+  
+
+  <p class="meta">
+    
+        <a class="basic-alignment left" href="https://www.maciejmroz.com/2012/12/01/what-can-one-day-of-coding-bring/" title="What can one day of coding bring?">What can one day of coding bring?</a>
+    
+
+    
+      <a class="basic-alignment right" href="https://www.maciejmroz.com/2013/01/04/simulating-loot-based-virtual-economy/" title="Simulating loot based virtual economy">Simulating loot based virtual economy</a>
+    
+  </p>
+  
+</footer>
+
+      </article>
+    </div>
+    
+
+<aside class="sidebar thirds">
+  <section class="first odd">
+
+    
+      <h1>About me</h1>
+    
+
+    <p>
+      
+        I&rsquo;m just a geek, interested in technology, product development &amp; management, game industry and other geeky stuff.
+      
+    </p>
+  </section>
+
+
+
+  
+  <ul class="sidebar-nav">
+    <li class="sidebar-nav-item">
+      <a target="_blank" href="https://github.com/maciejmroz/" title="https://github.com/maciejmroz/"><i class="fa fa-github fa-3x"></i></a>
+      
+      
+      <a target="_blank" href="https://twitter.com/maciejmroz/" title="https://twitter.com/maciejmroz/"><i class="fa fa-twitter fa-3x"></i></a>
+       
+      <a target="_blank" href="https://www.linkedin.com/in/mrozmaciej/" title="https://www.linkedin.com/in/mrozmaciej/"><i class="fa fa-linkedin fa-3x"></i></a>
+      
+      
+      <a target="_blank" href="https://www.facebook.com/maciej.mroz/" title="https://www.facebook.com/maciej.mroz/"><i class="fa fa-facebook fa-3x"></i></a>
+      
+      
+
+    
+    
+    </li>
+  </ul>
+
+  
+
+  
+    
+      <section class="odd">
+        
+          <h1>Categories</h1>
+        
+        
+          <li>
+            <a href="https://www.maciejmroz.com/categories/game-development/" title="Game Development" >Game Development</a>
+          </li>
+        
+          <li>
+            <a href="https://www.maciejmroz.com/categories/game-industry/" title="Game Industry" >Game Industry</a>
+          </li>
+        
+          <li>
+            <a href="https://www.maciejmroz.com/categories/product-management/" title="Product Management" >Product Management</a>
+          </li>
+        
+          <li>
+            <a href="https://www.maciejmroz.com/categories/programming/" title="Programming" >Programming</a>
+          </li>
+        
+          <li>
+            <a href="https://www.maciejmroz.com/categories/server-side/" title="Server Side" >Server Side</a>
+          </li>
+        
+          <li>
+            <a href="https://www.maciejmroz.com/categories/technology/" title="Technology" >Technology</a>
+          </li>
+        
+      </section>
+    
+  
+
+  
+  
+  
+    
+      <section class="even">
+        <h1>Recent Posts</h1>
+        <ul id="recent_posts">
+          
+            <li class="post">
+              <a href="/2015/01/01/beyond-virtualization/">Beyond virtualization</a>
+            </li>
+          
+            <li class="post">
+              <a href="/2014/11/04/ltv-of-a-service/">LTV of a service</a>
+            </li>
+          
+            <li class="post">
+              <a href="/2013/09/22/functional-programming-trojan-horse/">Functional programming trojan horse</a>
+            </li>
+          
+            <li class="post">
+              <a href="/2013/09/09/am-i-a-marketing-person-now/">Am I a marketing person now?</a>
+            </li>
+          
+            <li class="post">
+              <a href="/2013/05/04/c11-goodness/">C&#43;&#43;11 Goodness</a>
+            </li>
+          
+            <li class="post">
+              <a href="/2013/03/09/the-structure-in-unstructured-data/">The structure in unstructured data</a>
+            </li>
+          
+        </ul>
+      </section>
+    
+  
+
+</aside>
+
+  </div>
+</div>
+
+<footer role="contentinfo">
+  <p>Copyright &copy; 2016 Maciej Mróz - <a href="https://www.maciejmroz.com/license/">License</a> -
+  <span class="credit">Powered by <a target="_blank" href="https://gohugo.io">Hugo</a> and <a target="_blank" href="https://github.com/parsiya/hugo-octopress/">Hugo-Octopress</a> theme.
+</p>
+
+</footer>
+
+
+<script>
+  var _gaq=[['_setAccount','UA-88050305-1'],['_trackPageview']];
+  (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+  g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+  s.parentNode.insertBefore(g,s)}(document,'script'));
+</script>
+
+</body>
+</html>
+

@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width,minimum-scale=1,maximum-scale=1">
+
+  
+  
+  <link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+  <link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+  
+
+  
+  <title>LTV of a service</title>
+
+  
+  
+  <link rel="stylesheet" href="https://www.maciejmroz.com/css/hugo-octopress.css">
+
+  
+  
+
+  
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+
+  
+  <link href="https://www.maciejmroz.com/favicon.png" rel="icon">
+
+  
+  
+  
+
+  
+
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+
+  <meta name="author" content="Maciej Mróz">
+
+  
+  <meta name="generator" content="Hugo 0.17" />
+
+  
+  
+
+</head>
+<body>
+
+
+<header role="banner"><hgroup>
+  
+  <h1><a href="https://www.maciejmroz.com/">Maciej Mróz Personal Blog</a></h1>
+    <h2>Because why not</h2>
+</hgroup></header>
+
+
+<nav role="navigation">
+
+<ul class="main-navigation">
+  
+  
+    
+      <li><a href="https://www.maciejmroz.com/" title="Blog">Blog</a></li>
+    
+  
+    
+      <li><a href="https://www.maciejmroz.com/demoscene" title="Demoscene" >Demoscene</a></li>
+    
+  
+</ul>
+
+
+<ul class="subscription">
+  
+
+</ul>
+
+
+</nav>
+
+
+<div id="main">
+  <div id="content">
+    <div>
+      <article class="hentry" role="article">
+
+        
+        
+
+<header>
+    <p class="meta">Nov 4, 2014
+         - 4 minute read 
+        
+
+        
+        
+        
+            - <a class="label" href="https://www.maciejmroz.com/categories/product-management/">Product Management </a>
+        
+    </p>
+    <h1 class="entry-title">
+         LTV of a service 
+    </h1>
+</header>
+
+
+        <div class="entry-content">
+          
+          
+          
+          <p>A little story today. It goes like this. I drop by one of our teams, and within completely different discussion I get asked this very &ldquo;simple&rdquo; question:</p>
+
+<blockquote>
+<p>&ldquo;Can we overlay an actual development team cost on top of product revenues so that we know if we are in the red or in the green?&rdquo;</p>
+</blockquote>
+
+<p>If you haven&rsquo;t noticed yet, there&rsquo;s a flaw in this question. The problem is, it simply doesn&rsquo;t make sense from economic point of view. For any project in any industry one thing is true: investment into project comes before realizing profit from that project. It&rsquo;s pure logic, you just can&rsquo;t defeat causality. Depending on the industry the distribution of investment and revenue over time axis will differ, but it might look like this:</p>
+
+<p><img src="/img/investment-vs-revenue_300.jpg" alt="investment vs revenue_300" /></p>
+
+<p>This offset between investment and revenue is the core of the problem: current development costs are <strong>always</strong> out of sync with current revenue. Depending on the industry and project the gap will obviously vary but it&rsquo;s always there. This is relatively simple and intiuitive concept when we talk about project-based work but it becomes somewhat more complex when we talk about online games, which are services. Some successful online games (like World of Warcraft) have been with us for a long time, but this is only because their developers keep working on them. In other words, the investment is continuous, and so is revenue (both curves do not have to be smooth!). These games wouldn&rsquo;t have survived if they remained static in their entire life cycle, they evolved and changed together with their player base. In the world of game services, there&rsquo;s huge overlap between the two curves from graph above but the truth remains: current investments create <strong>future</strong> profits. Nothing new here, move along, and of post? Not really, this is where the fun actually begins.</p>
+
+<p>Let&rsquo;s talk about something I decided to call <strong>service decay model</strong>. What happens to the service once we completely stop development and leave only essential stuff: server operations, customer support, traffic acquisition? How long before it no longer makes sense to keep it running? If the product becomes static, it will continue to make money, only less and less every month. The decline does not happen overnight, and the tail is very long, but (with rare exceptions) we can safely assume that there&rsquo;s some upper cap on total profits that we can extract from service in the period between now and before killing it completely at some unknown point in future. This upper cap is life time value (LTV) of a service. Let&rsquo;s call it LTVS, I love abbreviations (on a more serious side, economists/financial folks probably have some more established name for this). We have no way to know LTVS, we can only try to build model that predicts it. Building predictive models is so hardcore math that Steve Jobs would just say it&rsquo;s magical (you should build that model anyway, just because everyone sucks at predictions). What is interesting is that LTVS lets us define the value of current development: it is the <strong>change</strong> it causes to LTVS. In other words: <strong>The feature is profitable if the increase in future revenue is bigger than the cost of implementing the feature.</strong> To put it in pseudo equation form: Cost(feature) &lt; delta LTVS. Why is that stuff important?</p>
+
+<ol>
+<li>When you are early in the service life, it is &ldquo;sink or swim&rdquo;, it has to grow or you should just cut your losses and move on.</li>
+<li>When you are late in the service life, you should stop development way, way before you are in the red (in terms of service revenue vs development costs). When? When you no longer add value.</li>
+<li>If your service gets huge, economy of scale comes into play - 0.1% improvement might still be worth it if you have 10M users.</li>
+<li>Pulling the plug on service (killing it from end user perspective) may come long time after dev team moved on to other stuff.</li>
+</ol>
+
+<p>By the way, this explains how larger companies came to the idea of separate product development (whose task is to deliver a product/service or make specific improvement/change in it) from operations (which is responsible for running the service day to day) and from marketing (which does user acquisition and community management). In theory it makes sense, but it also creates organizational silos and internal handoffs, along with numerous negative effects. You have been warned. An interesting (even if slightly bitter) thought to end this post is something I saw on Twitter few days ago: &ldquo;There are two kinds of product features, those that improve product value, and those that justify someones job&rdquo;.</p>
+
+        </div>
+        
+
+<footer>
+  <p class="meta">
+    <span class="byline author vcard">Posted by <span class="fn">Maciej Mróz</span></span>
+    
+    <time>Nov 4, 2014</time>
+    
+    </span>
+  </p>
+
+  
+  
+
+  
+
+  <p class="meta">
+    
+        <a class="basic-alignment left" href="https://www.maciejmroz.com/2013/09/22/functional-programming-trojan-horse/" title="Functional programming trojan horse">Functional programming trojan horse</a>
+    
+
+    
+      <a class="basic-alignment right" href="https://www.maciejmroz.com/2015/01/01/beyond-virtualization/" title="Beyond virtualization">Beyond virtualization</a>
+    
+  </p>
+  
+</footer>
+
+      </article>
+    </div>
+    
+
+<aside class="sidebar thirds">
+  <section class="first odd">
+
+    
+      <h1>About me</h1>
+    
+
+    <p>
+      
+        I&rsquo;m just a geek, interested in technology, product development &amp; management, game industry and other geeky stuff.
+      
+    </p>
+  </section>
+
+
+
+  
+  <ul class="sidebar-nav">
+    <li class="sidebar-nav-item">
+      <a target="_blank" href="https://github.com/maciejmroz/" title="https://github.com/maciejmroz/"><i class="fa fa-github fa-3x"></i></a>
+      
+      
+      <a target="_blank" href="https://twitter.com/maciejmroz/" title="https://twitter.com/maciejmroz/"><i class="fa fa-twitter fa-3x"></i></a>
+       
+      <a target="_blank" href="https://www.linkedin.com/in/mrozmaciej/" title="https://www.linkedin.com/in/mrozmaciej/"><i class="fa fa-linkedin fa-3x"></i></a>
+      
+      
+      <a target="_blank" href="https://www.facebook.com/maciej.mroz/" title="https://www.facebook.com/maciej.mroz/"><i class="fa fa-facebook fa-3x"></i></a>
+      
+      
+
+    
+    
+    </li>
+  </ul>
+
+  
+
+  
+    
+      <section class="odd">
+        
+          <h1>Categories</h1>
+        
+        
+          <li>
+            <a href="https://www.maciejmroz.com/categories/game-development/" title="Game Development" >Game Development</a>
+          </li>
+        
+          <li>
+            <a href="https://www.maciejmroz.com/categories/game-industry/" title="Game Industry" >Game Industry</a>
+          </li>
+        
+          <li>
+            <a href="https://www.maciejmroz.com/categories/product-management/" title="Product Management" >Product Management</a>
+          </li>
+        
+          <li>
+            <a href="https://www.maciejmroz.com/categories/programming/" title="Programming" >Programming</a>
+          </li>
+        
+          <li>
+            <a href="https://www.maciejmroz.com/categories/server-side/" title="Server Side" >Server Side</a>
+          </li>
+        
+          <li>
+            <a href="https://www.maciejmroz.com/categories/technology/" title="Technology" >Technology</a>
+          </li>
+        
+      </section>
+    
+  
+
+  
+  
+  
+    
+      <section class="even">
+        <h1>Recent Posts</h1>
+        <ul id="recent_posts">
+          
+            <li class="post">
+              <a href="/2015/01/01/beyond-virtualization/">Beyond virtualization</a>
+            </li>
+          
+            <li class="post">
+              <a href="/2014/11/04/ltv-of-a-service/">LTV of a service</a>
+            </li>
+          
+            <li class="post">
+              <a href="/2013/09/22/functional-programming-trojan-horse/">Functional programming trojan horse</a>
+            </li>
+          
+            <li class="post">
+              <a href="/2013/09/09/am-i-a-marketing-person-now/">Am I a marketing person now?</a>
+            </li>
+          
+            <li class="post">
+              <a href="/2013/05/04/c11-goodness/">C&#43;&#43;11 Goodness</a>
+            </li>
+          
+            <li class="post">
+              <a href="/2013/03/09/the-structure-in-unstructured-data/">The structure in unstructured data</a>
+            </li>
+          
+        </ul>
+      </section>
+    
+  
+
+</aside>
+
+  </div>
+</div>
+
+<footer role="contentinfo">
+  <p>Copyright &copy; 2016 Maciej Mróz - <a href="https://www.maciejmroz.com/license/">License</a> -
+  <span class="credit">Powered by <a target="_blank" href="https://gohugo.io">Hugo</a> and <a target="_blank" href="https://github.com/parsiya/hugo-octopress/">Hugo-Octopress</a> theme.
+</p>
+
+</footer>
+
+
+<script>
+  var _gaq=[['_setAccount','UA-88050305-1'],['_trackPageview']];
+  (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+  g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+  s.parentNode.insertBefore(g,s)}(document,'script'));
+</script>
+
+</body>
+</html>
+
