@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Maciej Mróz Personal Blog</title>
+    <link>https://maciejmroz.com/tags/hugo/index.xml</link>
+    <description>Recent content on Maciej Mróz Personal Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <atom:link href="https://maciejmroz.com/tags/hugo/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Moving the blog to Hugo</title>
+      <link>https://maciejmroz.com/2016/11/26/moving-the-blog-to-hugo/</link>
+      <pubDate>Sat, 26 Nov 2016 16:03:03 +0100</pubDate>
+      
+      <guid>https://maciejmroz.com/2016/11/26/moving-the-blog-to-hugo/</guid>
+      <description>
+
+&lt;p&gt;Quite a chunk of time has passed since my last update to this blog. While primary reason is my super busy life (on both proffessional and personal fronts) there was also another one I have finally addressed, along with a few extras. The reason was that over the years I simply grew tired of WordPress software. The point to migrate away from it occupied my TODO list for too long. I am not going to bash WP here, I used it for many years, and for that I am grateful to its authors. However, for me at least the time has come to move towards something else.&lt;/p&gt;
+
+&lt;h2 id=&#34;back-to-simplicity&#34;&gt;Back to simplicity&lt;/h2&gt;
+
+&lt;p&gt;I remember that when I was in high school my friend was running entire e-commerce site using static HTML generator written in Perl, combined with some CGI scripts to chandle checkout process. Going even further back, I remember the times when I actually used notepad to edit HTML 3 files, and upload that with FTP over a 28k modem connection to a hosting provider. Things were simple back then, and I truly miss that simplicity.&lt;/p&gt;
+
+&lt;p&gt;Having to run entire LAMP stack on my own just to run simple website is standing contrary to the rule of keeping things simple. That&amp;rsquo;s exactly what I was doing for the past few years, and that&amp;rsquo;s what I wanted to change. This is the primary reason I decided to look at static website generators as a new blogging platform. All these CMS systems have been created for people who don&amp;rsquo;t know their way around computers. Hackers know better :)&lt;/p&gt;
+
+&lt;p&gt;There is quite a few modern generators to choose from. My initial favorite was &lt;a href=&#34;http://octopress.org/&#34;&gt;Octopress&lt;/a&gt;, but eventually I settled on &lt;a href=&#34;https://gohugo.io/&#34;&gt;Hugo&lt;/a&gt; but with Octopress-inspited theme. Hugo is simple, easy to customize, trivial to install, comes with built in webserver that watches file changes, and reloads the pages in your browser just when you save source file via JavaScript magic. It&amp;rsquo;s also very, very fast - regenerating this website in its entirety takes 200-300 ms on my MacBook Pro.&lt;/p&gt;
+
+&lt;p&gt;Hugo, similar to other generators, uses Markdown as source file format. I guess the format has been popularized by GitHub (and likely other hosted Git solutions) with automatic rendering of README.md in the repositories. Regardless of the reason, it is well known and liked by hacker types. It has some limitations, but also lets you focus on the content and not its form. With Hugo you can easily work around Markdown limitations by using your own macros that expand to HTML during rendering. So, while 99% of the time sticking to plain Markdown syntax is enough, you are not left alone in the corner cases.&lt;/p&gt;
+
+&lt;h2 id=&#34;github-pages&#34;&gt;GitHub Pages&lt;/h2&gt;
+
+&lt;p&gt;GitHub has launched &lt;a href=&#34;https://pages.github.com/&#34;&gt;GitHub Pages&lt;/a&gt; quite a while ago. It&amp;rsquo;s totally free service that let&amp;rsquo;s you serve static web content to the world. There are traffic limitations but not at the level that matters for a personal blog. Should you somehow run into these limitations, there are plenty of other options, Amazon S3 among them. For now, sticking to GitHub gives me very nice publishing flow. In your website directory:&lt;/p&gt;
+
+&lt;div class=&#34;highlight&#34; style=&#34;background: #272822&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span&gt;&lt;/span&gt;MaciekMBP:hugo maciek$ hugo
+Started building sites ...
+Built site &lt;span style=&#34;color: #66d9ef&#34;&gt;for&lt;/span&gt; language en:
+&lt;span style=&#34;color: #ae81ff&#34;&gt;0&lt;/span&gt; draft content
+&lt;span style=&#34;color: #ae81ff&#34;&gt;0&lt;/span&gt; future content
+&lt;span style=&#34;color: #ae81ff&#34;&gt;0&lt;/span&gt; expired content
+&lt;span style=&#34;color: #ae81ff&#34;&gt;35&lt;/span&gt; pages created
+&lt;span style=&#34;color: #ae81ff&#34;&gt;0&lt;/span&gt; non-page files copied
+&lt;span style=&#34;color: #ae81ff&#34;&gt;6&lt;/span&gt; paginator pages created
+&lt;span style=&#34;color: #ae81ff&#34;&gt;45&lt;/span&gt; tags created
+&lt;span style=&#34;color: #ae81ff&#34;&gt;17&lt;/span&gt; categories created
+total in &lt;span style=&#34;color: #ae81ff&#34;&gt;227&lt;/span&gt; ms
+MaciekMBP:hugo maciek$ &lt;span style=&#34;color: #f8f8f2&#34;&gt;cd&lt;/span&gt; public
+MaciekMBP:public maciek$ git add -A
+MaciekMBP:public maciek$ git commit -m &lt;span style=&#34;color: #e6db74&#34;&gt;&amp;quot;New version info&amp;quot;&lt;/span&gt;
+MaciekMBP:public maciek$ git push
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;That&amp;rsquo;s all, new site version is live!!! Of course you can (and should :) ) use version control tools for your source files, too. For ambitious types: implement building and publishing of your website via continuous integration server :)&lt;/p&gt;
+
+&lt;h2 id=&#34;cloudflare&#34;&gt;CloudFlare&lt;/h2&gt;
+
+&lt;p&gt;Serving static website from GitHub is very quick, and supports HTTPS within github.io domain. What if you want HTTPS on your own domain? Here is where &lt;a href=&#34;https://www.cloudflare.com/&#34;&gt;CloudFlare&lt;/a&gt; steps in. Within their &lt;strong&gt;free&lt;/strong&gt; plan you can get not only free HTTPS, but with great options like: redirecting HTTP straffic to HTTPS, turning on HSTS (HTTP Strict Stransport Security) for the site, or even forcing TLS 1.3 use (beta feature). While going crazy with security on personal blog that&amp;rsquo;s available on GitHub anyway may seem like an overkill, I strongly believe that in the era of &lt;a href=&#34;https://letsencrypt.org/&#34;&gt;Let&amp;rsquo;s Encrypt&lt;/a&gt;, non-encrypted HTTP traffic should just die. Using CloudFlare has an additional advantage of speed: it&amp;rsquo;s not just about encryption, but also a CDN sitting in front of GitHub. To make it even sweeter, CloudFlare fully supports HTTP/2 and SPDY protocols.&lt;/p&gt;
+
+&lt;p&gt;And one more thing: thanks to CloudFlare &lt;a href=&#34;https://blog.cloudflare.com/introducing-cname-flattening-rfc-compliant-cnames-at-a-domains-root/&#34;&gt;CNAME Flattening&lt;/a&gt; you can have CNAME at top level of your domain &lt;strong&gt;without breaking the RFC&lt;/strong&gt;. As a result, the address for this blog from now on will be just &lt;a href=&#34;https://maciejmroz.com&#34;&gt;https://maciejmroz.com&lt;/a&gt;, served to you at zero cost in &amp;ldquo;cloud native&amp;rdquo; way :)&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

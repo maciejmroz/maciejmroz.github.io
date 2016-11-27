@@ -2,18 +2,18 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Maciej Mróz Personal Blog</title>
-    <link>/categories/software-engineering/index.xml</link>
+    <link>https://maciejmroz.com/categories/software-engineering/index.xml</link>
     <description>Recent content on Maciej Mróz Personal Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <atom:link href="/categories/software-engineering/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://maciejmroz.com/categories/software-engineering/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>What is Agile, anyway?</title>
-      <link>/2012/04/27/what-is-agile-anyway/</link>
+      <link>https://maciejmroz.com/2012/04/27/what-is-agile-anyway/</link>
       <pubDate>Fri, 27 Apr 2012 00:00:00 +0000</pubDate>
       
-      <guid>/2012/04/27/what-is-agile-anyway/</guid>
+      <guid>https://maciejmroz.com/2012/04/27/what-is-agile-anyway/</guid>
       <description>&lt;p&gt;I was recently confronted with very interesting misconception: that Agile and SCRUM are the same thing. It really got me thinking. First, it means that one must be very careful when using the word &amp;ldquo;agile&amp;rdquo; in software development context. Less obvious: SCRUM is de facto standard agile method today, and very often the only one people know or heard about.&lt;/p&gt;
 
 &lt;p&gt;Wikipedia lists &lt;a href=&#34;http://en.wikipedia.org/wiki/Agile_software_development&#34;&gt;10+ different methods&lt;/a&gt; falling under &amp;ldquo;Agile&amp;rdquo; umbrella. It&amp;rsquo;s no suprise because agile manifesto is very vague and does not really tell much (if anything) about the &lt;strong&gt;how&lt;/strong&gt; part. Specific methods declared as &amp;ldquo;agile&amp;rdquo; are simply inspired by these principles. Agile software development is a way of thinking, or even a philosophy, developed as a reaction to shortcomings of &amp;ldquo;traditional&amp;rdquo; methods. While this religious/flamewar flavour may sound dangerous, it&amp;rsquo;s a fact that SCRUM (as an example) solves some of these shortcomings in a very neat and precise way. But is Agile any better?&lt;/p&gt;

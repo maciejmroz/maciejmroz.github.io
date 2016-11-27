@@ -2,18 +2,18 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Maciej Mróz Personal Blog</title>
-    <link>/categories/mobile/index.xml</link>
+    <link>https://maciejmroz.com/categories/mobile/index.xml</link>
     <description>Recent content on Maciej Mróz Personal Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <atom:link href="/categories/mobile/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://maciejmroz.com/categories/mobile/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Is the era of dedicated gaming devices coming to an end?</title>
-      <link>/2012/02/22/is-the-era-of-dedicated-gaming-devices-coming-to-an-end/</link>
+      <link>https://maciejmroz.com/2012/02/22/is-the-era-of-dedicated-gaming-devices-coming-to-an-end/</link>
       <pubDate>Wed, 22 Feb 2012 00:00:00 +0000</pubDate>
       
-      <guid>/2012/02/22/is-the-era-of-dedicated-gaming-devices-coming-to-an-end/</guid>
+      <guid>https://maciejmroz.com/2012/02/22/is-the-era-of-dedicated-gaming-devices-coming-to-an-end/</guid>
       <description>&lt;p&gt;Today was the day when PlayStation Vita launched worldwide. I had the chance to play most of the launch games already during GDC Europe last August and I think that both hardware and launch lineup are impressive. But I didn&amp;rsquo;t buy PS Vita on launch. It&amp;rsquo;s probably a very sad day for Sony, bacause &amp;ldquo;PlayStation&amp;rdquo; is my religion (on Facebook, at least :) ).&lt;/p&gt;
 
 &lt;p&gt;What happended? I faced the truth - mainstream mobile gaming is already on Android and iOS, and a lot of titles are released every day. I know that every single developer out there is working on these platforms, and they don&amp;rsquo;t mind selling the game for $1-$5. You can&amp;rsquo;t possibly deny the trends - these devices are the new player in the console market. Just a few months ago I have written (on this blog) that there&amp;rsquo;s not much danger to Vita from the iOS/Android camp. I hate to admit that, but I might have been wrong. Yes, phones and tablets might lose on overall experience, but at the same time they win hands down when it goes to price and convenience. I actually found myself playing games on both iPhone and iPad in past six months or so. And I enjoyed doing it, at least for a short while.&lt;/p&gt;
@@ -26,10 +26,10 @@
     
     <item>
       <title>Some thoughts on the mobile revolution</title>
-      <link>/2012/01/07/some-thoughts-on-the-mobile-revolution/</link>
+      <link>https://maciejmroz.com/2012/01/07/some-thoughts-on-the-mobile-revolution/</link>
       <pubDate>Sat, 07 Jan 2012 00:00:00 +0000</pubDate>
       
-      <guid>/2012/01/07/some-thoughts-on-the-mobile-revolution/</guid>
+      <guid>https://maciejmroz.com/2012/01/07/some-thoughts-on-the-mobile-revolution/</guid>
       <description>&lt;p&gt;People keep talking about &amp;ldquo;mobile&amp;rdquo;, how it&amp;rsquo;s going to be very important (i.e. &amp;ldquo;we have &lt;strong&gt;mobile first&lt;/strong&gt; policy&amp;rdquo; &amp;hellip;) but recently it really struck me: most talking about mobile revolution have abolutely no idea. They just don&amp;rsquo;t get it. Which is a bit sad, actually, especially if you think that big media companies are still struggling to make sense of what to do with classic, web-based Internet. Mobile is a revolution can only be understood by mobile users. I remember when CEO of Bigpoint was talking on GDC Europe more than a year ago about buying everyone in his company an iPad. At that time I only thought &amp;ldquo;it&amp;rsquo;s nice&amp;rdquo;. But it was much more than that. It was an investment to create competitive advantage (and a very, very high ROI investment). There&amp;rsquo;s absolutely no way to understand smartphones, tablets and their features without actually using these things. Because it is &lt;strong&gt;that&lt;/strong&gt; disruptive.&lt;/p&gt;
 
 &lt;p&gt;Without previously experiencing these devices, one might believe that correct way of &amp;ldquo;going mobile&amp;rdquo; is to adjust user interface to fit on smaller screen, and ship. It&amp;rsquo;s great recipe for failure. Fitting existing content and PC-like user experience into something that is completely different? It cannot be made to work. It&amp;rsquo;s about entire user experience! Look at the usage pattern of mobile devices. When I pick up the phone, I want to something &lt;strong&gt;very specific, right now&lt;/strong&gt;. More often than not it is not my primary activity, so I don&amp;rsquo;t intend to waste too much time doing it. The thinking part is already behind me, now I am at the &amp;ldquo;doing&amp;rdquo; stage. This &amp;ldquo;right now&amp;rdquo; flow starts actually even before developer has any chance to interact with the user - it happens when an application is launched. Launching a web browser, going to website, and then doing something is just taking too long. It&amp;rsquo;s one the reasons we are seeing the &amp;ldquo;applification&amp;rdquo; of Internet (which is very interesting trend on its own, and it&amp;rsquo;s the very reason Google cannot afford to fail with Android).&lt;/p&gt;
@@ -52,10 +52,10 @@
     
     <item>
       <title>Onswipe - entering the era of tablet publishing</title>
-      <link>/2012/01/04/onswipe-entering-the-era-of-tablet-publishing/</link>
+      <link>https://maciejmroz.com/2012/01/04/onswipe-entering-the-era-of-tablet-publishing/</link>
       <pubDate>Wed, 04 Jan 2012 00:00:00 +0000</pubDate>
       
-      <guid>/2012/01/04/onswipe-entering-the-era-of-tablet-publishing/</guid>
+      <guid>https://maciejmroz.com/2012/01/04/onswipe-entering-the-era-of-tablet-publishing/</guid>
       <description>&lt;p&gt;Classic web is dying, even if slowly. I will write longer post about that soon. In the meantime, try to use Flipboard for a while … and you will notice that classic portals/blogs are just dinosaurs. They might not know it yet but it doesn&amp;rsquo;t change the facts.&lt;/p&gt;
 
 &lt;p&gt;If you are using WordPress, there is a cure called &lt;a href=&#34;http://www.onswipe.com&#34;&gt;Onswipe&lt;/a&gt;. It&amp;rsquo;s not perfect (in fact it is buggy as hell) but shows a lot of promise. Onswipe is a WordPress plugin that provides Flipboard-like experience on an IPad using HTML5. Enter this blog from an iPad, and you will enter completely different world. I suppose it should also work on Android tablets, after all it&amp;rsquo;s just HTML. Onswipe is interesting for two resons. The first reason (and the reason for it&amp;rsquo;s existence) is that it essentially changes website into an &lt;strong&gt;application&lt;/strong&gt;. The second reason it is interesting is because these guys got &lt;a href=&#34;http://venturebeat.com/2011/06/03/onswipe-funding/&#34;&gt;$5M in funding&lt;/a&gt; to write a WordPress plugin :) Which leads to following conclusions:&lt;/p&gt;
@@ -69,10 +69,10 @@
     
     <item>
       <title>Is it time to try an Adroid phone now?</title>
-      <link>/2011/05/08/is-it-time-to-try-an-adroid-phone-now/</link>
+      <link>https://maciejmroz.com/2011/05/08/is-it-time-to-try-an-adroid-phone-now/</link>
       <pubDate>Sun, 08 May 2011 00:00:00 +0000</pubDate>
       
-      <guid>/2011/05/08/is-it-time-to-try-an-adroid-phone-now/</guid>
+      <guid>https://maciejmroz.com/2011/05/08/is-it-time-to-try-an-adroid-phone-now/</guid>
       <description>&lt;p&gt;I&amp;rsquo;ve been an IPhone user for loong time. While I did not own the &amp;ldquo;1G&amp;rdquo;, I have my 3G for more than two years now. And, to be honest, it begins to show its age. For quite some time, it wasn&amp;rsquo;t getting any of the new cool stuff in iOS, and iOS version 4 actually should have never been released on iPhone 3G because it makes a lot of stuff run noticeably slower. So, the question is whether to upgrade to iPhone 4.&lt;/p&gt;
 
 &lt;p&gt;The biggest advantages of the iPhone right now are: retina display and iOS (again, I believe that it is the best mobile system out there right now). But the rest of the world wasn&amp;rsquo;t in standstill during the past two years. There are Android based phones that at least on paper look better than iPhone 4 (except for the display, nothing out there can really match it) - fast dual core CPU, more memory, better GPU, better camera, comparable internal flash memory, Flash Player support, NFC chip &amp;hellip; iPhone 4 has none of these, and is more expensive. It also is a very safe choice and an upgrade in every way possible over the iPhone 3G I am using right now.&lt;/p&gt;
@@ -85,20 +85,20 @@
     
     <item>
       <title>What to expect from iPad 2</title>
-      <link>/2011/01/20/what-to-expect-from-ipad-2/</link>
+      <link>https://maciejmroz.com/2011/01/20/what-to-expect-from-ipad-2/</link>
       <pubDate>Thu, 20 Jan 2011 00:00:00 +0000</pubDate>
       
-      <guid>/2011/01/20/what-to-expect-from-ipad-2/</guid>
+      <guid>https://maciejmroz.com/2011/01/20/what-to-expect-from-ipad-2/</guid>
       <description>&lt;p&gt;Before CES, I&amp;rsquo;d say &amp;ldquo;not much&amp;rdquo;. The thing is, today Apple owns the tablet market (if defined as dedicated hardware running dedicated OS), there is almost no competition out there. But it is on the horizon. Take Motorola Xoom as an example. Hardware specs are way beyond iPad 1.0, and if Android 3.0 is going to be that good as people claim, Apple is going to be in real trouble if they release underpowered device. And there will be more and more Android tablets as we go deeper into 2011 &amp;hellip; My guesses for iPad 2 are: SD card slot, front facing camera, and 1GB of RAM. SD card slot is fairly cheap way to greatly improve the device, and is very much in line with intended use - something that would replace laptop for basic photo management tasks. Front facing camera - not much point to discuss. Memory is more interesting - a month ago I&amp;rsquo;d bet on 512 MB, exactly the same as in iPhone 4. But after CES it just sounds cheap and limited. Apple has tradition of selling as little as they can for as much as possible, but I don&amp;rsquo;t really think they can get away with that. I think this is very moderate spec that should be considered basis for more. Retina display? Dual core CPU? Faster GPU? USB slot? They need another iPhone 4, and this time without the antennagate. Right now, after CES, anything is possible.&lt;/p&gt;
 </description>
     </item>
     
     <item>
       <title>Apple Tablet</title>
-      <link>/2010/02/06/apple-ipad-first-thoughts/</link>
+      <link>https://maciejmroz.com/2010/02/06/apple-ipad-first-thoughts/</link>
       <pubDate>Sat, 06 Feb 2010 11:52:02 +0100</pubDate>
       
-      <guid>/2010/02/06/apple-ipad-first-thoughts/</guid>
+      <guid>https://maciejmroz.com/2010/02/06/apple-ipad-first-thoughts/</guid>
       <description>&lt;p&gt;Apple tablet is no longer a mystery. The question now is whether it meets the expectations or fits any real needs :) Basically it is an oversized iPhone - 1024x768 multitouch display, 16-64 GB of flash memory, 1 GHz custom CPU, WiFi, Bluetooth etc, and it runs iPhone OS. I already have an iPhone. Is iPad going to perform better enough to justify buying additional device?&lt;/p&gt;
 
 &lt;p&gt;GMail support with push in the iPhone is most of the time sufficient for me. I rarely reply to mails directly from my iPhone, though. If something requires longer answer I usually just use normal computer for that. iPads bigger screen (and bigger virtual keyboard as a result) will surely improve experience here. I can actually imagine writing emails using this thing. Web browsing is where iPad is going to be a lot better than iPhone simply because of screen size and CPU performance (one of the things I noticed immediately at Apple videos is how smooth it runs, it&amp;rsquo;s super fast!). Web and mail if work well might alone be a selling point for people who don&amp;rsquo;t keep &lt;sup&gt;24&lt;/sup&gt;&amp;frasl;&lt;sub&gt;7&lt;/sub&gt; computer at home and actually do turn it on and off. In that scenario iPad is going to be very useful, offering browsing and mail experience very close to &amp;ldquo;full&amp;rdquo; but with instant access.&lt;/p&gt;

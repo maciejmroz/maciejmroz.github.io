@@ -2,18 +2,71 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Maciej Mróz Personal Blog</title>
-    <link>/categories/technology/index.xml</link>
+    <link>https://maciejmroz.com/categories/technology/index.xml</link>
     <description>Recent content on Maciej Mróz Personal Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <atom:link href="/categories/technology/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://maciejmroz.com/categories/technology/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Moving the blog to Hugo</title>
+      <link>https://maciejmroz.com/2016/11/26/moving-the-blog-to-hugo/</link>
+      <pubDate>Sat, 26 Nov 2016 16:03:03 +0100</pubDate>
+      
+      <guid>https://maciejmroz.com/2016/11/26/moving-the-blog-to-hugo/</guid>
+      <description>
+
+&lt;p&gt;Quite a chunk of time has passed since my last update to this blog. While primary reason is my super busy life (on both proffessional and personal fronts) there was also another one I have finally addressed, along with a few extras. The reason was that over the years I simply grew tired of WordPress software. The point to migrate away from it occupied my TODO list for too long. I am not going to bash WP here, I used it for many years, and for that I am grateful to its authors. However, for me at least the time has come to move towards something else.&lt;/p&gt;
+
+&lt;h2 id=&#34;back-to-simplicity&#34;&gt;Back to simplicity&lt;/h2&gt;
+
+&lt;p&gt;I remember that when I was in high school my friend was running entire e-commerce site using static HTML generator written in Perl, combined with some CGI scripts to chandle checkout process. Going even further back, I remember the times when I actually used notepad to edit HTML 3 files, and upload that with FTP over a 28k modem connection to a hosting provider. Things were simple back then, and I truly miss that simplicity.&lt;/p&gt;
+
+&lt;p&gt;Having to run entire LAMP stack on my own just to run simple website is standing contrary to the rule of keeping things simple. That&amp;rsquo;s exactly what I was doing for the past few years, and that&amp;rsquo;s what I wanted to change. This is the primary reason I decided to look at static website generators as a new blogging platform. All these CMS systems have been created for people who don&amp;rsquo;t know their way around computers. Hackers know better :)&lt;/p&gt;
+
+&lt;p&gt;There is quite a few modern generators to choose from. My initial favorite was &lt;a href=&#34;http://octopress.org/&#34;&gt;Octopress&lt;/a&gt;, but eventually I settled on &lt;a href=&#34;https://gohugo.io/&#34;&gt;Hugo&lt;/a&gt; but with Octopress-inspited theme. Hugo is simple, easy to customize, trivial to install, comes with built in webserver that watches file changes, and reloads the pages in your browser just when you save source file via JavaScript magic. It&amp;rsquo;s also very, very fast - regenerating this website in its entirety takes 200-300 ms on my MacBook Pro.&lt;/p&gt;
+
+&lt;p&gt;Hugo, similar to other generators, uses Markdown as source file format. I guess the format has been popularized by GitHub (and likely other hosted Git solutions) with automatic rendering of README.md in the repositories. Regardless of the reason, it is well known and liked by hacker types. It has some limitations, but also lets you focus on the content and not its form. With Hugo you can easily work around Markdown limitations by using your own macros that expand to HTML during rendering. So, while 99% of the time sticking to plain Markdown syntax is enough, you are not left alone in the corner cases.&lt;/p&gt;
+
+&lt;h2 id=&#34;github-pages&#34;&gt;GitHub Pages&lt;/h2&gt;
+
+&lt;p&gt;GitHub has launched &lt;a href=&#34;https://pages.github.com/&#34;&gt;GitHub Pages&lt;/a&gt; quite a while ago. It&amp;rsquo;s totally free service that let&amp;rsquo;s you serve static web content to the world. There are traffic limitations but not at the level that matters for a personal blog. Should you somehow run into these limitations, there are plenty of other options, Amazon S3 among them. For now, sticking to GitHub gives me very nice publishing flow. In your website directory:&lt;/p&gt;
+
+&lt;div class=&#34;highlight&#34; style=&#34;background: #272822&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span&gt;&lt;/span&gt;MaciekMBP:hugo maciek$ hugo
+Started building sites ...
+Built site &lt;span style=&#34;color: #66d9ef&#34;&gt;for&lt;/span&gt; language en:
+&lt;span style=&#34;color: #ae81ff&#34;&gt;0&lt;/span&gt; draft content
+&lt;span style=&#34;color: #ae81ff&#34;&gt;0&lt;/span&gt; future content
+&lt;span style=&#34;color: #ae81ff&#34;&gt;0&lt;/span&gt; expired content
+&lt;span style=&#34;color: #ae81ff&#34;&gt;35&lt;/span&gt; pages created
+&lt;span style=&#34;color: #ae81ff&#34;&gt;0&lt;/span&gt; non-page files copied
+&lt;span style=&#34;color: #ae81ff&#34;&gt;6&lt;/span&gt; paginator pages created
+&lt;span style=&#34;color: #ae81ff&#34;&gt;45&lt;/span&gt; tags created
+&lt;span style=&#34;color: #ae81ff&#34;&gt;17&lt;/span&gt; categories created
+total in &lt;span style=&#34;color: #ae81ff&#34;&gt;227&lt;/span&gt; ms
+MaciekMBP:hugo maciek$ &lt;span style=&#34;color: #f8f8f2&#34;&gt;cd&lt;/span&gt; public
+MaciekMBP:public maciek$ git add -A
+MaciekMBP:public maciek$ git commit -m &lt;span style=&#34;color: #e6db74&#34;&gt;&amp;quot;New version info&amp;quot;&lt;/span&gt;
+MaciekMBP:public maciek$ git push
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;That&amp;rsquo;s all, new site version is live!!! Of course you can (and should :) ) use version control tools for your source files, too. For ambitious types: implement building and publishing of your website via continuous integration server :)&lt;/p&gt;
+
+&lt;h2 id=&#34;cloudflare&#34;&gt;CloudFlare&lt;/h2&gt;
+
+&lt;p&gt;Serving static website from GitHub is very quick, and supports HTTPS within github.io domain. What if you want HTTPS on your own domain? Here is where &lt;a href=&#34;https://www.cloudflare.com/&#34;&gt;CloudFlare&lt;/a&gt; steps in. Within their &lt;strong&gt;free&lt;/strong&gt; plan you can get not only free HTTPS, but with great options like: redirecting HTTP straffic to HTTPS, turning on HSTS (HTTP Strict Stransport Security) for the site, or even forcing TLS 1.3 use (beta feature). While going crazy with security on personal blog that&amp;rsquo;s available on GitHub anyway may seem like an overkill, I strongly believe that in the era of &lt;a href=&#34;https://letsencrypt.org/&#34;&gt;Let&amp;rsquo;s Encrypt&lt;/a&gt;, non-encrypted HTTP traffic should just die. Using CloudFlare has an additional advantage of speed: it&amp;rsquo;s not just about encryption, but also a CDN sitting in front of GitHub. To make it even sweeter, CloudFlare fully supports HTTP/2 and SPDY protocols.&lt;/p&gt;
+
+&lt;p&gt;And one more thing: thanks to CloudFlare &lt;a href=&#34;https://blog.cloudflare.com/introducing-cname-flattening-rfc-compliant-cnames-at-a-domains-root/&#34;&gt;CNAME Flattening&lt;/a&gt; you can have CNAME at top level of your domain &lt;strong&gt;without breaking the RFC&lt;/strong&gt;. As a result, the address for this blog from now on will be just &lt;a href=&#34;https://maciejmroz.com&#34;&gt;https://maciejmroz.com&lt;/a&gt;, served to you at zero cost in &amp;ldquo;cloud native&amp;rdquo; way :)&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>Beyond virtualization</title>
-      <link>/2015/01/01/beyond-virtualization/</link>
+      <link>https://maciejmroz.com/2015/01/01/beyond-virtualization/</link>
       <pubDate>Thu, 01 Jan 2015 00:00:00 +0000</pubDate>
       
-      <guid>/2015/01/01/beyond-virtualization/</guid>
+      <guid>https://maciejmroz.com/2015/01/01/beyond-virtualization/</guid>
       <description>&lt;p&gt;I guess it&amp;rsquo;s time to sum up recent trends in how we build, deploy, and operate complex server side software. Virtualization and cloud computing have been with us for quite a while but right now the era of containers is coming, with entire Docker ecosystem paving the way. You might want to ask a very valid question: &amp;ldquo;What&amp;rsquo;s in it for me?&amp;rdquo; :) I will focus on business implications of the technology. But let&amp;rsquo;s set the context first.&lt;/p&gt;
 
 &lt;p&gt;The explosion of cloud computing in recent years literally changed the way we think. Well, you probably could treat Amazon EC2 instances as if they were ordinary machines, but &amp;ldquo;in the cloud&amp;rdquo;. That of course would be &lt;strong&gt;totally&lt;/strong&gt; missing the point. The key advantages of cloud computing are on the intersection of operations, software architecture and development - these cannot be realized without moving to true DevOps. Trying to slap &amp;ldquo;cloud computing&amp;rdquo; sticker on top of existing organization with IT/Operations/Development (add more if needed to fit your case) silos will not give anyone much value. Once you change your approach, you suddenly get the true benefits:&lt;/p&gt;
@@ -52,10 +105,10 @@ The real cloud computing usage scenarios could look like this:&lt;/li&gt;
     
     <item>
       <title>The structure in unstructured data</title>
-      <link>/2013/03/09/the-structure-in-unstructured-data/</link>
+      <link>https://maciejmroz.com/2013/03/09/the-structure-in-unstructured-data/</link>
       <pubDate>Sat, 09 Mar 2013 00:00:00 +0000</pubDate>
       
-      <guid>/2013/03/09/the-structure-in-unstructured-data/</guid>
+      <guid>https://maciejmroz.com/2013/03/09/the-structure-in-unstructured-data/</guid>
       <description>&lt;p&gt;Working with data is something I personally consider one of the coolest things one can do right now in the tech industry. Typically when someone thinks or talks about &amp;ldquo;Big Data&amp;rdquo; it implies petabyte data sets and Hadoop clusters spanning 100+ nodes. The truth is, even a lot smaller data and humbler infrastructure can provide great insights and drive the product/service innovation. To me its really a lot closer to &amp;ldquo;Smart Data&amp;rdquo; than &amp;ldquo;Big Data&amp;rdquo; - it doesn&amp;rsquo;t matter how big your data set is, but how much you are able to do with it, and how quickly.&lt;/p&gt;
 
 &lt;p&gt;In my workplace we run our own data gathering, storage, and processing. Our own code, our own infrastructure. Managed, architected, and even partially implemented by yours truly. What is special about our system is that compared to most commercial systems, we allow our products to report pretty much arbitrary data. There are very basic guidelines that must be met for standard metrics to work, but what is actually possible goes way beyond that. Product teams have access to raw data and can create their own processing tools if they want/need to. They can also use Hive to query the data if they want to - very often you can just brute force your answer from data, so why not do it? Programmer&amp;rsquo;s time is expensive, after all.&lt;/p&gt;
@@ -72,10 +125,10 @@ The real cloud computing usage scenarios could look like this:&lt;/li&gt;
     
     <item>
       <title>Is virtualization a failure of operating systems?</title>
-      <link>/2012/12/19/is-virtualization-a-failure-of-operating-systems/</link>
+      <link>https://maciejmroz.com/2012/12/19/is-virtualization-a-failure-of-operating-systems/</link>
       <pubDate>Wed, 19 Dec 2012 00:00:00 +0000</pubDate>
       
-      <guid>/2012/12/19/is-virtualization-a-failure-of-operating-systems/</guid>
+      <guid>https://maciejmroz.com/2012/12/19/is-virtualization-a-failure-of-operating-systems/</guid>
       <description>&lt;p&gt;One thing has hit me while watching of this year&amp;rsquo;s LinuxCon Europe presentations - one of reasons virtualization exists in the first place is operating system inability to properly isolate the applications from each other. Look at it this way: the role of operating systems is abstracting the physical hardware from the applications. And what is the role of hypervisor? Abstracting the hardware from the opertaing system(s) … Which makes the operating system an application running under the hypervisor, doesn&amp;rsquo;t it?&lt;/p&gt;
 
 &lt;p&gt;Now, let&amp;rsquo;s think of it from other angle - why are we using virtualization? We are virtualizing applications, and operating system is only a required intermediary. Typical workload of virtual machine is exactly one application (in general case this is one-to-many relationship, because often single application spans multiple VMs). We do this partly to achieve good utilization of physical hardware, but also to achieve isolation at the level close to &amp;ldquo;physical box per every application&amp;rdquo;. Not as secure, but conceptually equivalent.&lt;/p&gt;
@@ -86,10 +139,10 @@ The real cloud computing usage scenarios could look like this:&lt;/li&gt;
     
     <item>
       <title>Enter the Node.js</title>
-      <link>/2012/07/07/enter-the-node-js/</link>
+      <link>https://maciejmroz.com/2012/07/07/enter-the-node-js/</link>
       <pubDate>Sat, 07 Jul 2012 00:00:00 +0000</pubDate>
       
-      <guid>/2012/07/07/enter-the-node-js/</guid>
+      <guid>https://maciejmroz.com/2012/07/07/enter-the-node-js/</guid>
       <description>
 
 &lt;p&gt;The title says it all, but I probably still should paint some background to this article. Imagine a system where you need very high performance, you need it yesterday, and you don&amp;rsquo;t have infinite funds to simply throw more hardware at the problem. Very important component in this system is a web server. Very simple requests, always generated by code (while system in question does not provide data to end users, you can think of AJAX - definitely there&amp;rsquo;s a similarity). So I have a webserver in question. Apache + PHP, running on a virtual machine. I quickly written a Python script that emulated the workload webserver was supposed to have (fuzzed POST requests in specific format). I did back of the envelope calculations of the performance the web server has to meet. As it turned out, Apache + PHP running on a virtual machine was at very, very small percentage of what I needed.&lt;/p&gt;
@@ -152,10 +205,10 @@ The real cloud computing usage scenarios could look like this:&lt;/li&gt;
     
     <item>
       <title>The demise of spinning disks</title>
-      <link>/2012/03/18/the-demise-of-spinning-disks/</link>
+      <link>https://maciejmroz.com/2012/03/18/the-demise-of-spinning-disks/</link>
       <pubDate>Sun, 18 Mar 2012 00:00:00 +0000</pubDate>
       
-      <guid>/2012/03/18/the-demise-of-spinning-disks/</guid>
+      <guid>https://maciejmroz.com/2012/03/18/the-demise-of-spinning-disks/</guid>
       <description>&lt;p&gt;It was quite some time ago when my company started using Fusion-IO (enterprise SSDs) on our database servers. We are happily using them till this day. The great part is that we could scale vertically and leave software layer unchanged. Even better: we &lt;strong&gt;still&lt;/strong&gt; have room for growth, despite getting more users and our application stack getting more and more demanding. We were one of the first to switch to SSDs on server side - so right now it&amp;rsquo;s interesting that this idea propagated so quickly. We got to the point where people start loudly saying &amp;ldquo;disk is the new tape&amp;rdquo;. And it really is.&lt;/p&gt;
 
 &lt;p&gt;The gap between CPU speed and external memory has been widening for a long time, and got to the point of being simply ridiculous. It&amp;rsquo;s worth noting that it&amp;rsquo;s not only about gap between CPU and disk drive but also about gap between CPU and DRAM (which is slightly less known fact). For CPU accessing L1 cache takes single digit amount of clock cycles. Subsequent levels of memory hierarchy are slower and slower. Accessing main memory gets us into area of hundereds to even 1000+ CPU cycles (this is strongly architecture dependent). This is very bad and low level programmers have been battling this issue for a long time now. One of approaches is using access patterns that minimize CPU cache misses and using low level prefetch instructions. We are essentally talking about linearizing access to memory that is supposed to be &amp;ldquo;random access&amp;rdquo;. If latency is the problem in case of DRAM, how bad it is in case of disk drives? Very, very bad.&lt;/p&gt;
@@ -182,10 +235,10 @@ The real cloud computing usage scenarios could look like this:&lt;/li&gt;
     
     <item>
       <title>If you haven&#39;t noticed, OpenGL API is alive and kicking</title>
-      <link>/2012/03/04/if-you-havent-noticed-opengl-api-is-alive-and-kicking/</link>
+      <link>https://maciejmroz.com/2012/03/04/if-you-havent-noticed-opengl-api-is-alive-and-kicking/</link>
       <pubDate>Sun, 04 Mar 2012 00:00:00 +0000</pubDate>
       
-      <guid>/2012/03/04/if-you-havent-noticed-opengl-api-is-alive-and-kicking/</guid>
+      <guid>https://maciejmroz.com/2012/03/04/if-you-havent-noticed-opengl-api-is-alive-and-kicking/</guid>
       <description>&lt;p&gt;Recently I somehow found enough time to read &amp;ldquo;OpenGL SuperBible, 5th edition&amp;rdquo;. It was something done purely for fun, just to see how things are looking today for modern graphics APIs. Last time I did any serious graphics programming, OpenGL was slowly dying.&lt;/p&gt;
 
 &lt;p&gt;In fact, my M.Sc. thesis used Direct3D as implementation API. I simply had no choice. There was no standard for anything - every single important feature was exposed through extensions. At the same time, Direct3D 9 was well thought, simple, and forward looking. Microsoft was leading the way, and everyone knew that. As an example: somewhere around 2005, EXT_framebuffer_object appeared, giving GL functionality that was available since Direct3D 7! Good news: things have changed, and they have changed for better.&lt;/p&gt;
@@ -200,10 +253,10 @@ The real cloud computing usage scenarios could look like this:&lt;/li&gt;
     
     <item>
       <title>Is the era of dedicated gaming devices coming to an end?</title>
-      <link>/2012/02/22/is-the-era-of-dedicated-gaming-devices-coming-to-an-end/</link>
+      <link>https://maciejmroz.com/2012/02/22/is-the-era-of-dedicated-gaming-devices-coming-to-an-end/</link>
       <pubDate>Wed, 22 Feb 2012 00:00:00 +0000</pubDate>
       
-      <guid>/2012/02/22/is-the-era-of-dedicated-gaming-devices-coming-to-an-end/</guid>
+      <guid>https://maciejmroz.com/2012/02/22/is-the-era-of-dedicated-gaming-devices-coming-to-an-end/</guid>
       <description>&lt;p&gt;Today was the day when PlayStation Vita launched worldwide. I had the chance to play most of the launch games already during GDC Europe last August and I think that both hardware and launch lineup are impressive. But I didn&amp;rsquo;t buy PS Vita on launch. It&amp;rsquo;s probably a very sad day for Sony, bacause &amp;ldquo;PlayStation&amp;rdquo; is my religion (on Facebook, at least :) ).&lt;/p&gt;
 
 &lt;p&gt;What happended? I faced the truth - mainstream mobile gaming is already on Android and iOS, and a lot of titles are released every day. I know that every single developer out there is working on these platforms, and they don&amp;rsquo;t mind selling the game for $1-$5. You can&amp;rsquo;t possibly deny the trends - these devices are the new player in the console market. Just a few months ago I have written (on this blog) that there&amp;rsquo;s not much danger to Vita from the iOS/Android camp. I hate to admit that, but I might have been wrong. Yes, phones and tablets might lose on overall experience, but at the same time they win hands down when it goes to price and convenience. I actually found myself playing games on both iPhone and iPad in past six months or so. And I enjoyed doing it, at least for a short while.&lt;/p&gt;
@@ -216,10 +269,10 @@ The real cloud computing usage scenarios could look like this:&lt;/li&gt;
     
     <item>
       <title>Is HTML5 a viable platform for games?</title>
-      <link>/2012/01/12/is-html5-a-viable-platform-for-games/</link>
+      <link>https://maciejmroz.com/2012/01/12/is-html5-a-viable-platform-for-games/</link>
       <pubDate>Thu, 12 Jan 2012 00:00:00 +0000</pubDate>
       
-      <guid>/2012/01/12/is-html5-a-viable-platform-for-games/</guid>
+      <guid>https://maciejmroz.com/2012/01/12/is-html5-a-viable-platform-for-games/</guid>
       <description>&lt;p&gt;If you ever tried to get deeper into it than just looking at press releases about &amp;ldquo;HTML5 companies&amp;rdquo; who just received some VC funding, it is indeed very interesting question. Let&amp;rsquo;s put aside the idea of building entire business on HTML5 tools/engines. What I want to touch to today is the topic of the technology in general, and it&amp;rsquo;s comparison with possible alternatives. Important distinction here - it&amp;rsquo;s about 2D casual games. It&amp;rsquo;s also good assumption that we are targeting mobile devices. So, what are the options? Realistic choices: Native, HTML5, Adobe AIR, some hybrid of native and HTML5 (in case of mobile devices).&lt;/p&gt;
 
 &lt;p&gt;There&amp;rsquo;s one thing that HTML5 offers and no one else can - breaking away from app stores of any kind. It is very important, but not because of the cut app store operator takes (i.e. 30% in Apple case). Anyone who is even remotely aware of the costs and complexities associated with doing payment processing will happily give away 30% and then say &amp;ldquo;thank you for doing it for me&amp;rdquo;. This obviously does not apply to large companies for scale reasons, but for small/medium sized developers it&amp;rsquo;s only a reason to be happy. There are other reasons to break away from app stores, one is obvious and one less so, but it is actually more important.&lt;/p&gt;
@@ -236,10 +289,10 @@ The real cloud computing usage scenarios could look like this:&lt;/li&gt;
     
     <item>
       <title>Some thoughts on the mobile revolution</title>
-      <link>/2012/01/07/some-thoughts-on-the-mobile-revolution/</link>
+      <link>https://maciejmroz.com/2012/01/07/some-thoughts-on-the-mobile-revolution/</link>
       <pubDate>Sat, 07 Jan 2012 00:00:00 +0000</pubDate>
       
-      <guid>/2012/01/07/some-thoughts-on-the-mobile-revolution/</guid>
+      <guid>https://maciejmroz.com/2012/01/07/some-thoughts-on-the-mobile-revolution/</guid>
       <description>&lt;p&gt;People keep talking about &amp;ldquo;mobile&amp;rdquo;, how it&amp;rsquo;s going to be very important (i.e. &amp;ldquo;we have &lt;strong&gt;mobile first&lt;/strong&gt; policy&amp;rdquo; &amp;hellip;) but recently it really struck me: most talking about mobile revolution have abolutely no idea. They just don&amp;rsquo;t get it. Which is a bit sad, actually, especially if you think that big media companies are still struggling to make sense of what to do with classic, web-based Internet. Mobile is a revolution can only be understood by mobile users. I remember when CEO of Bigpoint was talking on GDC Europe more than a year ago about buying everyone in his company an iPad. At that time I only thought &amp;ldquo;it&amp;rsquo;s nice&amp;rdquo;. But it was much more than that. It was an investment to create competitive advantage (and a very, very high ROI investment). There&amp;rsquo;s absolutely no way to understand smartphones, tablets and their features without actually using these things. Because it is &lt;strong&gt;that&lt;/strong&gt; disruptive.&lt;/p&gt;
 
 &lt;p&gt;Without previously experiencing these devices, one might believe that correct way of &amp;ldquo;going mobile&amp;rdquo; is to adjust user interface to fit on smaller screen, and ship. It&amp;rsquo;s great recipe for failure. Fitting existing content and PC-like user experience into something that is completely different? It cannot be made to work. It&amp;rsquo;s about entire user experience! Look at the usage pattern of mobile devices. When I pick up the phone, I want to something &lt;strong&gt;very specific, right now&lt;/strong&gt;. More often than not it is not my primary activity, so I don&amp;rsquo;t intend to waste too much time doing it. The thinking part is already behind me, now I am at the &amp;ldquo;doing&amp;rdquo; stage. This &amp;ldquo;right now&amp;rdquo; flow starts actually even before developer has any chance to interact with the user - it happens when an application is launched. Launching a web browser, going to website, and then doing something is just taking too long. It&amp;rsquo;s one the reasons we are seeing the &amp;ldquo;applification&amp;rdquo; of Internet (which is very interesting trend on its own, and it&amp;rsquo;s the very reason Google cannot afford to fail with Android).&lt;/p&gt;
@@ -262,10 +315,10 @@ The real cloud computing usage scenarios could look like this:&lt;/li&gt;
     
     <item>
       <title>Why PC sales are slowing down</title>
-      <link>/2011/12/03/why-pc-sales-are-slowing-down/</link>
+      <link>https://maciejmroz.com/2011/12/03/why-pc-sales-are-slowing-down/</link>
       <pubDate>Sat, 03 Dec 2011 00:00:00 +0000</pubDate>
       
-      <guid>/2011/12/03/why-pc-sales-are-slowing-down/</guid>
+      <guid>https://maciejmroz.com/2011/12/03/why-pc-sales-are-slowing-down/</guid>
       <description>&lt;p&gt;There has been a lot of talk lately about how tablets are eating into the classic PC market, that people don&amp;rsquo;t need PCs any more, and how doomed they are. It&amp;rsquo;s true that we are witnessing a decline of the PC platform, and that this trend will only intensify. At the same time I don&amp;rsquo;t believe that &lt;strong&gt;right now&lt;/strong&gt; it has much to do with rapid growth of tablet market. There are many other resons it is bad to be a PC vendor right now.&lt;/p&gt;
 
 &lt;p&gt;First of all, for quite some time now desktop computers are simply &lt;strong&gt;good enough&lt;/strong&gt;. There used to be the push to buy newer and faster hardware every year but for most people that need is gone. Many use their machines until they break down, and not until they can buy something faster. What activities really require a lot of processing power? And even more interesting question - how many of these activities will not migrate to the cloud in near future? I don&amp;rsquo;t need faster desktop computer. I might need hardware that&amp;rsquo;s instantly on, consumes less power, is quiet, and syncs to every other device I have, but faster it not among my requirements for a PC. Down the line, I don&amp;rsquo;t really need more storage - days of &amp;ldquo;downloading the internet&amp;rdquo; are long gone.&lt;/p&gt;
@@ -284,10 +337,10 @@ The real cloud computing usage scenarios could look like this:&lt;/li&gt;
     
     <item>
       <title>Is it time to try an Adroid phone now?</title>
-      <link>/2011/05/08/is-it-time-to-try-an-adroid-phone-now/</link>
+      <link>https://maciejmroz.com/2011/05/08/is-it-time-to-try-an-adroid-phone-now/</link>
       <pubDate>Sun, 08 May 2011 00:00:00 +0000</pubDate>
       
-      <guid>/2011/05/08/is-it-time-to-try-an-adroid-phone-now/</guid>
+      <guid>https://maciejmroz.com/2011/05/08/is-it-time-to-try-an-adroid-phone-now/</guid>
       <description>&lt;p&gt;I&amp;rsquo;ve been an IPhone user for loong time. While I did not own the &amp;ldquo;1G&amp;rdquo;, I have my 3G for more than two years now. And, to be honest, it begins to show its age. For quite some time, it wasn&amp;rsquo;t getting any of the new cool stuff in iOS, and iOS version 4 actually should have never been released on iPhone 3G because it makes a lot of stuff run noticeably slower. So, the question is whether to upgrade to iPhone 4.&lt;/p&gt;
 
 &lt;p&gt;The biggest advantages of the iPhone right now are: retina display and iOS (again, I believe that it is the best mobile system out there right now). But the rest of the world wasn&amp;rsquo;t in standstill during the past two years. There are Android based phones that at least on paper look better than iPhone 4 (except for the display, nothing out there can really match it) - fast dual core CPU, more memory, better GPU, better camera, comparable internal flash memory, Flash Player support, NFC chip &amp;hellip; iPhone 4 has none of these, and is more expensive. It also is a very safe choice and an upgrade in every way possible over the iPhone 3G I am using right now.&lt;/p&gt;
@@ -300,10 +353,10 @@ The real cloud computing usage scenarios could look like this:&lt;/li&gt;
     
     <item>
       <title>There is no such thing as best computing device</title>
-      <link>/2011/03/06/the-lines-are-really-getting-blurry/</link>
+      <link>https://maciejmroz.com/2011/03/06/the-lines-are-really-getting-blurry/</link>
       <pubDate>Sun, 06 Mar 2011 00:00:00 +0000</pubDate>
       
-      <guid>/2011/03/06/the-lines-are-really-getting-blurry/</guid>
+      <guid>https://maciejmroz.com/2011/03/06/the-lines-are-really-getting-blurry/</guid>
       <description>&lt;p&gt;The recent releases from Apple (iPad 2 and earlier new laptops) get me thinking a bit about evolution of computing devices and how we actually use them. The past was very simple: loud and powerful desktops, underpowered laptops with short battery life, and feature phones that couldn&amp;rsquo;t really do much. The technology progress changed things a lot.&lt;/p&gt;
 
 &lt;p&gt;As desktops and laptops countinued to improve, smartphones were introduced to the world. It&amp;rsquo;s hard to tell when that happened, but at some point they could do quite a bit. Then we had netbooks, ultraportable laptops (like MBA) and finally tablet devices. There&amp;rsquo;s huge overlap in hardware capabilities and possible usage between all these devices. It&amp;rsquo;s going to get even more complicated in future. Apple already announced a bunch os iOS-like features in their upcoming Mac OS X Lion. Apple already has fully functional iOS emulator to use with their XCode development environment. Fast forward a year or two: why not let iOS applications run on Mac OS X machines as full screen applications? The clear cut between desktop OS and mobile OS is going to be no more.&lt;/p&gt;
@@ -314,10 +367,10 @@ The real cloud computing usage scenarios could look like this:&lt;/li&gt;
     
     <item>
       <title>Why PSP2 is going to succeed</title>
-      <link>/2011/01/30/why-psp2-is-going-to-succeed/</link>
+      <link>https://maciejmroz.com/2011/01/30/why-psp2-is-going-to-succeed/</link>
       <pubDate>Sun, 30 Jan 2011 00:00:00 +0000</pubDate>
       
-      <guid>/2011/01/30/why-psp2-is-going-to-succeed/</guid>
+      <guid>https://maciejmroz.com/2011/01/30/why-psp2-is-going-to-succeed/</guid>
       <description>&lt;p&gt;They actually call it NGP, standing for Next Generation Portable. I wouldn&amp;rsquo;t really be suprised that much if the name was left unchanged in final product. Anyway, I&amp;rsquo;ve seen some posts from respected sites saying that PSP2 is doomed, dead on arrival, etc etc &amp;hellip; which I think is completely wrong thinking. The basic problem is comparing it to a phone, usually the iPhone.&lt;/p&gt;
 
 &lt;p&gt;It is true that games are huge on Apple platform, and they are only going to get bigger. But comparing Angry Birds or Cut The Rope to God of War, Tekken or Wipeout &amp;hellip; come on, be serious here for a moment. &lt;strong&gt;It is not the same market&lt;/strong&gt;. One can actually argue that PSP (the first one) has been offering the best portable gaming experience to this day. The only real competitor it has is the Nintendo DS, which is also a &lt;strong&gt;dedicated&lt;/strong&gt; device. And being dedicated device targeted at specific audience is very important.&lt;/p&gt;
@@ -332,35 +385,11 @@ The real cloud computing usage scenarios could look like this:&lt;/li&gt;
     
     <item>
       <title>What to expect from iPad 2</title>
-      <link>/2011/01/20/what-to-expect-from-ipad-2/</link>
+      <link>https://maciejmroz.com/2011/01/20/what-to-expect-from-ipad-2/</link>
       <pubDate>Thu, 20 Jan 2011 00:00:00 +0000</pubDate>
       
-      <guid>/2011/01/20/what-to-expect-from-ipad-2/</guid>
+      <guid>https://maciejmroz.com/2011/01/20/what-to-expect-from-ipad-2/</guid>
       <description>&lt;p&gt;Before CES, I&amp;rsquo;d say &amp;ldquo;not much&amp;rdquo;. The thing is, today Apple owns the tablet market (if defined as dedicated hardware running dedicated OS), there is almost no competition out there. But it is on the horizon. Take Motorola Xoom as an example. Hardware specs are way beyond iPad 1.0, and if Android 3.0 is going to be that good as people claim, Apple is going to be in real trouble if they release underpowered device. And there will be more and more Android tablets as we go deeper into 2011 &amp;hellip; My guesses for iPad 2 are: SD card slot, front facing camera, and 1GB of RAM. SD card slot is fairly cheap way to greatly improve the device, and is very much in line with intended use - something that would replace laptop for basic photo management tasks. Front facing camera - not much point to discuss. Memory is more interesting - a month ago I&amp;rsquo;d bet on 512 MB, exactly the same as in iPhone 4. But after CES it just sounds cheap and limited. Apple has tradition of selling as little as they can for as much as possible, but I don&amp;rsquo;t really think they can get away with that. I think this is very moderate spec that should be considered basis for more. Retina display? Dual core CPU? Faster GPU? USB slot? They need another iPhone 4, and this time without the antennagate. Right now, after CES, anything is possible.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Apple Tablet</title>
-      <link>/2010/02/06/apple-ipad-first-thoughts/</link>
-      <pubDate>Sat, 06 Feb 2010 11:52:02 +0100</pubDate>
-      
-      <guid>/2010/02/06/apple-ipad-first-thoughts/</guid>
-      <description>&lt;p&gt;Apple tablet is no longer a mystery. The question now is whether it meets the expectations or fits any real needs :) Basically it is an oversized iPhone - 1024x768 multitouch display, 16-64 GB of flash memory, 1 GHz custom CPU, WiFi, Bluetooth etc, and it runs iPhone OS. I already have an iPhone. Is iPad going to perform better enough to justify buying additional device?&lt;/p&gt;
-
-&lt;p&gt;GMail support with push in the iPhone is most of the time sufficient for me. I rarely reply to mails directly from my iPhone, though. If something requires longer answer I usually just use normal computer for that. iPads bigger screen (and bigger virtual keyboard as a result) will surely improve experience here. I can actually imagine writing emails using this thing. Web browsing is where iPad is going to be a lot better than iPhone simply because of screen size and CPU performance (one of the things I noticed immediately at Apple videos is how smooth it runs, it&amp;rsquo;s super fast!). Web and mail if work well might alone be a selling point for people who don&amp;rsquo;t keep &lt;sup&gt;24&lt;/sup&gt;&amp;frasl;&lt;sub&gt;7&lt;/sub&gt; computer at home and actually do turn it on and off. In that scenario iPad is going to be very useful, offering browsing and mail experience very close to &amp;ldquo;full&amp;rdquo; but with instant access.&lt;/p&gt;
-
-&lt;p&gt;iTunes for music/video/podcasts is nice for people living in the US, I imagine. Apple still has not fully acknowledged existence of Poland, so for me this functionality is not very attractive, simply because it does not work. Of course I can transcode videos and use MP3 for music but that&amp;rsquo;s hardly the experience it should be. For watching video I don&amp;rsquo;t think it can realistically beat big LCD TV, I know that there are some VGA/composite adapters (sold separately), but what I&amp;rsquo;d really like to see is just HDMI output. Or perhaps built in DLNA media server? Both would solve the problem of &amp;ldquo;how to put it on large screen&amp;rdquo;, second one is wireless, which in my dictionary is almost the same as &amp;ldquo;better&amp;rdquo; :)&lt;/p&gt;
-
-&lt;p&gt;Photo functionality is nice but crippled at the very beginning by the hardware - iPad does not have SD card slot nor USB port. What may be the most attractive usage is loading the photos directly from my camera into the iPad, tag them, rate, sort, delete ones I don&amp;rsquo;t like, upload to Facebook etc. It will be possible but will require additional &amp;ldquo;camera connection kit&amp;rdquo;. Not including these ports by default it strange to say the least. Perhaps they are already planning revised hardware version late this year, and that&amp;rsquo;s just sinister plan to make people buy new hardware in longer term :). Anyway, I really do see the potential here.&lt;/p&gt;
-
-&lt;p&gt;iBookstore was obviously going to happen - and I think it is very good it did. It will put a lot of pressure on ebook reader market. I am not entirely convinced on using active IPS display for reading, in the end it is not that much different from staring at the lamp for a long time. Theoretically e-ink displays have an advantage here, and if you try using iRex Iliad (for example) then yes, its display technology is awesome in terms of ease of reading. At the same time, everything else is far from great. Iliad is slow, takes ages to start up, and again ages to load large pdf files, page turning is sluggish, battery life is not so great, and overall user interface is far from easy to navigate. If Apple really can get 10 hours of battery life from iPad (and one month of standby!), while running active high resolution color display, it clearly shows that there is something wrong with all ebook readers released to market so far. This really reminds me of what Apple did to cell phone market. Perhaps they did not built perfect device but still managed to do something better than everyone else. Again, I see a lot of potential here. I&amp;rsquo;d really like to buy books in electronic rather than physical form, but I guess there&amp;rsquo;s long time before that really happens. What is needed is immediate availability of electronic version along with print release, and availability of electronic version of every single book out there. None of these is happening today, probably not even in the US. We&amp;rsquo;ll get there in a few years. Printing industry is insanely wasteful and while I do not care about the environment that much in general, when I can do something environmentally friendly and convenient at the same time - I am all for it. For now, I only want to know if I can upload pdf files directly to the iPad - I might not be able to use it to read commercial books, but there surely is tons of technical documentation, presentations etc that I might want to read on the iPad.&lt;/p&gt;
-
-&lt;p&gt;One glaring omission I think everyone considered almost a given before iPad announcement is front facing camera. It means no video conferencing. Perhaps it has something to do with unlimited 3G data plans Apple and AT&amp;T; are offering in the US? Anyway I do see it as a shortcoming, and something surely to be corrected in future hardware release (and everyone will go and buy themselves a new iPad &amp;hellip; Apple is thinking long term here :) ). Network connectivity is where it manages to do very well. 802.11n + Bluetooth 2.1 is very good, built in 3G modem is also nice. There&amp;rsquo;s nothing more to want here. I&amp;rsquo;d only like to know if I can use iPhone as Bluetooth modem for non-3G iPad. The price difference between 3G and non-3G versions is significant and I can&amp;rsquo;t really imagine scenario when I am mobile and without my phone. So why two SIM cards? Seems logical that in this case I should simply be able to go with WiFi-only version.&lt;/p&gt;
-
-&lt;p&gt;Apple did not forget about productivity apps, and I am sure there will be more with time. However this is where you really need multitasking. iWork applications are ok, but in reality you are switching between these apps and email/web/skype/calculator/pdf reader etc. Non to mention listening to music in background. Which means we are left with very basic functionality. That can be fixed with OS update, at the cost of battery life (which Apple seems to be defending very aggressively). In the end, iPad is no replacement for a laptop or PC/Mac, although to be fair I have to say that it does not try to be one.&lt;/p&gt;
-
-&lt;p&gt;The idea of doing simple tasks on simple device leads me to another question: do people still need a PC/laptop? Think about it: typical people mostly consume media, what they produce (outside of work) is rather simplistic: photos, videos, some blog posts. They also need basic calendar/todo list, perhaps money management application. Add to this the trend of moving more and more online and running it inside a web browser (obviously a model supported by iPad) and we are soon approaching the world where all of typical stuff people do can be done using one simple device, probably looking a lot like the iPad. I believe it indeed is a new device category, that takes away some of the tasks we so far are used to do on personal computer. I see very strong analogy to game consoles here, btw. I do not play typical &amp;ldquo;3D&amp;rdquo; games on my computer any more. Sure I&amp;rsquo;ll use it to play Civilization, but for most games the console is just better. It&amp;rsquo;s likely going to be the same with iPad, but this time what&amp;rsquo;s left of the personal computer may no longer be necessary for many people.&lt;/p&gt;
 </description>
     </item>
     

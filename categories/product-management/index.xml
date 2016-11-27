@@ -2,18 +2,18 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Maciej Mróz Personal Blog</title>
-    <link>/categories/product-management/index.xml</link>
+    <link>https://maciejmroz.com/categories/product-management/index.xml</link>
     <description>Recent content on Maciej Mróz Personal Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <atom:link href="/categories/product-management/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://maciejmroz.com/categories/product-management/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>LTV of a service</title>
-      <link>/2014/11/04/ltv-of-a-service/</link>
+      <link>https://maciejmroz.com/2014/11/04/ltv-of-a-service/</link>
       <pubDate>Tue, 04 Nov 2014 00:00:00 +0000</pubDate>
       
-      <guid>/2014/11/04/ltv-of-a-service/</guid>
+      <guid>https://maciejmroz.com/2014/11/04/ltv-of-a-service/</guid>
       <description>&lt;p&gt;A little story today. It goes like this. I drop by one of our teams, and within completely different discussion I get asked this very &amp;ldquo;simple&amp;rdquo; question:&lt;/p&gt;
 
 &lt;blockquote&gt;
@@ -22,7 +22,7 @@
 
 &lt;p&gt;If you haven&amp;rsquo;t noticed yet, there&amp;rsquo;s a flaw in this question. The problem is, it simply doesn&amp;rsquo;t make sense from economic point of view. For any project in any industry one thing is true: investment into project comes before realizing profit from that project. It&amp;rsquo;s pure logic, you just can&amp;rsquo;t defeat causality. Depending on the industry the distribution of investment and revenue over time axis will differ, but it might look like this:&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;/img/investment-vs-revenue_300.jpg&#34; alt=&#34;investment vs revenue_300&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://maciejmroz.com/img/investment-vs-revenue_300.jpg&#34; alt=&#34;investment vs revenue_300&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;This offset between investment and revenue is the core of the problem: current development costs are &lt;strong&gt;always&lt;/strong&gt; out of sync with current revenue. Depending on the industry and project the gap will obviously vary but it&amp;rsquo;s always there. This is relatively simple and intiuitive concept when we talk about project-based work but it becomes somewhat more complex when we talk about online games, which are services. Some successful online games (like World of Warcraft) have been with us for a long time, but this is only because their developers keep working on them. In other words, the investment is continuous, and so is revenue (both curves do not have to be smooth!). These games wouldn&amp;rsquo;t have survived if they remained static in their entire life cycle, they evolved and changed together with their player base. In the world of game services, there&amp;rsquo;s huge overlap between the two curves from graph above but the truth remains: current investments create &lt;strong&gt;future&lt;/strong&gt; profits. Nothing new here, move along, and of post? Not really, this is where the fun actually begins.&lt;/p&gt;
 
@@ -41,10 +41,10 @@
     
     <item>
       <title>The rationale behind A/B testing</title>
-      <link>/2013/02/24/the-rationale-behind-ab-testing/</link>
+      <link>https://maciejmroz.com/2013/02/24/the-rationale-behind-ab-testing/</link>
       <pubDate>Sun, 24 Feb 2013 00:00:00 +0000</pubDate>
       
-      <guid>/2013/02/24/the-rationale-behind-ab-testing/</guid>
+      <guid>https://maciejmroz.com/2013/02/24/the-rationale-behind-ab-testing/</guid>
       <description>&lt;p&gt;A few days ago, while having a casual conversation over a beer, I was totally shocked when I heard something close to: &amp;ldquo;A/B testing is pointless on small project like ours because testing overhead is too high&amp;rdquo;. Is it? Let&amp;rsquo;s run the numbers :) Assumptions:&lt;/p&gt;
 
 &lt;ul&gt;

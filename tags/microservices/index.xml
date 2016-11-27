@@ -2,18 +2,18 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Maciej Mróz Personal Blog</title>
-    <link>/tags/microservices/index.xml</link>
+    <link>https://maciejmroz.com/tags/microservices/index.xml</link>
     <description>Recent content on Maciej Mróz Personal Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <atom:link href="/tags/microservices/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://maciejmroz.com/tags/microservices/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Beyond virtualization</title>
-      <link>/2015/01/01/beyond-virtualization/</link>
+      <link>https://maciejmroz.com/2015/01/01/beyond-virtualization/</link>
       <pubDate>Thu, 01 Jan 2015 00:00:00 +0000</pubDate>
       
-      <guid>/2015/01/01/beyond-virtualization/</guid>
+      <guid>https://maciejmroz.com/2015/01/01/beyond-virtualization/</guid>
       <description>&lt;p&gt;I guess it&amp;rsquo;s time to sum up recent trends in how we build, deploy, and operate complex server side software. Virtualization and cloud computing have been with us for quite a while but right now the era of containers is coming, with entire Docker ecosystem paving the way. You might want to ask a very valid question: &amp;ldquo;What&amp;rsquo;s in it for me?&amp;rdquo; :) I will focus on business implications of the technology. But let&amp;rsquo;s set the context first.&lt;/p&gt;
 
 &lt;p&gt;The explosion of cloud computing in recent years literally changed the way we think. Well, you probably could treat Amazon EC2 instances as if they were ordinary machines, but &amp;ldquo;in the cloud&amp;rdquo;. That of course would be &lt;strong&gt;totally&lt;/strong&gt; missing the point. The key advantages of cloud computing are on the intersection of operations, software architecture and development - these cannot be realized without moving to true DevOps. Trying to slap &amp;ldquo;cloud computing&amp;rdquo; sticker on top of existing organization with IT/Operations/Development (add more if needed to fit your case) silos will not give anyone much value. Once you change your approach, you suddenly get the true benefits:&lt;/p&gt;

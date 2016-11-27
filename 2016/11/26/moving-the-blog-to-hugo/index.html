@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width,minimum-scale=1,maximum-scale=1">
+
+  
+  
+  <link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+  <link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+  
+
+  
+  <title>Moving the blog to Hugo</title>
+
+  
+  
+  <link rel="stylesheet" href="https://maciejmroz.com/css/hugo-octopress.css">
+
+  
+  
+
+  
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+
+  
+  <link href="https://maciejmroz.com/favicon.png" rel="icon">
+
+  
+  
+  
+
+  
+
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+
+  <meta name="author" content="Maciej Mróz">
+
+  
+  <meta name="generator" content="Hugo 0.17" />
+
+  
+  
+
+</head>
+<body>
+
+
+<header role="banner"><hgroup>
+  
+  <h1><a href="https://maciejmroz.com/">Maciej Mróz Personal Blog</a></h1>
+    <h2>Because why not</h2>
+</hgroup></header>
+
+
+<nav role="navigation">
+
+<ul class="main-navigation">
+  
+  
+    
+      <li><a href="https://maciejmroz.com/" title="Blog">Blog</a></li>
+    
+  
+    
+      <li><a href="https://maciejmroz.com/demoscene" title="Demoscene" >Demoscene</a></li>
+    
+  
+</ul>
+
+
+<ul class="subscription">
+  
+
+</ul>
+
+
+</nav>
+
+
+<div id="main">
+  <div id="content">
+    <div>
+      <article class="hentry" role="article">
+
+        
+        
+
+<header>
+    <p class="meta">Nov 26, 2016
+         - 4 minute read 
+        
+
+        
+        
+        
+            - <a class="label" href="https://maciejmroz.com/categories/blog/">Blog </a><a class="label" href="https://maciejmroz.com/categories/technology/">Technology </a>
+        
+    </p>
+    <h1 class="entry-title">
+         Moving the blog to Hugo 
+    </h1>
+</header>
+
+
+        <div class="entry-content">
+          
+          
+          
+          
+
+<p>Quite a chunk of time has passed since my last update to this blog. While primary reason is my super busy life (on both proffessional and personal fronts) there was also another one I have finally addressed, along with a few extras. The reason was that over the years I simply grew tired of WordPress software. The point to migrate away from it occupied my TODO list for too long. I am not going to bash WP here, I used it for many years, and for that I am grateful to its authors. However, for me at least the time has come to move towards something else.</p>
+
+<h2 id="back-to-simplicity">Back to simplicity</h2>
+
+<p>I remember that when I was in high school my friend was running entire e-commerce site using static HTML generator written in Perl, combined with some CGI scripts to chandle checkout process. Going even further back, I remember the times when I actually used notepad to edit HTML 3 files, and upload that with FTP over a 28k modem connection to a hosting provider. Things were simple back then, and I truly miss that simplicity.</p>
+
+<p>Having to run entire LAMP stack on my own just to run simple website is standing contrary to the rule of keeping things simple. That&rsquo;s exactly what I was doing for the past few years, and that&rsquo;s what I wanted to change. This is the primary reason I decided to look at static website generators as a new blogging platform. All these CMS systems have been created for people who don&rsquo;t know their way around computers. Hackers know better :)</p>
+
+<p>There is quite a few modern generators to choose from. My initial favorite was <a href="http://octopress.org/">Octopress</a>, but eventually I settled on <a href="https://gohugo.io/">Hugo</a> but with Octopress-inspited theme. Hugo is simple, easy to customize, trivial to install, comes with built in webserver that watches file changes, and reloads the pages in your browser just when you save source file via JavaScript magic. It&rsquo;s also very, very fast - regenerating this website in its entirety takes 200-300 ms on my MacBook Pro.</p>
+
+<p>Hugo, similar to other generators, uses Markdown as source file format. I guess the format has been popularized by GitHub (and likely other hosted Git solutions) with automatic rendering of README.md in the repositories. Regardless of the reason, it is well known and liked by hacker types. It has some limitations, but also lets you focus on the content and not its form. With Hugo you can easily work around Markdown limitations by using your own macros that expand to HTML during rendering. So, while 99% of the time sticking to plain Markdown syntax is enough, you are not left alone in the corner cases.</p>
+
+<h2 id="github-pages">GitHub Pages</h2>
+
+<p>GitHub has launched <a href="https://pages.github.com/">GitHub Pages</a> quite a while ago. It&rsquo;s totally free service that let&rsquo;s you serve static web content to the world. There are traffic limitations but not at the level that matters for a personal blog. Should you somehow run into these limitations, there are plenty of other options, Amazon S3 among them. For now, sticking to GitHub gives me very nice publishing flow. In your website directory:</p>
+
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%"><span></span>MaciekMBP:hugo maciek$ hugo
+Started building sites ...
+Built site <span style="color: #66d9ef">for</span> language en:
+<span style="color: #ae81ff">0</span> draft content
+<span style="color: #ae81ff">0</span> future content
+<span style="color: #ae81ff">0</span> expired content
+<span style="color: #ae81ff">35</span> pages created
+<span style="color: #ae81ff">0</span> non-page files copied
+<span style="color: #ae81ff">6</span> paginator pages created
+<span style="color: #ae81ff">45</span> tags created
+<span style="color: #ae81ff">17</span> categories created
+total in <span style="color: #ae81ff">227</span> ms
+MaciekMBP:hugo maciek$ <span style="color: #f8f8f2">cd</span> public
+MaciekMBP:public maciek$ git add -A
+MaciekMBP:public maciek$ git commit -m <span style="color: #e6db74">&quot;New version info&quot;</span>
+MaciekMBP:public maciek$ git push
+</pre></div>
+
+
+<p>That&rsquo;s all, new site version is live!!! Of course you can (and should :) ) use version control tools for your source files, too. For ambitious types: implement building and publishing of your website via continuous integration server :)</p>
+
+<h2 id="cloudflare">CloudFlare</h2>
+
+<p>Serving static website from GitHub is very quick, and supports HTTPS within github.io domain. What if you want HTTPS on your own domain? Here is where <a href="https://www.cloudflare.com/">CloudFlare</a> steps in. Within their <strong>free</strong> plan you can get not only free HTTPS, but with great options like: redirecting HTTP straffic to HTTPS, turning on HSTS (HTTP Strict Stransport Security) for the site, or even forcing TLS 1.3 use (beta feature). While going crazy with security on personal blog that&rsquo;s available on GitHub anyway may seem like an overkill, I strongly believe that in the era of <a href="https://letsencrypt.org/">Let&rsquo;s Encrypt</a>, non-encrypted HTTP traffic should just die. Using CloudFlare has an additional advantage of speed: it&rsquo;s not just about encryption, but also a CDN sitting in front of GitHub. To make it even sweeter, CloudFlare fully supports HTTP/2 and SPDY protocols.</p>
+
+<p>And one more thing: thanks to CloudFlare <a href="https://blog.cloudflare.com/introducing-cname-flattening-rfc-compliant-cnames-at-a-domains-root/">CNAME Flattening</a> you can have CNAME at top level of your domain <strong>without breaking the RFC</strong>. As a result, the address for this blog from now on will be just <a href="https://maciejmroz.com">https://maciejmroz.com</a>, served to you at zero cost in &ldquo;cloud native&rdquo; way :)</p>
+
+        </div>
+        
+
+<footer>
+  <p class="meta">
+    <span class="byline author vcard">Posted by <span class="fn">Maciej Mróz</span></span>
+    
+    <time>Nov 26, 2016</time>
+    
+      <span class="categories">
+        Tags:
+        
+          <a class="category" href="https://maciejmroz.com/tags/blog">Blog</a>  <a class="category" href="https://maciejmroz.com/tags/hugo">Hugo</a>  <a class="category" href="https://maciejmroz.com/tags/git">Git</a>  <a class="category" href="https://maciejmroz.com/tags/github">GitHub</a>  <a class="category" href="https://maciejmroz.com/tags/cloudflare">CloudFlare</a>  <a class="category" href="https://maciejmroz.com/tags/https">HTTPS</a>  <a class="category" href="https://maciejmroz.com/tags/hsts">HSTS</a>  <a class="category" href="https://maciejmroz.com/tags/octopress">Octopress</a>  <a class="category" href="https://maciejmroz.com/tags/lets-encrypt">Let&#39;s Encrypt</a>  
+    
+    </span>
+  </p>
+
+  
+  
+
+  
+
+  <p class="meta">
+    
+        <a class="basic-alignment left" href="https://maciejmroz.com/2015/01/01/beyond-virtualization/" title="Beyond virtualization">Beyond virtualization</a>
+    
+
+    
+  </p>
+  
+</footer>
+
+      </article>
+    </div>
+    
+
+<aside class="sidebar thirds">
+  <section class="first odd">
+
+    
+      <h1>About me</h1>
+    
+
+    <p>
+      
+        I&rsquo;m just a geek, interested in technology, product development &amp; management, game industry and other geeky stuff.
+      
+    </p>
+  </section>
+
+
+
+  
+  <ul class="sidebar-nav">
+    <li class="sidebar-nav-item">
+      <a target="_blank" href="https://github.com/maciejmroz/" title="https://github.com/maciejmroz/"><i class="fa fa-github fa-3x"></i></a>
+      
+      
+      <a target="_blank" href="https://twitter.com/maciejmroz/" title="https://twitter.com/maciejmroz/"><i class="fa fa-twitter fa-3x"></i></a>
+       
+      <a target="_blank" href="https://www.linkedin.com/in/mrozmaciej/" title="https://www.linkedin.com/in/mrozmaciej/"><i class="fa fa-linkedin fa-3x"></i></a>
+      
+      
+      <a target="_blank" href="https://www.facebook.com/maciej.mroz/" title="https://www.facebook.com/maciej.mroz/"><i class="fa fa-facebook fa-3x"></i></a>
+      
+      
+
+    
+    
+    </li>
+  </ul>
+
+  
+
+  
+    
+      <section class="odd">
+        
+          <h1>Categories</h1>
+        
+        
+          <li>
+            <a href="https://maciejmroz.com/categories/game-development/" title="Game Development" >Game Development</a>
+          </li>
+        
+          <li>
+            <a href="https://maciejmroz.com/categories/game-industry/" title="Game Industry" >Game Industry</a>
+          </li>
+        
+          <li>
+            <a href="https://maciejmroz.com/categories/product-management/" title="Product Management" >Product Management</a>
+          </li>
+        
+          <li>
+            <a href="https://maciejmroz.com/categories/programming/" title="Programming" >Programming</a>
+          </li>
+        
+          <li>
+            <a href="https://maciejmroz.com/categories/server-side/" title="Server Side" >Server Side</a>
+          </li>
+        
+          <li>
+            <a href="https://maciejmroz.com/categories/technology/" title="Technology" >Technology</a>
+          </li>
+        
+      </section>
+    
+  
+
+  
+  
+  
+    
+      <section class="even">
+        <h1>Recent Posts</h1>
+        <ul id="recent_posts">
+          
+            <li class="post">
+              <a href="/2016/11/26/moving-the-blog-to-hugo/">Moving the blog to Hugo</a>
+            </li>
+          
+            <li class="post">
+              <a href="/2015/01/01/beyond-virtualization/">Beyond virtualization</a>
+            </li>
+          
+            <li class="post">
+              <a href="/2014/11/04/ltv-of-a-service/">LTV of a service</a>
+            </li>
+          
+            <li class="post">
+              <a href="/2013/09/22/functional-programming-trojan-horse/">Functional programming trojan horse</a>
+            </li>
+          
+            <li class="post">
+              <a href="/2013/09/09/am-i-a-marketing-person-now/">Am I a marketing person now?</a>
+            </li>
+          
+            <li class="post">
+              <a href="/2013/05/04/c11-goodness/">C&#43;&#43;11 Goodness</a>
+            </li>
+          
+        </ul>
+      </section>
+    
+  
+
+</aside>
+
+  </div>
+</div>
+
+<footer role="contentinfo">
+  <p>Copyright &copy; 2016 Maciej Mróz - <a href="https://maciejmroz.com/license/">License</a> -
+  <span class="credit">Powered by <a target="_blank" href="https://gohugo.io">Hugo</a> and <a target="_blank" href="https://github.com/parsiya/hugo-octopress/">Hugo-Octopress</a> theme.
+</p>
+
+</footer>
+
+
+<script>
+  var _gaq=[['_setAccount','UA-88050305-1'],['_trackPageview']];
+  (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+  g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+  s.parentNode.insertBefore(g,s)}(document,'script'));
+</script>
+
+</body>
+</html>
+

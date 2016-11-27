@@ -2,18 +2,18 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Maciej Mróz Personal Blog</title>
-    <link>/tags/scala/index.xml</link>
+    <link>https://maciejmroz.com/tags/scala/index.xml</link>
     <description>Recent content on Maciej Mróz Personal Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <atom:link href="/tags/scala/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://maciejmroz.com/tags/scala/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Functional programming trojan horse</title>
-      <link>/2013/09/22/functional-programming-trojan-horse/</link>
+      <link>https://maciejmroz.com/2013/09/22/functional-programming-trojan-horse/</link>
       <pubDate>Sun, 22 Sep 2013 00:00:00 +0000</pubDate>
       
-      <guid>/2013/09/22/functional-programming-trojan-horse/</guid>
+      <guid>https://maciejmroz.com/2013/09/22/functional-programming-trojan-horse/</guid>
       <description>
 
 &lt;p&gt;All of game server code at my current company is using C++, and we are still starting new projects using existing C++ framework. I gave a presentation on our server architecture a few months ago, available &lt;a href=&#34;http://www.slideshare.net/maciejmroz/architektura-serwera-gier-online&#34;&gt;here&lt;/a&gt; (it&amp;rsquo;s in Polish, it was local event here in Kraków). After giving the presentation I was approached by a guy (sorry, don&amp;rsquo;t remember the name) who said something like: &amp;ldquo;It&amp;rsquo;s cool you did all that in C++. It&amp;rsquo;d be interesting to see you talk next year about how you rewritten the whole thing in Java :)&amp;ldquo;. I instantly answered: &amp;ldquo;Right now I&amp;rsquo;d do it with Scala and Akka&amp;rdquo;.&lt;/p&gt;

@@ -2,18 +2,18 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Maciej Mróz Personal Blog</title>
-    <link>/tags/vierualization/index.xml</link>
+    <link>https://maciejmroz.com/tags/vierualization/index.xml</link>
     <description>Recent content on Maciej Mróz Personal Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <atom:link href="/tags/vierualization/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://maciejmroz.com/tags/vierualization/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Is virtualization a failure of operating systems?</title>
-      <link>/2012/12/19/is-virtualization-a-failure-of-operating-systems/</link>
+      <link>https://maciejmroz.com/2012/12/19/is-virtualization-a-failure-of-operating-systems/</link>
       <pubDate>Wed, 19 Dec 2012 00:00:00 +0000</pubDate>
       
-      <guid>/2012/12/19/is-virtualization-a-failure-of-operating-systems/</guid>
+      <guid>https://maciejmroz.com/2012/12/19/is-virtualization-a-failure-of-operating-systems/</guid>
       <description>&lt;p&gt;One thing has hit me while watching of this year&amp;rsquo;s LinuxCon Europe presentations - one of reasons virtualization exists in the first place is operating system inability to properly isolate the applications from each other. Look at it this way: the role of operating systems is abstracting the physical hardware from the applications. And what is the role of hypervisor? Abstracting the hardware from the opertaing system(s) … Which makes the operating system an application running under the hypervisor, doesn&amp;rsquo;t it?&lt;/p&gt;
 
 &lt;p&gt;Now, let&amp;rsquo;s think of it from other angle - why are we using virtualization? We are virtualizing applications, and operating system is only a required intermediary. Typical workload of virtual machine is exactly one application (in general case this is one-to-many relationship, because often single application spans multiple VMs). We do this partly to achieve good utilization of physical hardware, but also to achieve isolation at the level close to &amp;ldquo;physical box per every application&amp;rdquo;. Not as secure, but conceptually equivalent.&lt;/p&gt;

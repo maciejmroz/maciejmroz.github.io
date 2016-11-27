@@ -2,18 +2,18 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Maciej Mróz Personal Blog</title>
-    <link>/categories/storage/index.xml</link>
+    <link>https://maciejmroz.com/categories/storage/index.xml</link>
     <description>Recent content on Maciej Mróz Personal Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <atom:link href="/categories/storage/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://maciejmroz.com/categories/storage/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>The demise of spinning disks</title>
-      <link>/2012/03/18/the-demise-of-spinning-disks/</link>
+      <link>https://maciejmroz.com/2012/03/18/the-demise-of-spinning-disks/</link>
       <pubDate>Sun, 18 Mar 2012 00:00:00 +0000</pubDate>
       
-      <guid>/2012/03/18/the-demise-of-spinning-disks/</guid>
+      <guid>https://maciejmroz.com/2012/03/18/the-demise-of-spinning-disks/</guid>
       <description>&lt;p&gt;It was quite some time ago when my company started using Fusion-IO (enterprise SSDs) on our database servers. We are happily using them till this day. The great part is that we could scale vertically and leave software layer unchanged. Even better: we &lt;strong&gt;still&lt;/strong&gt; have room for growth, despite getting more users and our application stack getting more and more demanding. We were one of the first to switch to SSDs on server side - so right now it&amp;rsquo;s interesting that this idea propagated so quickly. We got to the point where people start loudly saying &amp;ldquo;disk is the new tape&amp;rdquo;. And it really is.&lt;/p&gt;
 
 &lt;p&gt;The gap between CPU speed and external memory has been widening for a long time, and got to the point of being simply ridiculous. It&amp;rsquo;s worth noting that it&amp;rsquo;s not only about gap between CPU and disk drive but also about gap between CPU and DRAM (which is slightly less known fact). For CPU accessing L1 cache takes single digit amount of clock cycles. Subsequent levels of memory hierarchy are slower and slower. Accessing main memory gets us into area of hundereds to even 1000+ CPU cycles (this is strongly architecture dependent). This is very bad and low level programmers have been battling this issue for a long time now. One of approaches is using access patterns that minimize CPU cache misses and using low level prefetch instructions. We are essentally talking about linearizing access to memory that is supposed to be &amp;ldquo;random access&amp;rdquo;. If latency is the problem in case of DRAM, how bad it is in case of disk drives? Very, very bad.&lt;/p&gt;

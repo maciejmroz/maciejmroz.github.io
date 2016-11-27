@@ -2,18 +2,18 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Maciej Mróz Personal Blog</title>
-    <link>/categories/books/index.xml</link>
+    <link>https://maciejmroz.com/categories/books/index.xml</link>
     <description>Recent content on Maciej Mróz Personal Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <atom:link href="/categories/books/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://maciejmroz.com/categories/books/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>If you haven&#39;t noticed, OpenGL API is alive and kicking</title>
-      <link>/2012/03/04/if-you-havent-noticed-opengl-api-is-alive-and-kicking/</link>
+      <link>https://maciejmroz.com/2012/03/04/if-you-havent-noticed-opengl-api-is-alive-and-kicking/</link>
       <pubDate>Sun, 04 Mar 2012 00:00:00 +0000</pubDate>
       
-      <guid>/2012/03/04/if-you-havent-noticed-opengl-api-is-alive-and-kicking/</guid>
+      <guid>https://maciejmroz.com/2012/03/04/if-you-havent-noticed-opengl-api-is-alive-and-kicking/</guid>
       <description>&lt;p&gt;Recently I somehow found enough time to read &amp;ldquo;OpenGL SuperBible, 5th edition&amp;rdquo;. It was something done purely for fun, just to see how things are looking today for modern graphics APIs. Last time I did any serious graphics programming, OpenGL was slowly dying.&lt;/p&gt;
 
 &lt;p&gt;In fact, my M.Sc. thesis used Direct3D as implementation API. I simply had no choice. There was no standard for anything - every single important feature was exposed through extensions. At the same time, Direct3D 9 was well thought, simple, and forward looking. Microsoft was leading the way, and everyone knew that. As an example: somewhere around 2005, EXT_framebuffer_object appeared, giving GL functionality that was available since Direct3D 7! Good news: things have changed, and they have changed for better.&lt;/p&gt;

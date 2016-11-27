@@ -2,19 +2,72 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Post-rsses on Maciej Mróz Personal Blog</title>
-    <link>/post/index.xml</link>
+    <link>https://maciejmroz.com/post/index.xml</link>
     <description>Recent content in Post-rsses on Maciej Mróz Personal Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 01 Jan 2015 00:00:00 +0000</lastBuildDate>
-    <atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 26 Nov 2016 16:03:03 +0100</lastBuildDate>
+    <atom:link href="https://maciejmroz.com/post/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Moving the blog to Hugo</title>
+      <link>https://maciejmroz.com/2016/11/26/moving-the-blog-to-hugo/</link>
+      <pubDate>Sat, 26 Nov 2016 16:03:03 +0100</pubDate>
+      
+      <guid>https://maciejmroz.com/2016/11/26/moving-the-blog-to-hugo/</guid>
+      <description>
+
+&lt;p&gt;Quite a chunk of time has passed since my last update to this blog. While primary reason is my super busy life (on both proffessional and personal fronts) there was also another one I have finally addressed, along with a few extras. The reason was that over the years I simply grew tired of WordPress software. The point to migrate away from it occupied my TODO list for too long. I am not going to bash WP here, I used it for many years, and for that I am grateful to its authors. However, for me at least the time has come to move towards something else.&lt;/p&gt;
+
+&lt;h2 id=&#34;back-to-simplicity&#34;&gt;Back to simplicity&lt;/h2&gt;
+
+&lt;p&gt;I remember that when I was in high school my friend was running entire e-commerce site using static HTML generator written in Perl, combined with some CGI scripts to chandle checkout process. Going even further back, I remember the times when I actually used notepad to edit HTML 3 files, and upload that with FTP over a 28k modem connection to a hosting provider. Things were simple back then, and I truly miss that simplicity.&lt;/p&gt;
+
+&lt;p&gt;Having to run entire LAMP stack on my own just to run simple website is standing contrary to the rule of keeping things simple. That&amp;rsquo;s exactly what I was doing for the past few years, and that&amp;rsquo;s what I wanted to change. This is the primary reason I decided to look at static website generators as a new blogging platform. All these CMS systems have been created for people who don&amp;rsquo;t know their way around computers. Hackers know better :)&lt;/p&gt;
+
+&lt;p&gt;There is quite a few modern generators to choose from. My initial favorite was &lt;a href=&#34;http://octopress.org/&#34;&gt;Octopress&lt;/a&gt;, but eventually I settled on &lt;a href=&#34;https://gohugo.io/&#34;&gt;Hugo&lt;/a&gt; but with Octopress-inspited theme. Hugo is simple, easy to customize, trivial to install, comes with built in webserver that watches file changes, and reloads the pages in your browser just when you save source file via JavaScript magic. It&amp;rsquo;s also very, very fast - regenerating this website in its entirety takes 200-300 ms on my MacBook Pro.&lt;/p&gt;
+
+&lt;p&gt;Hugo, similar to other generators, uses Markdown as source file format. I guess the format has been popularized by GitHub (and likely other hosted Git solutions) with automatic rendering of README.md in the repositories. Regardless of the reason, it is well known and liked by hacker types. It has some limitations, but also lets you focus on the content and not its form. With Hugo you can easily work around Markdown limitations by using your own macros that expand to HTML during rendering. So, while 99% of the time sticking to plain Markdown syntax is enough, you are not left alone in the corner cases.&lt;/p&gt;
+
+&lt;h2 id=&#34;github-pages&#34;&gt;GitHub Pages&lt;/h2&gt;
+
+&lt;p&gt;GitHub has launched &lt;a href=&#34;https://pages.github.com/&#34;&gt;GitHub Pages&lt;/a&gt; quite a while ago. It&amp;rsquo;s totally free service that let&amp;rsquo;s you serve static web content to the world. There are traffic limitations but not at the level that matters for a personal blog. Should you somehow run into these limitations, there are plenty of other options, Amazon S3 among them. For now, sticking to GitHub gives me very nice publishing flow. In your website directory:&lt;/p&gt;
+
+&lt;div class=&#34;highlight&#34; style=&#34;background: #272822&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span&gt;&lt;/span&gt;MaciekMBP:hugo maciek$ hugo
+Started building sites ...
+Built site &lt;span style=&#34;color: #66d9ef&#34;&gt;for&lt;/span&gt; language en:
+&lt;span style=&#34;color: #ae81ff&#34;&gt;0&lt;/span&gt; draft content
+&lt;span style=&#34;color: #ae81ff&#34;&gt;0&lt;/span&gt; future content
+&lt;span style=&#34;color: #ae81ff&#34;&gt;0&lt;/span&gt; expired content
+&lt;span style=&#34;color: #ae81ff&#34;&gt;35&lt;/span&gt; pages created
+&lt;span style=&#34;color: #ae81ff&#34;&gt;0&lt;/span&gt; non-page files copied
+&lt;span style=&#34;color: #ae81ff&#34;&gt;6&lt;/span&gt; paginator pages created
+&lt;span style=&#34;color: #ae81ff&#34;&gt;45&lt;/span&gt; tags created
+&lt;span style=&#34;color: #ae81ff&#34;&gt;17&lt;/span&gt; categories created
+total in &lt;span style=&#34;color: #ae81ff&#34;&gt;227&lt;/span&gt; ms
+MaciekMBP:hugo maciek$ &lt;span style=&#34;color: #f8f8f2&#34;&gt;cd&lt;/span&gt; public
+MaciekMBP:public maciek$ git add -A
+MaciekMBP:public maciek$ git commit -m &lt;span style=&#34;color: #e6db74&#34;&gt;&amp;quot;New version info&amp;quot;&lt;/span&gt;
+MaciekMBP:public maciek$ git push
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;That&amp;rsquo;s all, new site version is live!!! Of course you can (and should :) ) use version control tools for your source files, too. For ambitious types: implement building and publishing of your website via continuous integration server :)&lt;/p&gt;
+
+&lt;h2 id=&#34;cloudflare&#34;&gt;CloudFlare&lt;/h2&gt;
+
+&lt;p&gt;Serving static website from GitHub is very quick, and supports HTTPS within github.io domain. What if you want HTTPS on your own domain? Here is where &lt;a href=&#34;https://www.cloudflare.com/&#34;&gt;CloudFlare&lt;/a&gt; steps in. Within their &lt;strong&gt;free&lt;/strong&gt; plan you can get not only free HTTPS, but with great options like: redirecting HTTP straffic to HTTPS, turning on HSTS (HTTP Strict Stransport Security) for the site, or even forcing TLS 1.3 use (beta feature). While going crazy with security on personal blog that&amp;rsquo;s available on GitHub anyway may seem like an overkill, I strongly believe that in the era of &lt;a href=&#34;https://letsencrypt.org/&#34;&gt;Let&amp;rsquo;s Encrypt&lt;/a&gt;, non-encrypted HTTP traffic should just die. Using CloudFlare has an additional advantage of speed: it&amp;rsquo;s not just about encryption, but also a CDN sitting in front of GitHub. To make it even sweeter, CloudFlare fully supports HTTP/2 and SPDY protocols.&lt;/p&gt;
+
+&lt;p&gt;And one more thing: thanks to CloudFlare &lt;a href=&#34;https://blog.cloudflare.com/introducing-cname-flattening-rfc-compliant-cnames-at-a-domains-root/&#34;&gt;CNAME Flattening&lt;/a&gt; you can have CNAME at top level of your domain &lt;strong&gt;without breaking the RFC&lt;/strong&gt;. As a result, the address for this blog from now on will be just &lt;a href=&#34;https://maciejmroz.com&#34;&gt;https://maciejmroz.com&lt;/a&gt;, served to you at zero cost in &amp;ldquo;cloud native&amp;rdquo; way :)&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>Beyond virtualization</title>
-      <link>/2015/01/01/beyond-virtualization/</link>
+      <link>https://maciejmroz.com/2015/01/01/beyond-virtualization/</link>
       <pubDate>Thu, 01 Jan 2015 00:00:00 +0000</pubDate>
       
-      <guid>/2015/01/01/beyond-virtualization/</guid>
+      <guid>https://maciejmroz.com/2015/01/01/beyond-virtualization/</guid>
       <description>&lt;p&gt;I guess it&amp;rsquo;s time to sum up recent trends in how we build, deploy, and operate complex server side software. Virtualization and cloud computing have been with us for quite a while but right now the era of containers is coming, with entire Docker ecosystem paving the way. You might want to ask a very valid question: &amp;ldquo;What&amp;rsquo;s in it for me?&amp;rdquo; :) I will focus on business implications of the technology. But let&amp;rsquo;s set the context first.&lt;/p&gt;
 
 &lt;p&gt;The explosion of cloud computing in recent years literally changed the way we think. Well, you probably could treat Amazon EC2 instances as if they were ordinary machines, but &amp;ldquo;in the cloud&amp;rdquo;. That of course would be &lt;strong&gt;totally&lt;/strong&gt; missing the point. The key advantages of cloud computing are on the intersection of operations, software architecture and development - these cannot be realized without moving to true DevOps. Trying to slap &amp;ldquo;cloud computing&amp;rdquo; sticker on top of existing organization with IT/Operations/Development (add more if needed to fit your case) silos will not give anyone much value. Once you change your approach, you suddenly get the true benefits:&lt;/p&gt;
@@ -53,10 +106,10 @@ The real cloud computing usage scenarios could look like this:&lt;/li&gt;
     
     <item>
       <title>LTV of a service</title>
-      <link>/2014/11/04/ltv-of-a-service/</link>
+      <link>https://maciejmroz.com/2014/11/04/ltv-of-a-service/</link>
       <pubDate>Tue, 04 Nov 2014 00:00:00 +0000</pubDate>
       
-      <guid>/2014/11/04/ltv-of-a-service/</guid>
+      <guid>https://maciejmroz.com/2014/11/04/ltv-of-a-service/</guid>
       <description>&lt;p&gt;A little story today. It goes like this. I drop by one of our teams, and within completely different discussion I get asked this very &amp;ldquo;simple&amp;rdquo; question:&lt;/p&gt;
 
 &lt;blockquote&gt;
@@ -65,7 +118,7 @@ The real cloud computing usage scenarios could look like this:&lt;/li&gt;
 
 &lt;p&gt;If you haven&amp;rsquo;t noticed yet, there&amp;rsquo;s a flaw in this question. The problem is, it simply doesn&amp;rsquo;t make sense from economic point of view. For any project in any industry one thing is true: investment into project comes before realizing profit from that project. It&amp;rsquo;s pure logic, you just can&amp;rsquo;t defeat causality. Depending on the industry the distribution of investment and revenue over time axis will differ, but it might look like this:&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;/img/investment-vs-revenue_300.jpg&#34; alt=&#34;investment vs revenue_300&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://maciejmroz.com/img/investment-vs-revenue_300.jpg&#34; alt=&#34;investment vs revenue_300&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;This offset between investment and revenue is the core of the problem: current development costs are &lt;strong&gt;always&lt;/strong&gt; out of sync with current revenue. Depending on the industry and project the gap will obviously vary but it&amp;rsquo;s always there. This is relatively simple and intiuitive concept when we talk about project-based work but it becomes somewhat more complex when we talk about online games, which are services. Some successful online games (like World of Warcraft) have been with us for a long time, but this is only because their developers keep working on them. In other words, the investment is continuous, and so is revenue (both curves do not have to be smooth!). These games wouldn&amp;rsquo;t have survived if they remained static in their entire life cycle, they evolved and changed together with their player base. In the world of game services, there&amp;rsquo;s huge overlap between the two curves from graph above but the truth remains: current investments create &lt;strong&gt;future&lt;/strong&gt; profits. Nothing new here, move along, and of post? Not really, this is where the fun actually begins.&lt;/p&gt;
 
@@ -84,10 +137,10 @@ The real cloud computing usage scenarios could look like this:&lt;/li&gt;
     
     <item>
       <title>Functional programming trojan horse</title>
-      <link>/2013/09/22/functional-programming-trojan-horse/</link>
+      <link>https://maciejmroz.com/2013/09/22/functional-programming-trojan-horse/</link>
       <pubDate>Sun, 22 Sep 2013 00:00:00 +0000</pubDate>
       
-      <guid>/2013/09/22/functional-programming-trojan-horse/</guid>
+      <guid>https://maciejmroz.com/2013/09/22/functional-programming-trojan-horse/</guid>
       <description>
 
 &lt;p&gt;All of game server code at my current company is using C++, and we are still starting new projects using existing C++ framework. I gave a presentation on our server architecture a few months ago, available &lt;a href=&#34;http://www.slideshare.net/maciejmroz/architektura-serwera-gier-online&#34;&gt;here&lt;/a&gt; (it&amp;rsquo;s in Polish, it was local event here in Kraków). After giving the presentation I was approached by a guy (sorry, don&amp;rsquo;t remember the name) who said something like: &amp;ldquo;It&amp;rsquo;s cool you did all that in C++. It&amp;rsquo;d be interesting to see you talk next year about how you rewritten the whole thing in Java :)&amp;ldquo;. I instantly answered: &amp;ldquo;Right now I&amp;rsquo;d do it with Scala and Akka&amp;rdquo;.&lt;/p&gt;
@@ -160,10 +213,10 @@ The first very important and very commonly used thing is Option generic type. Op
     
     <item>
       <title>Am I a marketing person now?</title>
-      <link>/2013/09/09/am-i-a-marketing-person-now/</link>
+      <link>https://maciejmroz.com/2013/09/09/am-i-a-marketing-person-now/</link>
       <pubDate>Mon, 09 Sep 2013 00:00:00 +0000</pubDate>
       
-      <guid>/2013/09/09/am-i-a-marketing-person-now/</guid>
+      <guid>https://maciejmroz.com/2013/09/09/am-i-a-marketing-person-now/</guid>
       <description>&lt;p&gt;Yesterday I was talking to my Dad on Skype about the book I just finished reading. The book title was &amp;ldquo;Running Lean&amp;rdquo; and it is a very good take on the lean approach to product development/management originally made popular by Eric Ries. What struck me was that while I was talking, my Dad suddenly interrupted me and asked a simple question: &amp;ldquo;Are you a marketing guy now?&amp;rdquo;. Of course I denied, it just sounded completely bizarre and out of place! I am a technologist!&lt;/p&gt;
 
 &lt;p&gt;I would probably leave it at that and forget the thing, but my state of mind recently is &amp;ldquo;challenge everything&amp;rdquo;. I dug deeper. He asked the question because I was so passionate about the book, and that wasn&amp;rsquo;t even in face to face conversation, my excitement was showing over Skype voice call! I had to come clean and force myself to realize some things - things that turned out to be not that suprising once I started to connect the dots (Steve Jobs analogy seems fitting here, sorry :) ).&lt;/p&gt;
@@ -188,10 +241,10 @@ The first very important and very commonly used thing is Option generic type. Op
     
     <item>
       <title>C&#43;&#43;11 Goodness</title>
-      <link>/2013/05/04/c11-goodness/</link>
+      <link>https://maciejmroz.com/2013/05/04/c11-goodness/</link>
       <pubDate>Sat, 04 May 2013 00:00:00 +0000</pubDate>
       
-      <guid>/2013/05/04/c11-goodness/</guid>
+      <guid>https://maciejmroz.com/2013/05/04/c11-goodness/</guid>
       <description>&lt;p&gt;While most of my programming life used to be centered around C++, nowadays I do not really spend much time with the language at work (other than doing code reviews). I remain big fan of C++. Despite the fact it&amp;rsquo;s not very fashionable language, it is extremely efficient and quite flexible. What&amp;rsquo;s even more important it&amp;rsquo;s continuing to evolve, and it evolves in the right direction. I took some time to try out the C++11 features refactoring small private project, and it really looks good.&lt;/p&gt;
 
 &lt;p&gt;First of all: lambdas. This feature alone is a killer. C++ used to have &amp;ldquo;sort of lambdas&amp;rdquo; in the form of boost::lambda library, but this library was insanely hard to use beyond simple use cases, the syntax was alien, and when it broke the compiler errors were cryptic. It didn&amp;rsquo;t stop me from trying to use it, only to come up with the conclusion it doesn&amp;rsquo;t really improve my productivity in any way. I never used boost::lambda in any production code. C++11 lambdas are not like that. The lambda function body is written using normal C++ syntax. It&amp;rsquo;s ordinary code, just as readable as any other code. There&amp;rsquo;s no complex template voodoo happening. It looks just like any other function except for special syntax used to define it in place. If you do something wrong in the lambda, the compiler errors are what anyone would expect them to be. Ok, it&amp;rsquo;s all nice, but why all the fuss about anonymous functions? Because they are much more than just that! Using the variable capture specification you can create real closures. That&amp;rsquo;s closures as in: &amp;ldquo;Lisp has closures&amp;rdquo;. It means you can access enclosing state in the lambda body. All these small functors that proliferate like crazy when writing STL code are just not necessary any more! As a side note, you don&amp;rsquo;t have to use bind, either, because lambdas are perfectly fine as &amp;ldquo;glue code&amp;rdquo;! We get cleaner, shorter and more maintainable code, all thanks to the fact that compiler does what had to be done manually in the past. It doesn&amp;rsquo;t matter if it&amp;rsquo;s writing new code, or refactoring part of existing application. Lambdas offer real gains to productivity.&lt;/p&gt;
@@ -210,10 +263,10 @@ The first very important and very commonly used thing is Option generic type. Op
     
     <item>
       <title>The structure in unstructured data</title>
-      <link>/2013/03/09/the-structure-in-unstructured-data/</link>
+      <link>https://maciejmroz.com/2013/03/09/the-structure-in-unstructured-data/</link>
       <pubDate>Sat, 09 Mar 2013 00:00:00 +0000</pubDate>
       
-      <guid>/2013/03/09/the-structure-in-unstructured-data/</guid>
+      <guid>https://maciejmroz.com/2013/03/09/the-structure-in-unstructured-data/</guid>
       <description>&lt;p&gt;Working with data is something I personally consider one of the coolest things one can do right now in the tech industry. Typically when someone thinks or talks about &amp;ldquo;Big Data&amp;rdquo; it implies petabyte data sets and Hadoop clusters spanning 100+ nodes. The truth is, even a lot smaller data and humbler infrastructure can provide great insights and drive the product/service innovation. To me its really a lot closer to &amp;ldquo;Smart Data&amp;rdquo; than &amp;ldquo;Big Data&amp;rdquo; - it doesn&amp;rsquo;t matter how big your data set is, but how much you are able to do with it, and how quickly.&lt;/p&gt;
 
 &lt;p&gt;In my workplace we run our own data gathering, storage, and processing. Our own code, our own infrastructure. Managed, architected, and even partially implemented by yours truly. What is special about our system is that compared to most commercial systems, we allow our products to report pretty much arbitrary data. There are very basic guidelines that must be met for standard metrics to work, but what is actually possible goes way beyond that. Product teams have access to raw data and can create their own processing tools if they want/need to. They can also use Hive to query the data if they want to - very often you can just brute force your answer from data, so why not do it? Programmer&amp;rsquo;s time is expensive, after all.&lt;/p&gt;
@@ -230,10 +283,10 @@ The first very important and very commonly used thing is Option generic type. Op
     
     <item>
       <title>The rationale behind A/B testing</title>
-      <link>/2013/02/24/the-rationale-behind-ab-testing/</link>
+      <link>https://maciejmroz.com/2013/02/24/the-rationale-behind-ab-testing/</link>
       <pubDate>Sun, 24 Feb 2013 00:00:00 +0000</pubDate>
       
-      <guid>/2013/02/24/the-rationale-behind-ab-testing/</guid>
+      <guid>https://maciejmroz.com/2013/02/24/the-rationale-behind-ab-testing/</guid>
       <description>&lt;p&gt;A few days ago, while having a casual conversation over a beer, I was totally shocked when I heard something close to: &amp;ldquo;A/B testing is pointless on small project like ours because testing overhead is too high&amp;rdquo;. Is it? Let&amp;rsquo;s run the numbers :) Assumptions:&lt;/p&gt;
 
 &lt;ul&gt;
@@ -258,10 +311,10 @@ The first very important and very commonly used thing is Option generic type. Op
     
     <item>
       <title>Simulating loot based virtual economy</title>
-      <link>/2013/01/04/simulating-loot-based-virtual-economy/</link>
+      <link>https://maciejmroz.com/2013/01/04/simulating-loot-based-virtual-economy/</link>
       <pubDate>Fri, 04 Jan 2013 00:00:00 +0000</pubDate>
       
-      <guid>/2013/01/04/simulating-loot-based-virtual-economy/</guid>
+      <guid>https://maciejmroz.com/2013/01/04/simulating-loot-based-virtual-economy/</guid>
       <description>
 
 &lt;p&gt;Just like many others, in 2012 I spent significant amount of time playing Diablo 3. While I enjoyed the experience a lot, playing the game also pushed me to think about its design. What I found most interesting was random loot system and auction house. Because of that, I recently started to think if I can produce simplified model of virtual currency economy in a game with random loot. Now, one very important caveat: I did not try to model Blizzard’s game. Diablo 3 is a very complex design with many variables, and for a technical designers/monetization guys at Blizzard was surely a big challenge. My model does not try to be complete, but rather give an insight into how an economy like that can behave, and perhaps give some ideas on how such economy can be regulated. It’s more like first step to making a game like that :)&lt;/p&gt;
@@ -317,11 +370,11 @@ The first very important and very commonly used thing is Option generic type. Op
 
 &lt;p&gt;I implemented this model in C++ and run the simulation for 10 000 players, over 365 cycles. Results are quite interesting, although they raise more questions than they answer. A first thing to do would be to look at player progression through game as time passes. In the model, average tier of items used by players is likely a good measure:&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;/img/loot_economy/average_tier.png&#34; alt=&#34;average_tier&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://maciejmroz.com/img/loot_economy/average_tier.png&#34; alt=&#34;average_tier&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;Looks nice, right? Player should progress quickly at first, and then the progress should gradually slow down. Well, it’s only an average. From single player perspective the picture is completely different. Lets look at how many players managed to do at least one upgrade in the simulation cycle:&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;/img/loot_economy/upgrade_count.png&#34; alt=&#34;upgrade_count&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://maciejmroz.com/img/loot_economy/upgrade_count.png&#34; alt=&#34;upgrade_count&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;Ooops! This really hurts! We see bad things happening:&lt;/p&gt;
 
@@ -332,11 +385,11 @@ The first very important and very commonly used thing is Option generic type. Op
 
 &lt;p&gt;Now the game economy. Here’s a graph of transaction count:&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;/img/loot_economy/total_tr_count.png&#34; alt=&#34;total_tr_count&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://maciejmroz.com/img/loot_economy/total_tr_count.png&#34; alt=&#34;total_tr_count&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;There are some similarities, although overall shape is more dramatic :( Eventually number of transactions, just like upgrade count goes down to near zero. One would think looking at this graph that game economy becomes dead in time. Not so fast! Let’s look at transaction volume (sum of all transactions in simulation cycle):&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;/img/loot_economy/total_tr_volume.png&#34; alt=&#34;total_tr_volume&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://maciejmroz.com/img/loot_economy/total_tr_volume.png&#34; alt=&#34;total_tr_volume&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;Looks different, doesn’t it? Having few transactions does not mean the economy is dead. The transaction volume also seems to go through cycles, but every cycle seems to have its maximum higher than previous one! The question is: does anyone want a virtual economy like this one?&lt;/p&gt;
 
@@ -345,19 +398,19 @@ The simulation used to produce graphs above definitely deserves deeper look into
 
 &lt;p&gt;I divided the graphs into two separate sets, one for tiers 0-4, and one for tiers 5-9. The reason for this division is very simple: economy for items of tiers 0-4 was dead after &amp;lt;50 simulation cycles. Transaction count:&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;/img/loot_economy/tier_04_tr_count.png&#34; alt=&#34;tier_04_tr_count&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://maciejmroz.com/img/loot_economy/tier_04_tr_count.png&#34; alt=&#34;tier_04_tr_count&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;Item tiers 0 and 1 don’t even register on the graph, they were never traded. Another interesting thing about this graph is that once transaction count reaches peak value, it goes down even faster. This is essentially a market crash for items of this tier.&lt;/p&gt;
 
 &lt;p&gt;Now lets look at average price of items:&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;/img/loot_economy/tier_04_avg_prices.png&#34; alt=&#34;tier_04_avg_prices&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://maciejmroz.com/img/loot_economy/tier_04_avg_prices.png&#34; alt=&#34;tier_04_avg_prices&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;Prices started to fall down long before anything bad was visible in transaction count graph. Maximum transaction count for items of tier 4 happens long after value of these items hits its low.&lt;/p&gt;
 
 &lt;p&gt;This is all reflected in transaction volume split by item tier:&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;/img/loot_economy/tier_04_tr_volume.png&#34; alt=&#34;tier_04_tr_volume&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://maciejmroz.com/img/loot_economy/tier_04_tr_volume.png&#34; alt=&#34;tier_04_tr_volume&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;This is already a good indication into why total transaction volume graph looks the way it looks: it’s result of stacking data from separate tiers. While economy as a whole is alive, market for items of specific tiers grows and dies.&lt;/p&gt;
 
@@ -365,13 +418,13 @@ The simulation used to produce graphs above definitely deserves deeper look into
 
 &lt;p&gt;Transaction count:&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;/img/loot_economy/tier_59_tr_count.png&#34; alt=&#34;tier_59_tr_count&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://maciejmroz.com/img/loot_economy/tier_59_tr_count.png&#34; alt=&#34;tier_59_tr_count&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;The story repeats itself. It doesn’t look good: what we can see on tiers 5 and 6 is that their transaction count gradually goes up, but after reaching their peak they essentially become untradeable over night.&lt;/p&gt;
 
 &lt;p&gt;How about average prices?&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;/img/loot_economy/tier_59_avg_prices.png&#34; alt=&#34;tier_59_avg_prices&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://maciejmroz.com/img/loot_economy/tier_59_avg_prices.png&#34; alt=&#34;tier_59_avg_prices&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;Again, transaction count peak happens long after price plateau is reached. One interesting thing: the prices of tiers diverge slowly. It’s more like they grow together but then lower tier just lets it go and stays behind. There isn’t really much difference in pricing between tier 8 and 9 on this graph. These items are best by and are acquired „at any cost”.&lt;/p&gt;
 
@@ -379,7 +432,7 @@ The simulation used to produce graphs above definitely deserves deeper look into
 
 &lt;p&gt;Finally, transaction volume graph is not really suprising:&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;/img/loot_economy/tier_59_tr_volume.png&#34; alt=&#34;tier_59_tr_volume&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://maciejmroz.com/img/loot_economy/tier_59_tr_volume.png&#34; alt=&#34;tier_59_tr_volume&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;Again we see waves that go up, each one slower, but with higher peak. Given long enough time it would likely happen with higher item tiers.&lt;/p&gt;
 
@@ -403,10 +456,10 @@ The simulation used to produce graphs above definitely deserves deeper look into
     
     <item>
       <title>Is virtualization a failure of operating systems?</title>
-      <link>/2012/12/19/is-virtualization-a-failure-of-operating-systems/</link>
+      <link>https://maciejmroz.com/2012/12/19/is-virtualization-a-failure-of-operating-systems/</link>
       <pubDate>Wed, 19 Dec 2012 00:00:00 +0000</pubDate>
       
-      <guid>/2012/12/19/is-virtualization-a-failure-of-operating-systems/</guid>
+      <guid>https://maciejmroz.com/2012/12/19/is-virtualization-a-failure-of-operating-systems/</guid>
       <description>&lt;p&gt;One thing has hit me while watching of this year&amp;rsquo;s LinuxCon Europe presentations - one of reasons virtualization exists in the first place is operating system inability to properly isolate the applications from each other. Look at it this way: the role of operating systems is abstracting the physical hardware from the applications. And what is the role of hypervisor? Abstracting the hardware from the opertaing system(s) … Which makes the operating system an application running under the hypervisor, doesn&amp;rsquo;t it?&lt;/p&gt;
 
 &lt;p&gt;Now, let&amp;rsquo;s think of it from other angle - why are we using virtualization? We are virtualizing applications, and operating system is only a required intermediary. Typical workload of virtual machine is exactly one application (in general case this is one-to-many relationship, because often single application spans multiple VMs). We do this partly to achieve good utilization of physical hardware, but also to achieve isolation at the level close to &amp;ldquo;physical box per every application&amp;rdquo;. Not as secure, but conceptually equivalent.&lt;/p&gt;
@@ -417,19 +470,19 @@ The simulation used to produce graphs above definitely deserves deeper look into
     
     <item>
       <title>What can one day of coding bring?</title>
-      <link>/2012/12/01/what-can-one-day-of-coding-bring/</link>
+      <link>https://maciejmroz.com/2012/12/01/what-can-one-day-of-coding-bring/</link>
       <pubDate>Sat, 01 Dec 2012 00:00:00 +0000</pubDate>
       
-      <guid>/2012/12/01/what-can-one-day-of-coding-bring/</guid>
+      <guid>https://maciejmroz.com/2012/12/01/what-can-one-day-of-coding-bring/</guid>
       <description>&lt;p&gt;We&amp;rsquo;ve had our first internal hackaton recently at Ganymede. We don&amp;rsquo;t have &amp;ldquo;20% time&amp;rdquo; rule or anything like that, so the entire thing was a huge experiment. What we did was to take not one, but two days (Thursday and Friday) off our normal schedule to allow people do some cool stuff.Obviosly, because we are a game development company, most teams decided to a game. With all my responsibilities, I did not commit to any team, but decided to do small project on my own - to last minute I did not actually know if I would be tied up in other stuff or not. Some things can wait, some can not :(&lt;/p&gt;
 
 &lt;p&gt;Fortunately, I was able to spend some time coding along with the rest of the company. I thank our hackaton for just that - an opportunity to actually write code. With all the work on project management, product management, process, and other organizational responsibilities (like, making our little code fest actually happen :) ) I tend to forget how great if feels to actually create something instead of just helping others do it. What did I do? Nothing truly innovative. I am crazy about iOS game called Super Hexagon, and I just wanted similar gameplay. These &amp;ldquo;one mistake&amp;rdquo; games (Temple Run is another great example) have addictive quality hard to find anywhere else.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;/img/revhex.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://maciejmroz.com/img/revhex.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;There is no title screen and no highscore list. There is no network play, and no Facebook spamming. There are no achievements. Just the game you can play&amp;hellip;&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;/img/revhex_end.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://maciejmroz.com/img/revhex_end.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;&amp;hellip; over and over :) The entire thing was written in Python using Cocos2D library. Graphics was done by one of our artists who was kind enough to do it on almost last minute, despite being involved with other project.&lt;/p&gt;
 </description>
@@ -437,10 +490,10 @@ The simulation used to produce graphs above definitely deserves deeper look into
     
     <item>
       <title>Right is not the same as intuitive in product development</title>
-      <link>/2012/11/18/right-is-not-the-same-as-intuitive-in-product-development/</link>
+      <link>https://maciejmroz.com/2012/11/18/right-is-not-the-same-as-intuitive-in-product-development/</link>
       <pubDate>Sun, 18 Nov 2012 00:00:00 +0000</pubDate>
       
-      <guid>/2012/11/18/right-is-not-the-same-as-intuitive-in-product-development/</guid>
+      <guid>https://maciejmroz.com/2012/11/18/right-is-not-the-same-as-intuitive-in-product-development/</guid>
       <description>&lt;p&gt;Some introductory note: I&amp;rsquo;ve written this post before reading &lt;a href=&#34;http://www.amazon.com/The-Lean-Startup-Entrepreneurs-Continuous/dp/0307887898/&#34;&gt;Lean Startup&lt;/a&gt; by Eric Ries. Recently I finally found time to do it and &amp;hellip; I wish this book existed five years ago :) The problems I describe below are not unique. If what you read resonates with you in any way, go and read the book - it explains these ideas in a lot greater detail, touching on some more complicated subjects like product life cycle and company structure. Anyway, here&amp;rsquo;s the post, only slightly edited.&lt;/p&gt;
 
 &lt;hr /&gt;
@@ -481,10 +534,10 @@ Now, a catch: some of these assumptions can turn out to be true. But which ones?
     
     <item>
       <title>Diablo 3 review</title>
-      <link>/2012/07/28/diablo-3-review/</link>
+      <link>https://maciejmroz.com/2012/07/28/diablo-3-review/</link>
       <pubDate>Sat, 28 Jul 2012 00:00:00 +0000</pubDate>
       
-      <guid>/2012/07/28/diablo-3-review/</guid>
+      <guid>https://maciejmroz.com/2012/07/28/diablo-3-review/</guid>
       <description>&lt;p&gt;After a while of playing Diablo 3 it&amp;rsquo;s probably about time for me to publish my own opinion on the game. A warning: I was never really a Diablo 2 fan (at the time when it was big I was mostly playing a game called &amp;ldquo;Visual C++&amp;rdquo; :) ) so consider it a noob review if you want to :)&lt;/p&gt;
 
 &lt;p&gt;Like many people out there, I started out as a Monk. After one day of playing I said that this game is a lot like FarmVille, only for the hardcore crowd. Really, it was that easy. On Normal difficulty my first death was when I was wondering if these clouds of green gas from left by flowers from living trees are some kind of buff I should be collecting. Click, click, click, level up, click, click &amp;hellip; it&amp;rsquo;s just insane. I had some trouble with Belial because of that - it&amp;rsquo;s probably the only point early in the game where you actually have to avoid getting hit. Killed it on second or third attempt, then had one or two purely accidental deaths, killed Diablo.&lt;/p&gt;
@@ -550,10 +603,10 @@ Now, a catch: some of these assumptions can turn out to be true. But which ones?
     
     <item>
       <title>Enter the Node.js</title>
-      <link>/2012/07/07/enter-the-node-js/</link>
+      <link>https://maciejmroz.com/2012/07/07/enter-the-node-js/</link>
       <pubDate>Sat, 07 Jul 2012 00:00:00 +0000</pubDate>
       
-      <guid>/2012/07/07/enter-the-node-js/</guid>
+      <guid>https://maciejmroz.com/2012/07/07/enter-the-node-js/</guid>
       <description>
 
 &lt;p&gt;The title says it all, but I probably still should paint some background to this article. Imagine a system where you need very high performance, you need it yesterday, and you don&amp;rsquo;t have infinite funds to simply throw more hardware at the problem. Very important component in this system is a web server. Very simple requests, always generated by code (while system in question does not provide data to end users, you can think of AJAX - definitely there&amp;rsquo;s a similarity). So I have a webserver in question. Apache + PHP, running on a virtual machine. I quickly written a Python script that emulated the workload webserver was supposed to have (fuzzed POST requests in specific format). I did back of the envelope calculations of the performance the web server has to meet. As it turned out, Apache + PHP running on a virtual machine was at very, very small percentage of what I needed.&lt;/p&gt;
@@ -616,10 +669,10 @@ Now, a catch: some of these assumptions can turn out to be true. But which ones?
     
     <item>
       <title>What is Agile, anyway?</title>
-      <link>/2012/04/27/what-is-agile-anyway/</link>
+      <link>https://maciejmroz.com/2012/04/27/what-is-agile-anyway/</link>
       <pubDate>Fri, 27 Apr 2012 00:00:00 +0000</pubDate>
       
-      <guid>/2012/04/27/what-is-agile-anyway/</guid>
+      <guid>https://maciejmroz.com/2012/04/27/what-is-agile-anyway/</guid>
       <description>&lt;p&gt;I was recently confronted with very interesting misconception: that Agile and SCRUM are the same thing. It really got me thinking. First, it means that one must be very careful when using the word &amp;ldquo;agile&amp;rdquo; in software development context. Less obvious: SCRUM is de facto standard agile method today, and very often the only one people know or heard about.&lt;/p&gt;
 
 &lt;p&gt;Wikipedia lists &lt;a href=&#34;http://en.wikipedia.org/wiki/Agile_software_development&#34;&gt;10+ different methods&lt;/a&gt; falling under &amp;ldquo;Agile&amp;rdquo; umbrella. It&amp;rsquo;s no suprise because agile manifesto is very vague and does not really tell much (if anything) about the &lt;strong&gt;how&lt;/strong&gt; part. Specific methods declared as &amp;ldquo;agile&amp;rdquo; are simply inspired by these principles. Agile software development is a way of thinking, or even a philosophy, developed as a reaction to shortcomings of &amp;ldquo;traditional&amp;rdquo; methods. While this religious/flamewar flavour may sound dangerous, it&amp;rsquo;s a fact that SCRUM (as an example) solves some of these shortcomings in a very neat and precise way. But is Agile any better?&lt;/p&gt;
@@ -646,28 +699,6 @@ Now, a catch: some of these assumptions can turn out to be true. But which ones?
 &lt;p&gt;I could go on and on. If you noticed that these questions are hardly technical, good for you :) The most important takeaway here is very simple: software development does not ever exist in a vacuum! The primary goal of any development team is to meet the needs of customers (and, by proxy, the business as a whole) and do it in the most efficient way. This is the only metric that really matters, because ultimately companies exist to make money, and without customers they cannot. Everything else is secondary. If waterfall development is the answer, by all means go for it. If not, go with something else. It&amp;rsquo;s a business, not religion!&lt;/p&gt;
 
 &lt;p&gt;I do not believe there is &amp;ldquo;one method to rule them all&amp;rdquo;, or that there will ever be one. Having said that, assuming specific company, market, team, project, etc etc, there definitely exists some perfect process for that composition. At the same time, you probably will not be able to identify and introduce it for very simple reason: by the time you do, the world will change. So, instead of thinking about what&amp;rsquo;s better in principle start thinking about what&amp;rsquo;s better right here, right now. Start thinking about &lt;strong&gt;agile process development&lt;/strong&gt;.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>The next console generation ain&#39;t what it used to be</title>
-      <link>/2012/04/17/the-next-console-generation-aint-what-it-used-to-be/</link>
-      <pubDate>Tue, 17 Apr 2012 00:00:00 +0000</pubDate>
-      
-      <guid>/2012/04/17/the-next-console-generation-aint-what-it-used-to-be/</guid>
-      <description>&lt;p&gt;The next generation of consoles will most likely come by the end of year 2013. One intersting question arise: how it &lt;strong&gt;should&lt;/strong&gt; look like? Disclaimer: by &amp;ldquo;should&amp;rdquo; I mean &amp;ldquo;actually makes business sense for both platform holders and developers&amp;rdquo; and not &amp;ldquo;what hardcore gamers would like to see&amp;rdquo;. These meanings are at quite a big conflict, as we shall see later :)&lt;/p&gt;
-
-&lt;p&gt;In order to think about next gen we have to take deeper look at the general trends in the entertainment industry. Some of these trends were not significant at X360/PS3 launch, some did not even exist at the time. The world has radically changed in the past few years, invalidating many assumptions entire console industry was built on. As a reminder, the classic console business model is based on selling hardware at a loss in order to build userbase and later getting the money back in the form of licensing fees (which implies absolute control over platform). Traditionally, consoles were very powerful at release - comparable to very good gaming PC. Other than cost optimizations and physical layout, during lifetime of a console hardware specifications are fixed.&lt;/p&gt;
-
-&lt;p&gt;This provided value to customers in two ways: one way was getting very powerful hardware at a discounted price, and second was getting stable hardware configuration that is guaranteed to be compatible with every game released for the system. Of course, console gamers eventually end up paying more than PC gamers but because it is spread over long long time, it&amp;rsquo;s something people generally tend to overlook. It&amp;rsquo;s all great - if it works. However, if the console doesn&amp;rsquo;t get enough traction it is a financial disaster. Developing custom hardware and operating system is insanely costly and time consuming. We&amp;rsquo;re not only talking custom boards and software here - we&amp;rsquo;re talking CPU/GPU design! At launch, instead of starting to make money on the console, &lt;strong&gt;even more&lt;/strong&gt; money is spent. It&amp;rsquo;s a huge risk to take.&lt;/p&gt;
-
-&lt;p&gt;Subsidizing the hardware is something that was already put into doubt at the very beginning of the current console cycle by Nintendo. Wii was never sold at a loss, allowing the profit to be made on both games and hardware itself. It is reasonable to assume that designing the Wii was a lot cheaper than designing PS3/X360 - essentially is was slightly beefed up Gamecube with a new controller. Obviously, the break even point for Nintendo was much lower than for Sony/Microsoft, something I am sure both companies noticed. What everyone noticed is that there&amp;rsquo;s huge group of people who didn&amp;rsquo;t mind worse graphics quality, and didn&amp;rsquo;t care about HD that much. I am not trying to convince anyone here that better graphics and all other stuff brought by high performance hardware do not matter. They do. But with every hardware generation the group of people who care is actually smaller and smaller.&lt;/p&gt;
-
-&lt;p&gt;Now some personal observation. While I do not play games on a PC that much, I managed to notice one thing related to console cycles. Every time game console is released PC players say &amp;ldquo;wow!&amp;rdquo; (deep inside, of course, no PC gamer will openly admit that :) ). Shortly (a year or so later) PC hardware and games are roughly the same quality. Fast forward two years and PC games are vastly superior (this is the moment when PC gamers proudly bash console gamers in public :) ). Finally, when new console generation arrives, everyone says &amp;ldquo;it&amp;rsquo;s about time&amp;rdquo;. I don&amp;rsquo;t see this cycle happening right now &amp;hellip; sure, there are some DX11 titles that look very good (and look at tech demos from companies like Epic and Crytek!) but I don&amp;rsquo;t see people agonizing over the need for new GPU, or even complete system. Also, I don&amp;rsquo;t see people getting excited about new chips from AMD/Nvidia or new Intel CPUs. Hardcore gamers might still be in denial, but I&amp;rsquo;ll say it anyway: graphics quality is at the stage where providing even small gains in user experience requires expotential growth in computing power.&lt;/p&gt;
-
-&lt;p&gt;In order to make people say &amp;ldquo;wow!&amp;rdquo; again next gen systems would need &lt;strong&gt;a lot&lt;/strong&gt;. How much? For starters, we need to double GPU power just to port existing content to 1080p. I&amp;rsquo;d say that for a meaningful boost in quality, we&amp;rsquo;d also need 4x programmable shading performance on top of that - so 8x the GPU performance as a bare minimum. It&amp;rsquo;s safe to assume we&amp;rsquo;d also need a lot more memory - just boosting the texture resolution 2x requires 4x the memory. But we&amp;rsquo;d want to have HDR rendering pipeline. Ooops, that&amp;rsquo;s bigger framebuffer, and probably some HDR textures. Not to mention a lot of modern rendering techniques require floating point buffers and textures anyway. Add more geometry storage, too (even if in the form of displacement maps). So, going &amp;ldquo;the old way&amp;rdquo; next gen console would need at least 4GB of total memory and 2TFLOPS of programmable GPU, all that paired with significantly faster CPU. This is doable even today, but even if you ignore costs, there is another catch in here, and that&amp;rsquo;s &amp;hellip; power consumption. The correct way of thinking about CPU/GPU today is only one: performance/Watt. Fitting above spec within 200W envelope is going to be very challenging, even with 22nm CPU/GPU process. Can Sony/MS take a risk and go with a lot more powerful hardware at the expense of noise and power usage? I don&amp;rsquo;t think so. But that&amp;rsquo;s exactly what they would have to do make games significantly better looking.&lt;/p&gt;
-
-&lt;p&gt;Now look for a while at the development side of things. Some game budgets are already in line with Hollywood movies. Next gen as described above would require a lot more content, and new content production pipelines. Insane budgets would only get bigger &amp;hellip; There&amp;rsquo;s room for very few blockbusters out there, and even for them the business is getting tougher and tougher. Money and effort is likely to naturally flow in the direction of lower risk and higher ROI, and might mean moving away from traditional consoles. It&amp;rsquo;s not like developers don&amp;rsquo;t have a choice. In fact, right now developers have more choice than ever! First of all, there&amp;rsquo;s iOS and Android, in both smartphone and tablet form factors. These platforms have relatively low barriers to entry and and are natural target for small/medium development teams. There&amp;rsquo;s also Steam on PC, along with some smaller online stores. Last but not least, there&amp;rsquo;s Facebook, along with smaller social networks. Any of these are (from developer point of view) better platforms than XBox or PlayStation. That&amp;rsquo;s something significant even for big players in the industry. Simply speaking it&amp;rsquo;s better to invest in 5-10 small projects than in single big project - it is likely that some of the small projects will perform below expectations, or even fail, but at the same time it is unlikely that the entire investment portfolio will be a loser because the risk will be highly diversified. A portfolio of big projects is more and more like playing poker with your entire bankroll on table &amp;hellip; Current state of THQ clearly shows what the effects can be - positive expected value is not enough to gamble with hundreds of milions of dollars (although some investment bankers thought differently :) ). Platform without support of developers is a dead platform, and developing for consoles in the classic model is not really attractive any more from business point of view. XBLA and PSN might still be a viable target platform, but as they are it&amp;rsquo;s harder and harder to justify making any of them the lead platform - what we see more and more is that game gets launched on iOS/Android/Steam/Facebook and then possibly ported to consoles, not vice versa.&lt;/p&gt;
 </description>
     </item>
     
