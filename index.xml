@@ -6,8 +6,160 @@
     <description>Recent content on Maciej Mróz Personal Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 27 Dec 2016 17:03:44 +0100</lastBuildDate>
+    <lastBuildDate>Sun, 05 Feb 2017 13:17:09 +0100</lastBuildDate>
     <atom:link href="https://maciejmroz.com/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Implementing password storage with Golang</title>
+      <link>https://maciejmroz.com/2017/02/05/implementing-password-storage-with-golang/</link>
+      <pubDate>Sun, 05 Feb 2017 13:17:09 +0100</pubDate>
+      
+      <guid>https://maciejmroz.com/2017/02/05/implementing-password-storage-with-golang/</guid>
+      <description>&lt;p&gt;The common wisdom says: &amp;ldquo;Do not implement password storage on your own&amp;rdquo; &amp;hellip; Considering amount of things that can be done wrong, perhaps relying on one of plenty of external providers is the right thing to do :) If you still want to do this, read &lt;a href=&#34;https://www.owasp.org/index.php/Password_Storage_Cheat_Sheet&#34;&gt;OWASP Password Storage Cheat Sheet&lt;/a&gt; as a first step. After that, read &lt;a href=&#34;https://www.owasp.org/index.php/Authentication_Cheat_Sheet&#34;&gt;OWASP Authentication Cheat Sheet&lt;/a&gt; - password storage and authentication are close layers and most likely you&amp;rsquo;ll be working on both.&lt;/p&gt;
+
+&lt;p&gt;What modern password storage attempts to achieve is to make life harder for an attacker when password database &lt;strong&gt;is already compromised&lt;/strong&gt;. In the era of GPU/FPGA password cracking MD5 will not suffice. This may sound trivial, but apparently &lt;a href=&#34;https://twitter.com/maciejmroz/status/809396388597563392&#34;&gt;it&amp;rsquo;s not&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Jokes aside, at the very minimum use:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;computationally expensive password hashing function, preferably one with tunable cost&lt;/li&gt;
+&lt;li&gt;dedicataded random salt for every credential you store&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Password storage for every credential should contain:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;cost - so that if you decide that it is too low compared to what computing power potential attacker has at his/her disposal (you can assume it&amp;rsquo;s proportional to your business value).&lt;/li&gt;
+&lt;li&gt;random salt - I&amp;rsquo;ll restate it: unique for every user, stored together with hashed password. Salt &lt;strong&gt;is not&lt;/strong&gt; an encryption measure, if your db is compromised, so is the app, and so is the salt. What it really protects from is &amp;ldquo;rainbow table&amp;rdquo; kind of attack. With unique salt for every credential you also make it impossible to hash en entire dictionary and fish for something that matches.&lt;/li&gt;
+&lt;li&gt;hashed password (obviously salted :) )&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Good news and bad news coming. Good one: if you use modern platform/framework, it is likely that there exist libraries that take care of the above. In case of Go, you have &lt;a href=&#34;https://godoc.org/golang.org/x/crypto/bcrypt&#34;&gt;golang.org/x/crypto/bcrypt&lt;/a&gt; package for that. It is trivial to use, and contrary to some StackOverflow answers there&amp;rsquo;s absolutely no need to add salt in your own code - the library is already doing it for you.&lt;/p&gt;
+
+&lt;p&gt;Now time for the bad news, or to be more specific, bad news and a little example of why Go is an awesome language. The problem is, by using computationally expensive hashing function, you expose your website to an extremely easy denial of service attack. All that needs to be done to put website on its knees is to flood it with login requests - in typical scenario it will consume all your CPU resources and bring all your servers to a halt. And this is vulnerability we introduced ourselves: in the world of thousand requests per second we intentionally made part of the application very, very slow.&lt;/p&gt;
+
+&lt;p&gt;How to deal with it? There are many ways, and probably more than one should be used. Below I&amp;rsquo;ll show how to limit resources used by delegating expensive processing to a configurable pool of goroutines, and show how to introduce backpressure in this design.&lt;/p&gt;
+
+&lt;p&gt;At the highest level, in the service initialization code create channels used to communicate with goroutines and run requested number of them:&lt;/p&gt;
+
+&lt;div class=&#34;highlight&#34; style=&#34;background: #272822&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span style=&#34;color: #66d9ef&#34;&gt;func&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;NewAccountService&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;db&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;*&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;mgo&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;Database&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;BCryptCost&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;int&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;BcryptQueueDepth&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;int&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;BcryptConcurrency&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;int&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;AccountService&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;{&lt;/span&gt;
+
+    &lt;span style=&#34;color: #f8f8f2&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color: #f92672&#34;&gt;...&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;)&lt;/span&gt;
+
+    &lt;span style=&#34;color: #a6e22e&#34;&gt;as&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;&amp;amp;&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;accountService&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;{&lt;/span&gt;
+	    &lt;span style=&#34;color: #a6e22e&#34;&gt;BcryptCost&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;:&lt;/span&gt;        &lt;span style=&#34;color: #a6e22e&#34;&gt;BCryptCost&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;,&lt;/span&gt;
+	    &lt;span style=&#34;color: #a6e22e&#34;&gt;fromPasswordQueue&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;make(&lt;/span&gt;&lt;span style=&#34;color: #66d9ef&#34;&gt;chan&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;generateFromPasswordRequest&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;BcryptQueueDepth&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;),&lt;/span&gt;
+	    &lt;span style=&#34;color: #a6e22e&#34;&gt;compareQueue&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;:&lt;/span&gt;      &lt;span style=&#34;color: #f8f8f2&#34;&gt;make(&lt;/span&gt;&lt;span style=&#34;color: #66d9ef&#34;&gt;chan&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;compareHashAndPasswordRequest&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;BcryptQueueDepth&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;),&lt;/span&gt;
+    &lt;span style=&#34;color: #f8f8f2&#34;&gt;}&lt;/span&gt;
+
+    &lt;span style=&#34;color: #66d9ef&#34;&gt;for&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;i&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color: #ae81ff&#34;&gt;0&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;;&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;i&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;BcryptConcurrency&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;;&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;i&lt;/span&gt;&lt;span style=&#34;color: #f92672&#34;&gt;++&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;{&lt;/span&gt;
+	    &lt;span style=&#34;color: #66d9ef&#34;&gt;go&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;bcryptRequestHandler&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;as&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;fromPasswordQueue&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;as&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;compareQueue&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;)&lt;/span&gt;
+    &lt;span style=&#34;color: #f8f8f2&#34;&gt;}&lt;/span&gt;
+
+    &lt;span style=&#34;color: #66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;as&lt;/span&gt;
+&lt;span style=&#34;color: #f8f8f2&#34;&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;It is important that buffered channels are used above. It allows certain number of requests to be enqueued, and allows us to respond properly when channel is full. Simply blocking on full channel is not desireable because we run a goroutine per request and in case of DoS attack we&amp;rsquo;ll limit the CPU but will continue to leak memory by spawning tons of goroutines (or hit hard limit of the web server and become inaccessible). I&amp;rsquo;ll show how to deal with that later. The request/response types are really simple, as the execution goroutine is very thin wrapper over bcrypt:&lt;/p&gt;
+
+&lt;div class=&#34;highlight&#34; style=&#34;background: #272822&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span style=&#34;color: #66d9ef&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;generateFromPasswordResult&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;struct&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;{&lt;/span&gt;
+	&lt;span style=&#34;color: #a6e22e&#34;&gt;hashedPassword&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;[]&lt;/span&gt;&lt;span style=&#34;color: #66d9ef&#34;&gt;byte&lt;/span&gt;
+	&lt;span style=&#34;color: #a6e22e&#34;&gt;err&lt;/span&gt;            &lt;span style=&#34;color: #66d9ef&#34;&gt;error&lt;/span&gt;
+&lt;span style=&#34;color: #f8f8f2&#34;&gt;}&lt;/span&gt;
+
+&lt;span style=&#34;color: #66d9ef&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;generateFromPasswordRequest&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;struct&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;{&lt;/span&gt;
+	&lt;span style=&#34;color: #a6e22e&#34;&gt;password&lt;/span&gt;   &lt;span style=&#34;color: #f8f8f2&#34;&gt;[]&lt;/span&gt;&lt;span style=&#34;color: #66d9ef&#34;&gt;byte&lt;/span&gt;
+	&lt;span style=&#34;color: #a6e22e&#34;&gt;BCryptCost&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;int&lt;/span&gt;
+
+	&lt;span style=&#34;color: #a6e22e&#34;&gt;result&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;chan&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;generateFromPasswordResult&lt;/span&gt;
+&lt;span style=&#34;color: #f8f8f2&#34;&gt;}&lt;/span&gt;
+
+&lt;span style=&#34;color: #66d9ef&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;compareHashAndPasswordRequest&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;struct&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;{&lt;/span&gt;
+	&lt;span style=&#34;color: #a6e22e&#34;&gt;password&lt;/span&gt;       &lt;span style=&#34;color: #f8f8f2&#34;&gt;[]&lt;/span&gt;&lt;span style=&#34;color: #66d9ef&#34;&gt;byte&lt;/span&gt;
+	&lt;span style=&#34;color: #a6e22e&#34;&gt;hashedPassword&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;[]&lt;/span&gt;&lt;span style=&#34;color: #66d9ef&#34;&gt;byte&lt;/span&gt;
+
+	&lt;span style=&#34;color: #a6e22e&#34;&gt;result&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;chan&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;error&lt;/span&gt;
+&lt;span style=&#34;color: #f8f8f2&#34;&gt;}&lt;/span&gt;
+
+&lt;span style=&#34;color: #66d9ef&#34;&gt;func&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;bcryptRequestHandler&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;fromPasswordQueue&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;chan&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;generateFromPasswordRequest&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;compareQueue&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;chan&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;compareHashAndPasswordRequest&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;{&lt;/span&gt;
+	&lt;span style=&#34;color: #66d9ef&#34;&gt;for&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;{&lt;/span&gt;
+		&lt;span style=&#34;color: #66d9ef&#34;&gt;select&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;{&lt;/span&gt;
+		&lt;span style=&#34;color: #66d9ef&#34;&gt;case&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;rq&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;&amp;lt;-&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;fromPasswordQueue&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;:&lt;/span&gt;
+			&lt;span style=&#34;color: #a6e22e&#34;&gt;hashedPassword&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;err&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;bcrypt&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;GenerateFromPassword&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;rq&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;password&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;rq&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;BCryptCost&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;)&lt;/span&gt;
+			&lt;span style=&#34;color: #a6e22e&#34;&gt;rq&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;result&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;&amp;lt;-&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;generateFromPasswordResult&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;{&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;hashedPassword&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;err&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;}&lt;/span&gt;
+		&lt;span style=&#34;color: #66d9ef&#34;&gt;case&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;rq&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;&amp;lt;-&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;compareQueue&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;:&lt;/span&gt;
+			&lt;span style=&#34;color: #a6e22e&#34;&gt;rq&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;result&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;&amp;lt;-&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;bcrypt&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;CompareHashAndPassword&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;rq&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;hashedPassword&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;rq&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;password&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;)&lt;/span&gt;
+		&lt;span style=&#34;color: #f8f8f2&#34;&gt;}&lt;/span&gt;
+	&lt;span style=&#34;color: #f8f8f2&#34;&gt;}&lt;/span&gt;
+&lt;span style=&#34;color: #f8f8f2&#34;&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Pretty neat thing about Go: you send channel over which response is sent together with the request. While this is a common pattern in Go, people unfamiliar with Go concurrency and CSP model assume that communication topology must be static. In fact, ephemeral constructs like this one are quite normal in Go. You can also see it as a similarity to sending return address along with Akka actor message. After all, these models are computationally equivalent, just with different semantics. By the way, if you look for other platform that easily allows you to pin some processing to a group of threads, yes, JVM is great at this stuff, and no, node.js can&amp;rsquo;t do it :)&lt;/p&gt;
+
+&lt;p&gt;Ok, let&amp;rsquo;s introduce backpressure:&lt;/p&gt;
+
+&lt;div class=&#34;highlight&#34; style=&#34;background: #272822&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span style=&#34;color: #66d9ef&#34;&gt;func&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;s&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;*&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;accountService&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;newFromPasswordRequest&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;password&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;string&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color: #66d9ef&#34;&gt;chan&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;generateFromPasswordResult&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;error&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;{&lt;/span&gt;
+	&lt;span style=&#34;color: #66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;len(&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;s&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;fromPasswordQueue&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;&amp;gt;=&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;cap(&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;s&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;fromPasswordQueue&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;{&lt;/span&gt;
+		&lt;span style=&#34;color: #66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;nil&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;ErrOverload&lt;/span&gt;
+	&lt;span style=&#34;color: #f8f8f2&#34;&gt;}&lt;/span&gt;
+	&lt;span style=&#34;color: #a6e22e&#34;&gt;rq&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;generateFromPasswordRequest&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;{&lt;/span&gt;
+		&lt;span style=&#34;color: #a6e22e&#34;&gt;password&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;:&lt;/span&gt;   &lt;span style=&#34;color: #f8f8f2&#34;&gt;[]byte(&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;password&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;),&lt;/span&gt;
+		&lt;span style=&#34;color: #a6e22e&#34;&gt;BCryptCost&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;s&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;BcryptCost&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;,&lt;/span&gt;
+		&lt;span style=&#34;color: #a6e22e&#34;&gt;result&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;:&lt;/span&gt;     &lt;span style=&#34;color: #f8f8f2&#34;&gt;make(&lt;/span&gt;&lt;span style=&#34;color: #66d9ef&#34;&gt;chan&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;generateFromPasswordResult&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color: #ae81ff&#34;&gt;0&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;),&lt;/span&gt;
+	&lt;span style=&#34;color: #f8f8f2&#34;&gt;}&lt;/span&gt;
+	&lt;span style=&#34;color: #a6e22e&#34;&gt;s&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;fromPasswordQueue&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;&amp;lt;-&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;rq&lt;/span&gt;
+	&lt;span style=&#34;color: #66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;rq&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;result&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;nil&lt;/span&gt;
+&lt;span style=&#34;color: #f8f8f2&#34;&gt;}&lt;/span&gt;
+
+&lt;span style=&#34;color: #66d9ef&#34;&gt;func&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;s&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;*&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;accountService&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;newCompareRequest&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;hashedPassword&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;string&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;password&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;string&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color: #66d9ef&#34;&gt;chan&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;error&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;error&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;{&lt;/span&gt;
+	&lt;span style=&#34;color: #66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;len(&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;s&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;compareQueue&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;&amp;gt;=&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;cap(&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;s&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;compareQueue&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;{&lt;/span&gt;
+		&lt;span style=&#34;color: #66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;nil&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;ErrOverload&lt;/span&gt;
+	&lt;span style=&#34;color: #f8f8f2&#34;&gt;}&lt;/span&gt;
+	&lt;span style=&#34;color: #a6e22e&#34;&gt;rq&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;compareHashAndPasswordRequest&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;{&lt;/span&gt;
+		&lt;span style=&#34;color: #a6e22e&#34;&gt;hashedPassword&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;[]byte(&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;hashedPassword&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;),&lt;/span&gt;
+		&lt;span style=&#34;color: #a6e22e&#34;&gt;password&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;:&lt;/span&gt;       &lt;span style=&#34;color: #f8f8f2&#34;&gt;[]byte(&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;password&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;),&lt;/span&gt;
+		&lt;span style=&#34;color: #a6e22e&#34;&gt;result&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;:&lt;/span&gt;         &lt;span style=&#34;color: #f8f8f2&#34;&gt;make(&lt;/span&gt;&lt;span style=&#34;color: #66d9ef&#34;&gt;chan&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;error&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color: #ae81ff&#34;&gt;0&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;),&lt;/span&gt;
+	&lt;span style=&#34;color: #f8f8f2&#34;&gt;}&lt;/span&gt;
+	&lt;span style=&#34;color: #a6e22e&#34;&gt;s&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;compareQueue&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;&amp;lt;-&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;rq&lt;/span&gt;
+	&lt;span style=&#34;color: #66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;rq&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;result&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;nil&lt;/span&gt;
+&lt;span style=&#34;color: #f8f8f2&#34;&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;The functions above return channel or error (unfortunately there&amp;rsquo;s no equivalent of Scala&amp;rsquo;s Either[A,B] type in Go). The magic is in comparison &lt;em&gt;len(channel) &amp;gt;= cap(channel)&lt;/em&gt;: if we ever reach channel capacity, just return error indicating overload and let upstream code decide what to do about it (the approach will likely be different in a user facing website and different in a REST service consumed by a machine but in any case should be some sort of &amp;ldquo;try again later&amp;rdquo; signal). From the perspective of code that makes use of our wrappers, things are pretty simple:&lt;/p&gt;
+
+&lt;p&gt;&lt;div class=&#34;highlight&#34; style=&#34;background: #272822&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span style=&#34;color: #75715e&#34;&gt;//hashing password&lt;/span&gt;
+&lt;span style=&#34;color: #f8f8f2&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color: #f92672&#34;&gt;...&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;)&lt;/span&gt;
+&lt;span style=&#34;color: #a6e22e&#34;&gt;resChannel&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;err&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;s&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;newFromPasswordRequest&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;password&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;)&lt;/span&gt;
+&lt;span style=&#34;color: #66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;err&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;!=&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;nil&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;{&lt;/span&gt;
+    &lt;span style=&#34;color: #66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;nil&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;err&lt;/span&gt;
+&lt;span style=&#34;color: #f8f8f2&#34;&gt;}&lt;/span&gt;
+&lt;span style=&#34;color: #a6e22e&#34;&gt;res&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;&amp;lt;-&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;resChannel&lt;/span&gt;
+&lt;span style=&#34;color: #a6e22e&#34;&gt;hashedPassword&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;err&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;res&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;hashedPassword&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;res&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;err&lt;/span&gt;
+&lt;span style=&#34;color: #66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;err&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;!=&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;nil&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;{&lt;/span&gt;
+    &lt;span style=&#34;color: #66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;nil&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;err&lt;/span&gt;
+&lt;span style=&#34;color: #f8f8f2&#34;&gt;}&lt;/span&gt;
+&lt;span style=&#34;color: #f8f8f2&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color: #f92672&#34;&gt;...&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;)&lt;/span&gt;
+
+&lt;span style=&#34;color: #75715e&#34;&gt;//checking password against hashed value&lt;/span&gt;
+&lt;span style=&#34;color: #f8f8f2&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color: #f92672&#34;&gt;...&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;)&lt;/span&gt;
+&lt;span style=&#34;color: #a6e22e&#34;&gt;resChannel&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;err&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;s&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;newCompareRequest&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;account&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;HashedPassword&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;password&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;)&lt;/span&gt;
+&lt;span style=&#34;color: #66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;err&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;!=&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;nil&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;{&lt;/span&gt;
+    &lt;span style=&#34;color: #66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;nil&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;err&lt;/span&gt;
+&lt;span style=&#34;color: #f8f8f2&#34;&gt;}&lt;/span&gt;
+&lt;span style=&#34;color: #a6e22e&#34;&gt;err&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;&amp;lt;-&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;resChannel&lt;/span&gt;
+&lt;span style=&#34;color: #66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;err&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;!=&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;nil&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;{&lt;/span&gt;
+    &lt;span style=&#34;color: #66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;nil&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;err&lt;/span&gt;
+&lt;span style=&#34;color: #f8f8f2&#34;&gt;}&lt;/span&gt;
+&lt;span style=&#34;color: #f8f8f2&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color: #f92672&#34;&gt;...&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/p&gt;
+
+&lt;p&gt;Obviously, a proper password storage and authentication is going to be much, much more complicated :) Also, the problem of protecting yourself from DoS or DDoS is much more complex, and a lot of measures need to be taken, not only at the application layer. Still, I consider this pattern of putting a controllable upper bound on resources consumed by certain module in the application &lt;strong&gt;without breaking it into microservices&lt;/strong&gt; very useful, especially when combined with proper profiling and monitoring.&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>Going for simplicity with Go</title>
@@ -17,7 +169,7 @@
       <guid>https://maciejmroz.com/2016/12/27/going-for-simplicity-with-go/</guid>
       <description>
 
-&lt;p&gt;If you are backend engineer, you probably treat nonfunctional requirements like security, availability, scalability etc. Just as if they were laws of physics. And that&amp;rsquo;s good when working on mature, mission critical systems. But what if you don&amp;rsquo;t need all that and want to simply focus on getting something simple but professionally looking out there? Something like MVP/early stage product?&lt;/p&gt;
+&lt;p&gt;If you are backend engineer, you probably treat nonfunctional requirements like security, availability, scalability etc. just as if they were laws of physics. And that&amp;rsquo;s good when working on mature, mission critical systems. But what if you don&amp;rsquo;t need all that and want to simply focus on getting something simple but professionally looking out there? Something like MVP/early stage product?&lt;/p&gt;
 
 &lt;p&gt;Do you really need microservices, containers, service discovery, load balancers, caches, multiple databases, all clustered and replicated accross multiple availability zones? Hint: you are not making any money yet and there&amp;rsquo;s big chance you will not get to the point where you have product/market fit.&lt;/p&gt;
 
@@ -722,72 +874,6 @@ Now, a catch: some of these assumptions can turn out to be true. But which ones?
 &lt;/ol&gt;
 
 &lt;p&gt;Final words: the game is not without flaws, but it’s a good one. If you like this type of games – definitely go for it, even before Blizzard patches it.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Enter the Node.js</title>
-      <link>https://maciejmroz.com/2012/07/07/enter-the-node-js/</link>
-      <pubDate>Sat, 07 Jul 2012 00:00:00 +0000</pubDate>
-      
-      <guid>https://maciejmroz.com/2012/07/07/enter-the-node-js/</guid>
-      <description>
-
-&lt;p&gt;The title says it all, but I probably still should paint some background to this article. Imagine a system where you need very high performance, you need it yesterday, and you don&amp;rsquo;t have infinite funds to simply throw more hardware at the problem. Very important component in this system is a web server. Very simple requests, always generated by code (while system in question does not provide data to end users, you can think of AJAX - definitely there&amp;rsquo;s a similarity). So I have a webserver in question. Apache + PHP, running on a virtual machine. I quickly written a Python script that emulated the workload webserver was supposed to have (fuzzed POST requests in specific format). I did back of the envelope calculations of the performance the web server has to meet. As it turned out, Apache + PHP running on a virtual machine was at very, very small percentage of what I needed.&lt;/p&gt;
-
-&lt;p&gt;Obvious thing I tried was to get a VM with a lot more CPU power. It indeed got me a lot more performance, but as you might have guessed already, getting the improvement I needed was hardly possible this way. So I moved the webserver to a physical box (I have these too :) ). As I quickly learned after going physical, the Python script I was using to test the webserver couldn&amp;rsquo;t truly cut it any more and was adding a lot of overhead. I gave up the idea of precisely simulating the workload, took one example request, and used the industry standard - Apache Benchmark (ab). Even before that is was obvious that Apache + PHP is not going to cut it. My initial idea for improvement was to use nginx + PHP running in FastCGI mode. It did run, and initial results were quite promising but &amp;hellip; you&amp;rsquo;ll see results below. Anyway, nginx wasn&amp;rsquo;t cutting it.&lt;/p&gt;
-
-&lt;p&gt;I intended to take a deeper look at node.js for a long time but never really had a project that would push me far enough. This one was it. I am not a web developer, and JavaScript is hardly my language (I think in C++ but usually use Python because I am lazy). Anyway, imperative languages are mostly the same, I hacked node.js app that did what I needed. I slightly changed system design along along the way - node.js output format was JSON instead of CSV used by PHP app. Still, the apps were computationally equivalent, and it terms of I/O node.js was actually a bit more verbose. Output was pushed over the network to another service, so web app itself was not doing any disk I/O. Backend service was not the bottleneck.&lt;/p&gt;
-
-&lt;p&gt;The benchmark was done on Core i3 540, CentOS Linux 6.2, using newest node.js, PHP 5.3.x with APC installed, newest stable nginx, Apache 2.2.x. Node app was using &amp;lsquo;cluster&amp;rsquo; module (built in) in order to use all available logical CPU cores. Nginx was using PHP via FastCGI interface, Apache was running in &amp;lsquo;prefork&amp;rsquo; mode and PHP compiled as a module. I tried to benchmark 8,32,128,512,1024, 2048, 4096 simultaneous clients on 500k requests. Machine used to run ab was using some quad core Intel CPU and CentOS Linux 5.5 and was connected to the same 1 GBit switch the web server was connected to.&lt;/p&gt;
-
-&lt;h2 id=&#34;apache-vs-nginx&#34;&gt;Apache vs Nginx&lt;/h2&gt;
-
-&lt;p&gt;I guess that before going in details into results that I got from node it&amp;rsquo;s good to compare Apache and nginx - there&amp;rsquo;s a lot of comparisons out there, and many of them suggest that nginx is significantly better &amp;hellip; Apache results:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;8 clients: 2250 requests/sec, 4 ms latency&lt;/li&gt;
-&lt;li&gt;32 clients: 2250 requests/sec, 14 ms latency&lt;/li&gt;
-&lt;li&gt;128 clients: 2100 requests/sec, 60 ms latency&lt;/li&gt;
-&lt;li&gt;512 clients: 2100 requests/sec, 240 ms latency&lt;/li&gt;
-&lt;li&gt;1024 clients: FAILED&lt;/li&gt;
-&lt;li&gt;2048 clients: &amp;mdash;&amp;mdash;-&lt;/li&gt;
-&lt;li&gt;4096 clients: &amp;mdash;&amp;mdash;-&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Apache had mostly flat performance, going slightly down from 32 to 128 clients. At 1024 clients it simply stopped accepting connections. Still, if the request completed, it completed without error, and up to 512 simultaneous clients request latency was going up linearly with number of clients. Honestly, these are not bad results and I&amp;rsquo;d be fine with them if my target wasn&amp;rsquo;t at 5k requests per second. Nginx results:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;8 clients: 2250 rps, 4 ms latency&lt;/li&gt;
-&lt;li&gt;32 clients: 2350 rps, 14 ms latency&lt;/li&gt;
-&lt;li&gt;128 clients: 2350 rps, 55 ms latency&lt;/li&gt;
-&lt;li&gt;512 clients: 2100 rps, 241 ms latency (~500 failed!)&lt;/li&gt;
-&lt;li&gt;1024 clients: 1900 rps, 540 ms latency (~3650 failed!)&lt;/li&gt;
-&lt;li&gt;2048 clients: FAILED (completed but error rate 80%+)&lt;/li&gt;
-&lt;li&gt;4096 clients: &amp;mdash;&amp;mdash;-&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Nginx was never vastly faster than Apache. Still, at realistic workloads it indeed was slightly faster. What happened at higher concurrency levels was interesting. At 512 clients roughly 500 requests failed (completed with HTTP code other than 2xx) which is about 1 in 1000. The error rate went up even more at 1024 clients. The breakdown happened at 2048 clients - the benchmark did complete, but with more than 80% of requests ending in non-2xx code (I suppose it was 500 Internal server Error or something like that &amp;hellip;). To sum things up: the way nginx performance degrades with concurrency is different from Apache, and on the extreme end nginx was actually slower. Apache and nginx, while different, were still in the same performance league. I still needed 5000 requests per second and it was time to try out node.js.&lt;/p&gt;
-
-&lt;h2 id=&#34;welcome-the-king&#34;&gt;Welcome the king&lt;/h2&gt;
-
-&lt;p&gt;Node.js results:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;8 clients: 4700 rps, 2 ms latency&lt;/li&gt;
-&lt;li&gt;32 clients: 6900 rps, 5 ms latency&lt;/li&gt;
-&lt;li&gt;128 clients: 7200 rps, 18 ms latency&lt;/li&gt;
-&lt;li&gt;512 clients: 7200 rps, 70 ms latency&lt;/li&gt;
-&lt;li&gt;1024 clients: 7150 rps, 143 ms latency&lt;/li&gt;
-&lt;li&gt;2048 clients: 7100 rps, 288 ms latency&lt;/li&gt;
-&lt;li&gt;4096 clients: 6900 rps, 590 ms latency&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Shocking, isn&amp;rsquo;t it? Node was running in circles around traditional web servers! Its peak performance was not only at higher concurrency level, but the performance drop with more clients was only slight, instead of completely dying. It was able to complete the benchmark up to 4096 simultaneous clients, with 0 (zero!) errors (even if latency was high) &amp;hellip; For me it&amp;rsquo;s almost end of the road - I got more performance than I actually needed. Now it&amp;rsquo;s time to polish the code, write documentation etc - and then move to other parts of the system.&lt;/p&gt;
-
-&lt;p&gt;I&amp;rsquo;d love to repeat the benchmark on faster CPU some day (the i3 used was all I had in the office at the moment) - it seems that all servers in question would benefit a lot from more CPU power. Also, redoing the benchmarks on faster CPU with more physical cores might reveal some other limitations. After this experience, node is definitely going to be important part of my toolbox - it seems perfectly suited for many of the things I am struggling with at work. Still, it is unlikely to ever replace traditional webservers across the stack.&lt;/p&gt;
-
-&lt;p&gt;Something to think about: HTTP is actually very simple protocol. We made it complicated, and mainstream webservers moved along to support all the bells and whistles. What we have right now is like showing up on a car race with expensive limousine: it may have tons of great gizmos and might be a better all-rounder, but on a race track it is crushed by cars that were built to race.&lt;/p&gt;
 </description>
     </item>
     
