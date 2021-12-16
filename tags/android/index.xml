@@ -1,31 +1,19 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Maciej Mróz Personal Blog</title>
-    <link>https://maciejmroz.com/tags/android/index.xml</link>
-    <description>Recent content on Maciej Mróz Personal Blog</description>
+    <title>Android on Maciej Mróz Personal Blog</title>
+    <link>https://maciejmroz.com/tags/android/</link>
+    <description>Recent content in Android on Maciej Mróz Personal Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <atom:link href="https://maciejmroz.com/tags/android/index.xml" rel="self" type="application/rss+xml" />
-    
+    <lastBuildDate>Thu, 12 Jan 2012 00:00:00 +0000</lastBuildDate><atom:link href="https://maciejmroz.com/tags/android/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Is HTML5 a viable platform for games?</title>
       <link>https://maciejmroz.com/2012/01/12/is-html5-a-viable-platform-for-games/</link>
       <pubDate>Thu, 12 Jan 2012 00:00:00 +0000</pubDate>
       
       <guid>https://maciejmroz.com/2012/01/12/is-html5-a-viable-platform-for-games/</guid>
-      <description>&lt;p&gt;If you ever tried to get deeper into it than just looking at press releases about &amp;ldquo;HTML5 companies&amp;rdquo; who just received some VC funding, it is indeed very interesting question. Let&amp;rsquo;s put aside the idea of building entire business on HTML5 tools/engines. What I want to touch to today is the topic of the technology in general, and it&amp;rsquo;s comparison with possible alternatives. Important distinction here - it&amp;rsquo;s about 2D casual games. It&amp;rsquo;s also good assumption that we are targeting mobile devices. So, what are the options? Realistic choices: Native, HTML5, Adobe AIR, some hybrid of native and HTML5 (in case of mobile devices).&lt;/p&gt;
-
-&lt;p&gt;There&amp;rsquo;s one thing that HTML5 offers and no one else can - breaking away from app stores of any kind. It is very important, but not because of the cut app store operator takes (i.e. 30% in Apple case). Anyone who is even remotely aware of the costs and complexities associated with doing payment processing will happily give away 30% and then say &amp;ldquo;thank you for doing it for me&amp;rdquo;. This obviously does not apply to large companies for scale reasons, but for small/medium sized developers it&amp;rsquo;s only a reason to be happy. There are other reasons to break away from app stores, one is obvious and one less so, but it is actually more important.&lt;/p&gt;
-
-&lt;p&gt;The obvious reason to go through browser is freedom - there is no approval process. You just put yout game online, and that&amp;rsquo;s really all there is to it. Your app cannot be retroactively banned in case there is some sort of dispute. You even could consider going with content that&amp;rsquo;s not universally acceptable. This isn&amp;rsquo;t a big consideration for casual games, but might be an issue for other types of games. What is important is certainty that if I put my game on the Internet, people will be able to access it, period.&lt;/p&gt;
-
-&lt;p&gt;The less obvious reason is update process. I am living in game-as-a-service world already, and that means very short update cycles. At Ganymede, we have put quite a bit of work to automate the software releases and make them as painless as possible. Five times a day? If we want to, sure. Of course, if something goes bad, we can roll back a release in single click. We&amp;rsquo;re not doing continuous deployment, but I am sure many companies already do (although admittedly it&amp;rsquo;s more popular approach for web companies). This kind of model is not compatible with any app store. Trying to plan a lot in advance is painful (&lt;a href=&#34;http://www.youtube.com/watch?v=7ulKRB9572Y&amp;amp;feature=share&#34;&gt;and just plain bad&lt;/a&gt; [www.youtube.com]), and becomes unmanageable when you go beyond single platform. I will not say it&amp;rsquo;s impossible, because it can be done, but I already feel sorry for those who will go that way. I rarely see the requirement for frequent updates being brought up. Probably it&amp;rsquo;s because when you run into person coming from web world they just think &amp;ldquo;it&amp;rsquo;s supposed to be that way&amp;rdquo; (in a well run web shop it is almost always a given). On the other hand, traditional game developers are used to development model where launch is the end, not the beginning. Anyway, in perfect world online games use processes that are a lot closer to web development. That&amp;rsquo;s huge advantage on the side of HTML5 and one that shouldn&amp;rsquo;t be underestimated. Not going for frequest post launch updates with new content every week, optimization of user experience with A/B testing, etc means simply leaving tons of money on table. So why isn&amp;rsquo;t everyone and their grandma already writing HTML5 games for mobile?&lt;/p&gt;
-
-&lt;p&gt;Because everything else about it just plainly sucks. Forget about &amp;ldquo;write once, run anywhere&amp;rdquo;. You&amp;rsquo;ll have to do a lot of per-device and per-browser adjustments. Performance will be far from predictable. Typically, it will be very bad. Writing your game directly in JavaScript might not be good idea productivity-wise. There are projects that compile higher level stuff into JS (i.e. &lt;a href=&#34;http://www.dartlang.org/&#34;&gt;Dart&lt;/a&gt; [www.dartlang.org] or &lt;a href=&#34;http://coffeescript.org/&#34;&gt;CoffeeScript&lt;/a&gt; [coffeescript.org]), but are you brave enough to use any of them right now? Let&amp;rsquo;s continue with the bad side: you&amp;rsquo;ll not be able to use everything the device can do, and of course your limitations will vary from device to device. I am not talking about some esoteric problems, I am talking things as basic as multitouch support or sound playback. It is that bad. Another issue that you might run into is talent alignment. To develop games, you need game developers. And very few of them are excited about web programming. Typically, they are much more likely to be excited about &lt;a href=&#34;http://developer.apple.com/library/ios/#releasenotes/General/WhatsNewIniPhoneOS/Articles/iOS5.html&#34;&gt;ARC in iOS5&lt;/a&gt; [developer.apple.com]. On the other hand, idea of web developers doing an HTML5 game is just scary, because these guys typically have no clue how to even approach doing a game (even if they are good at what they do). Now it&amp;rsquo;s time to ask: &amp;ldquo;What the hell am I supposed to do with all this mess?&amp;rdquo;&lt;/p&gt;
-
-&lt;p&gt;My advice is simple: don&amp;rsquo;t give in to hype. Think about all your options in the context of the project you are about to do and do not ignore what the team is already strong at (i.e. short update cycle is useless if you do not know how to take advantage of it). Also, it&amp;rsquo;s good idea to apply this thinking in the context of your current product roadmap and overall strategy, but do not spend too much time doing it. The world is changing fast, be prepared.&lt;/p&gt;
-</description>
+      <description>If you ever tried to get deeper into it than just looking at press releases about &amp;ldquo;HTML5 companies&amp;rdquo; who just received some VC funding, it is indeed very interesting question. Let&amp;rsquo;s put aside the idea of building entire business on HTML5 tools/engines. What I want to touch to today is the topic of the technology in general, and it&amp;rsquo;s comparison with possible alternatives. Important distinction here - it&amp;rsquo;s about 2D casual games.</description>
     </item>
     
     <item>
@@ -34,14 +22,7 @@
       <pubDate>Sun, 08 May 2011 00:00:00 +0000</pubDate>
       
       <guid>https://maciejmroz.com/2011/05/08/is-it-time-to-try-an-adroid-phone-now/</guid>
-      <description>&lt;p&gt;I&amp;rsquo;ve been an IPhone user for loong time. While I did not own the &amp;ldquo;1G&amp;rdquo;, I have my 3G for more than two years now. And, to be honest, it begins to show its age. For quite some time, it wasn&amp;rsquo;t getting any of the new cool stuff in iOS, and iOS version 4 actually should have never been released on iPhone 3G because it makes a lot of stuff run noticeably slower. So, the question is whether to upgrade to iPhone 4.&lt;/p&gt;
-
-&lt;p&gt;The biggest advantages of the iPhone right now are: retina display and iOS (again, I believe that it is the best mobile system out there right now). But the rest of the world wasn&amp;rsquo;t in standstill during the past two years. There are Android based phones that at least on paper look better than iPhone 4 (except for the display, nothing out there can really match it) - fast dual core CPU, more memory, better GPU, better camera, comparable internal flash memory, Flash Player support, NFC chip &amp;hellip; iPhone 4 has none of these, and is more expensive. It also is a very safe choice and an upgrade in every way possible over the iPhone 3G I am using right now.&lt;/p&gt;
-
-&lt;p&gt;The truth is, I am very &lt;strong&gt;used to&lt;/strong&gt; iOS. I just like it. At the same time I know that buying iPhone 4 right now might not be the best choice. Waiting for iPhone 5 is an option (it will surely feature A5 chip), but seeing the paper-only availability of iPad 2, it&amp;rsquo;s not very optimistic wait. Even assuming that paper launch will be in June, real availability will be probably in September, and possibly later here in Poland. And that&amp;rsquo;s assuming Apple would actually launch it in June. By the way, iPad 2 is officially available for more than a month right now in Poland - but good luck buying one at official Apple reseller. They still have waiting list on the damn thing :(&lt;/p&gt;
-
-&lt;p&gt;So, in case of a phone, there&amp;rsquo;s strong possibility of defecting towards Android camp. Not because I want to, but because Apple might not deliver on time. In case I would go for an Adroid device, the new problem arises. Which one?&lt;/p&gt;
-</description>
+      <description>I&amp;rsquo;ve been an IPhone user for loong time. While I did not own the &amp;ldquo;1G&amp;rdquo;, I have my 3G for more than two years now. And, to be honest, it begins to show its age. For quite some time, it wasn&amp;rsquo;t getting any of the new cool stuff in iOS, and iOS version 4 actually should have never been released on iPhone 3G because it makes a lot of stuff run noticeably slower.</description>
     </item>
     
   </channel>

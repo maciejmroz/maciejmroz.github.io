@@ -1,18 +1,16 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
 <head>
-  <link href="http://gmpg.org/xfn/11" rel="profile">
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
 
   
-  <meta name="HandheldFriendly" content="True">
-  <meta name="MobileOptimized" content="320">
   <meta name="viewport" content="width=device-width,minimum-scale=1,maximum-scale=1">
 
   
-  
-  <link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
-  <link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+    
+    
+      <link href="/css/fonts.css" rel="stylesheet" type="text/css">
+    
   
 
   
@@ -20,39 +18,39 @@
 
   
   
-  <link rel="stylesheet" href="https://maciejmroz.com/css/hugo-octopress.css">
+  <link rel="stylesheet" href="/css/hugo-octopress.css">
 
   
   
 
   
-  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/fork-awesome.min.css">
+  
 
   
   <link href="https://maciejmroz.com/favicon.png" rel="icon">
 
   
   
-  
 
-  
-
-  <meta name="description" content="">
+  <meta name="description" content="" />
   <meta name="keywords" content="">
-
   <meta name="author" content="Maciej Mróz">
 
   
-  <meta name="generator" content="Hugo 0.17" />
+  <meta name="generator" content="Hugo 0.83.1" />
 
   
   
 
+  
+  
 </head>
 <body>
 
 
-<header role="banner"><hgroup>
+<header role="banner">
+<hgroup>
   
   <h1><a href="https://maciejmroz.com/">Maciej Mróz Personal Blog</a></h1>
     <h2>Because why not</h2>
@@ -60,6 +58,18 @@
 
 
 <nav role="navigation">
+<fieldset class="mobile-nav">
+  
+  <select onchange="location = this.value;">
+    <option value="">Navigate…</option>
+      
+        <option value="https://maciejmroz.com/">» Blog</option>
+      
+        <option value="https://maciejmroz.com/demoscene">» Demoscene</option>
+      
+  </select>
+</fieldset>
+
 
 <ul class="main-navigation">
   
@@ -74,10 +84,8 @@
   
 </ul>
 
-
 <ul class="subscription">
   
-
 </ul>
 
 
@@ -93,19 +101,18 @@
         
 
 <header>
-    <p class="meta">Nov 18, 2012
-         - 4 minute read 
-        
+  <p class="meta">Nov 18, 2012
+     - 4 minute read 
+    
 
-        
-        
-        
-            - <a class="label" href="https://maciejmroz.com/categories/product-development/">Product Development </a>
-        
-    </p>
-    <h1 class="entry-title">
-         Right is not the same as intuitive in product development 
-    </h1>
+    
+    
+      - <a class="label" href="https://maciejmroz.com/categories/product-development/">Product Development </a>
+    
+  </p>
+  <h1 class="entry-title">
+     Right is not the same as intuitive in product development 
+  </h1>
 </header>
 
 
@@ -114,17 +121,11 @@
           
           
           <p>Some introductory note: I&rsquo;ve written this post before reading <a href="http://www.amazon.com/The-Lean-Startup-Entrepreneurs-Continuous/dp/0307887898/">Lean Startup</a> by Eric Ries. Recently I finally found time to do it and &hellip; I wish this book existed five years ago :) The problems I describe below are not unique. If what you read resonates with you in any way, go and read the book - it explains these ideas in a lot greater detail, touching on some more complicated subjects like product life cycle and company structure. Anyway, here&rsquo;s the post, only slightly edited.</p>
-
-<hr />
-
+<hr>
 <p>You have new great idea. Or perhaps someone else has the idea and you are just executing it. Doesn&rsquo;t really matter. It goes into production, team gets assembled and a year later they come back with a working product. The developers did their job correctly, the product works as intended, incorporates most of the changes management has introduced in the past year, and everyone says it&rsquo;s ready. So it gets released and &hellip; nobody buys it. Customers don&rsquo;t want it, and you have no idea why.</p>
-
 <p>Everything seemed so perfect a year ago: the business plan, market research data, focus tests &hellip; whatever was used to &lsquo;prove&rsquo; the idea is right. The product is right, and of good quality, so you start refining it, adding features, buying marketing campaigns &hellip; all with little to no effect on the product performance, and all taking even more effort. Sounds familiar? Been there, done that :( Ok, what now? Blaming begins?</p>
-
 <p>Unfortunately, in corporate environments that&rsquo;s very often the case. Smart people jump off the ship before it crashes, and when failure is not tolerated, it&rsquo;s really the only thing to do: abandon the project before it fails. Except it&rsquo;s not the solution. But, what actually went wrong? Just one thing, and it&rsquo;s a mistake so common it&rsquo;s not even funny: treating assumptions as truth.</p>
-
 <p>Want a list? Ok, here are some typically made in the product development process:</p>
-
 <ol>
 <li>The business plan is actually worth anything.</li>
 <li>The focus group is representative of your customers. In other words, you know what customers want.</li>
@@ -136,9 +137,7 @@
 <li>It works for the competition, so it has to work for you, too.
 Now, a catch: some of these assumptions can turn out to be true. But which ones? Even if you have hard data (i.e. from past project) this data is by definition about another customer, another product, and another time. While anything you know shout not be ignored, it also shouldn&rsquo;t be blindly trusted. What we want is fix the process and make it look less like gambling with huge amounts of money. Can it be done? Yes, but that requires thinking a bit on the unothodox side :)</li>
 </ol>
-
 <p>The goal is not to eliminate mistakes, that&rsquo;s just impossible. It only pushes you further the road outlined at the beginning, and solves nothing. What you should do is in fact a lot simpler:</p>
-
 <ol>
 <li>List your assumptions.</li>
 <li>Prepare a plan to deal with them - prioritize your development around confirming or disproving there assumptions. Note: customer value of product feature is also an assumption!</li>
@@ -146,7 +145,6 @@ Now, a catch: some of these assumptions can turn out to be true. But which ones?
 <li>Constantly adjust - you don&rsquo;t know what product you are going to build. It&rsquo;s not your decision really, it&rsquo;s the customers who decide.</li>
 <li>Don&rsquo;t be afraid to kill products. It&rsquo;s better than continuing death march and waiting for the miracle to happen. Spend your effort where you actually have the chance to succeed.</li>
 </ol>
-
 <p>The product development process should never be about getting everything right at the beginning. It&rsquo;s about getting some stuff right, and being able to clearly identify the good and the bad things. It&rsquo;s about learning and adjusting. If it looks like adapting agile software development methods to product development, well &hellip; it should. It all really comes down to dealing with uncertainties, instead of pretending they are not there.</p>
 
         </div>
@@ -165,9 +163,6 @@ Now, a catch: some of these assumptions can turn out to be true. But which ones?
     
     </span>
   </p>
-
-  
-  
 
   
 
@@ -210,11 +205,14 @@ Now, a catch: some of these assumptions can turn out to be true. But which ones?
       
       
       <a target="_blank" href="https://twitter.com/maciejmroz/" title="https://twitter.com/maciejmroz/"><i class="fa fa-twitter fa-3x"></i></a>
-       
+      
+         
+      
       <a target="_blank" href="https://www.linkedin.com/in/mrozmaciej/" title="https://www.linkedin.com/in/mrozmaciej/"><i class="fa fa-linkedin fa-3x"></i></a>
       
       
       <a target="_blank" href="https://www.facebook.com/maciej.mroz/" title="https://www.facebook.com/maciej.mroz/"><i class="fa fa-facebook fa-3x"></i></a>
+      
       
       
 
@@ -268,55 +266,66 @@ Now, a catch: some of these assumptions can turn out to be true. But which ones?
         <h1>Recent Posts</h1>
         <ul id="recent_posts">
           
-            <li class="post">
-              <a href="/2017/02/05/implementing-password-storage-with-golang/">Implementing password storage with Golang</a>
-            </li>
           
-            <li class="post">
-              <a href="/2016/12/27/going-for-simplicity-with-go/">Going for simplicity with Go</a>
-            </li>
+            
+              <li class="post">
+                <a href="/2017/02/05/implementing-password-storage-with-golang/">Implementing password storage with Golang</a>
+              </li>
+            
           
-            <li class="post">
-              <a href="/2016/11/26/moving-the-blog-to-hugo/">Moving the blog to Hugo</a>
-            </li>
+            
           
-            <li class="post">
-              <a href="/2015/01/01/beyond-virtualization/">Beyond virtualization</a>
-            </li>
+            
+              <li class="post">
+                <a href="/2016/12/27/going-for-simplicity-with-go/">Going for simplicity with Go</a>
+              </li>
+            
           
-            <li class="post">
-              <a href="/2014/11/04/ltv-of-a-service/">LTV of a service</a>
-            </li>
+            
+              <li class="post">
+                <a href="/2016/11/26/moving-the-blog-to-hugo/">Moving the blog to Hugo</a>
+              </li>
+            
           
-            <li class="post">
-              <a href="/2013/09/22/functional-programming-trojan-horse/">Functional programming trojan horse</a>
-            </li>
+            
+              <li class="post">
+                <a href="/2015/01/01/beyond-virtualization/">Beyond virtualization</a>
+              </li>
+            
+          
+            
+              <li class="post">
+                <a href="/2014/11/04/ltv-of-a-service/">LTV of a service</a>
+              </li>
+            
           
         </ul>
       </section>
     
   
-
 </aside>
 
   </div>
 </div>
 
-<footer role="contentinfo">
-  <p>Copyright &copy; 2017 Maciej Mróz - <a href="https://maciejmroz.com/license/">License</a> -
-  <span class="credit">Powered by <a target="_blank" href="https://gohugo.io">Hugo</a> and <a target="_blank" href="https://github.com/parsiya/hugo-octopress/">Hugo-Octopress</a> theme.
-</p>
+    <footer role="contentinfo">
+      <p>Copyright &copy; 2021 Maciej Mróz - <a href="https://maciejmroz.com/license/">License</a> -
+        <span class="credit">Powered by <a target="_blank" href="https://gohugo.io">Hugo</a> and <a target="_blank" href="https://github.com/parsiya/hugo-octopress/">Hugo-Octopress</a> theme.
+      </p>
+    </footer>
 
-</footer>
+    
+    
+    
 
-
-<script>
-  var _gaq=[['_setAccount','UA-88050305-1'],['_trackPageview']];
-  (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
-  g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
-  s.parentNode.insertBefore(g,s)}(document,'script'));
-</script>
-
-</body>
+    
+      <script>
+        var _gaq=[['_setAccount','UA-88050305-1'],['_trackPageview']];
+        (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+        g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+        s.parentNode.insertBefore(g,s)}(document,'script'));
+      </script>
+    
+  </body>
 </html>
 

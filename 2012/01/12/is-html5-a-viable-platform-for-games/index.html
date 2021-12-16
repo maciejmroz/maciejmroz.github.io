@@ -1,18 +1,16 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
 <head>
-  <link href="http://gmpg.org/xfn/11" rel="profile">
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
 
   
-  <meta name="HandheldFriendly" content="True">
-  <meta name="MobileOptimized" content="320">
   <meta name="viewport" content="width=device-width,minimum-scale=1,maximum-scale=1">
 
   
-  
-  <link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
-  <link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+    
+    
+      <link href="/css/fonts.css" rel="stylesheet" type="text/css">
+    
   
 
   
@@ -20,39 +18,39 @@
 
   
   
-  <link rel="stylesheet" href="https://maciejmroz.com/css/hugo-octopress.css">
+  <link rel="stylesheet" href="/css/hugo-octopress.css">
 
   
   
 
   
-  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/fork-awesome.min.css">
+  
 
   
   <link href="https://maciejmroz.com/favicon.png" rel="icon">
 
   
   
-  
 
-  
-
-  <meta name="description" content="">
+  <meta name="description" content="" />
   <meta name="keywords" content="">
-
   <meta name="author" content="Maciej Mróz">
 
   
-  <meta name="generator" content="Hugo 0.17" />
+  <meta name="generator" content="Hugo 0.83.1" />
 
   
   
 
+  
+  
 </head>
 <body>
 
 
-<header role="banner"><hgroup>
+<header role="banner">
+<hgroup>
   
   <h1><a href="https://maciejmroz.com/">Maciej Mróz Personal Blog</a></h1>
     <h2>Because why not</h2>
@@ -60,6 +58,18 @@
 
 
 <nav role="navigation">
+<fieldset class="mobile-nav">
+  
+  <select onchange="location = this.value;">
+    <option value="">Navigate…</option>
+      
+        <option value="https://maciejmroz.com/">» Blog</option>
+      
+        <option value="https://maciejmroz.com/demoscene">» Demoscene</option>
+      
+  </select>
+</fieldset>
+
 
 <ul class="main-navigation">
   
@@ -74,10 +84,8 @@
   
 </ul>
 
-
 <ul class="subscription">
   
-
 </ul>
 
 
@@ -93,19 +101,18 @@
         
 
 <header>
-    <p class="meta">Jan 12, 2012
-         - 5 minute read 
-        
+  <p class="meta">Jan 12, 2012
+     - 5 minute read 
+    
 
-        
-        
-        
-            - <a class="label" href="https://maciejmroz.com/categories/game-development/">Game Development </a><a class="label" href="https://maciejmroz.com/categories/technology/">Technology </a>
-        
-    </p>
-    <h1 class="entry-title">
-         Is HTML5 a viable platform for games? 
-    </h1>
+    
+    
+      - <a class="label" href="https://maciejmroz.com/categories/game-development/">Game Development </a><a class="label" href="https://maciejmroz.com/categories/technology/">Technology </a>
+    
+  </p>
+  <h1 class="entry-title">
+     Is HTML5 a viable platform for games? 
+  </h1>
 </header>
 
 
@@ -114,15 +121,10 @@
           
           
           <p>If you ever tried to get deeper into it than just looking at press releases about &ldquo;HTML5 companies&rdquo; who just received some VC funding, it is indeed very interesting question. Let&rsquo;s put aside the idea of building entire business on HTML5 tools/engines. What I want to touch to today is the topic of the technology in general, and it&rsquo;s comparison with possible alternatives. Important distinction here - it&rsquo;s about 2D casual games. It&rsquo;s also good assumption that we are targeting mobile devices. So, what are the options? Realistic choices: Native, HTML5, Adobe AIR, some hybrid of native and HTML5 (in case of mobile devices).</p>
-
 <p>There&rsquo;s one thing that HTML5 offers and no one else can - breaking away from app stores of any kind. It is very important, but not because of the cut app store operator takes (i.e. 30% in Apple case). Anyone who is even remotely aware of the costs and complexities associated with doing payment processing will happily give away 30% and then say &ldquo;thank you for doing it for me&rdquo;. This obviously does not apply to large companies for scale reasons, but for small/medium sized developers it&rsquo;s only a reason to be happy. There are other reasons to break away from app stores, one is obvious and one less so, but it is actually more important.</p>
-
 <p>The obvious reason to go through browser is freedom - there is no approval process. You just put yout game online, and that&rsquo;s really all there is to it. Your app cannot be retroactively banned in case there is some sort of dispute. You even could consider going with content that&rsquo;s not universally acceptable. This isn&rsquo;t a big consideration for casual games, but might be an issue for other types of games. What is important is certainty that if I put my game on the Internet, people will be able to access it, period.</p>
-
 <p>The less obvious reason is update process. I am living in game-as-a-service world already, and that means very short update cycles. At Ganymede, we have put quite a bit of work to automate the software releases and make them as painless as possible. Five times a day? If we want to, sure. Of course, if something goes bad, we can roll back a release in single click. We&rsquo;re not doing continuous deployment, but I am sure many companies already do (although admittedly it&rsquo;s more popular approach for web companies). This kind of model is not compatible with any app store. Trying to plan a lot in advance is painful (<a href="http://www.youtube.com/watch?v=7ulKRB9572Y&amp;feature=share">and just plain bad</a> [www.youtube.com]), and becomes unmanageable when you go beyond single platform. I will not say it&rsquo;s impossible, because it can be done, but I already feel sorry for those who will go that way. I rarely see the requirement for frequent updates being brought up. Probably it&rsquo;s because when you run into person coming from web world they just think &ldquo;it&rsquo;s supposed to be that way&rdquo; (in a well run web shop it is almost always a given). On the other hand, traditional game developers are used to development model where launch is the end, not the beginning. Anyway, in perfect world online games use processes that are a lot closer to web development. That&rsquo;s huge advantage on the side of HTML5 and one that shouldn&rsquo;t be underestimated. Not going for frequest post launch updates with new content every week, optimization of user experience with A/B testing, etc means simply leaving tons of money on table. So why isn&rsquo;t everyone and their grandma already writing HTML5 games for mobile?</p>
-
 <p>Because everything else about it just plainly sucks. Forget about &ldquo;write once, run anywhere&rdquo;. You&rsquo;ll have to do a lot of per-device and per-browser adjustments. Performance will be far from predictable. Typically, it will be very bad. Writing your game directly in JavaScript might not be good idea productivity-wise. There are projects that compile higher level stuff into JS (i.e. <a href="http://www.dartlang.org/">Dart</a> [www.dartlang.org] or <a href="http://coffeescript.org/">CoffeeScript</a> [coffeescript.org]), but are you brave enough to use any of them right now? Let&rsquo;s continue with the bad side: you&rsquo;ll not be able to use everything the device can do, and of course your limitations will vary from device to device. I am not talking about some esoteric problems, I am talking things as basic as multitouch support or sound playback. It is that bad. Another issue that you might run into is talent alignment. To develop games, you need game developers. And very few of them are excited about web programming. Typically, they are much more likely to be excited about <a href="http://developer.apple.com/library/ios/#releasenotes/General/WhatsNewIniPhoneOS/Articles/iOS5.html">ARC in iOS5</a> [developer.apple.com]. On the other hand, idea of web developers doing an HTML5 game is just scary, because these guys typically have no clue how to even approach doing a game (even if they are good at what they do). Now it&rsquo;s time to ask: &ldquo;What the hell am I supposed to do with all this mess?&rdquo;</p>
-
 <p>My advice is simple: don&rsquo;t give in to hype. Think about all your options in the context of the project you are about to do and do not ignore what the team is already strong at (i.e. short update cycle is useless if you do not know how to take advantage of it). Also, it&rsquo;s good idea to apply this thinking in the context of your current product roadmap and overall strategy, but do not spend too much time doing it. The world is changing fast, be prepared.</p>
 
         </div>
@@ -141,9 +143,6 @@
     
     </span>
   </p>
-
-  
-  
 
   
 
@@ -186,11 +185,14 @@
       
       
       <a target="_blank" href="https://twitter.com/maciejmroz/" title="https://twitter.com/maciejmroz/"><i class="fa fa-twitter fa-3x"></i></a>
-       
+      
+         
+      
       <a target="_blank" href="https://www.linkedin.com/in/mrozmaciej/" title="https://www.linkedin.com/in/mrozmaciej/"><i class="fa fa-linkedin fa-3x"></i></a>
       
       
       <a target="_blank" href="https://www.facebook.com/maciej.mroz/" title="https://www.facebook.com/maciej.mroz/"><i class="fa fa-facebook fa-3x"></i></a>
+      
       
       
 
@@ -244,55 +246,66 @@
         <h1>Recent Posts</h1>
         <ul id="recent_posts">
           
-            <li class="post">
-              <a href="/2017/02/05/implementing-password-storage-with-golang/">Implementing password storage with Golang</a>
-            </li>
           
-            <li class="post">
-              <a href="/2016/12/27/going-for-simplicity-with-go/">Going for simplicity with Go</a>
-            </li>
+            
+              <li class="post">
+                <a href="/2017/02/05/implementing-password-storage-with-golang/">Implementing password storage with Golang</a>
+              </li>
+            
           
-            <li class="post">
-              <a href="/2016/11/26/moving-the-blog-to-hugo/">Moving the blog to Hugo</a>
-            </li>
+            
           
-            <li class="post">
-              <a href="/2015/01/01/beyond-virtualization/">Beyond virtualization</a>
-            </li>
+            
+              <li class="post">
+                <a href="/2016/12/27/going-for-simplicity-with-go/">Going for simplicity with Go</a>
+              </li>
+            
           
-            <li class="post">
-              <a href="/2014/11/04/ltv-of-a-service/">LTV of a service</a>
-            </li>
+            
+              <li class="post">
+                <a href="/2016/11/26/moving-the-blog-to-hugo/">Moving the blog to Hugo</a>
+              </li>
+            
           
-            <li class="post">
-              <a href="/2013/09/22/functional-programming-trojan-horse/">Functional programming trojan horse</a>
-            </li>
+            
+              <li class="post">
+                <a href="/2015/01/01/beyond-virtualization/">Beyond virtualization</a>
+              </li>
+            
+          
+            
+              <li class="post">
+                <a href="/2014/11/04/ltv-of-a-service/">LTV of a service</a>
+              </li>
+            
           
         </ul>
       </section>
     
   
-
 </aside>
 
   </div>
 </div>
 
-<footer role="contentinfo">
-  <p>Copyright &copy; 2017 Maciej Mróz - <a href="https://maciejmroz.com/license/">License</a> -
-  <span class="credit">Powered by <a target="_blank" href="https://gohugo.io">Hugo</a> and <a target="_blank" href="https://github.com/parsiya/hugo-octopress/">Hugo-Octopress</a> theme.
-</p>
+    <footer role="contentinfo">
+      <p>Copyright &copy; 2021 Maciej Mróz - <a href="https://maciejmroz.com/license/">License</a> -
+        <span class="credit">Powered by <a target="_blank" href="https://gohugo.io">Hugo</a> and <a target="_blank" href="https://github.com/parsiya/hugo-octopress/">Hugo-Octopress</a> theme.
+      </p>
+    </footer>
 
-</footer>
+    
+    
+    
 
-
-<script>
-  var _gaq=[['_setAccount','UA-88050305-1'],['_trackPageview']];
-  (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
-  g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
-  s.parentNode.insertBefore(g,s)}(document,'script'));
-</script>
-
-</body>
+    
+      <script>
+        var _gaq=[['_setAccount','UA-88050305-1'],['_trackPageview']];
+        (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+        g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+        s.parentNode.insertBefore(g,s)}(document,'script'));
+      </script>
+    
+  </body>
 </html>
 

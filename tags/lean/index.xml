@@ -1,55 +1,19 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Maciej Mróz Personal Blog</title>
-    <link>https://maciejmroz.com/tags/lean/index.xml</link>
-    <description>Recent content on Maciej Mróz Personal Blog</description>
+    <title>Lean on Maciej Mróz Personal Blog</title>
+    <link>https://maciejmroz.com/tags/lean/</link>
+    <description>Recent content in Lean on Maciej Mróz Personal Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <atom:link href="https://maciejmroz.com/tags/lean/index.xml" rel="self" type="application/rss+xml" />
-    
+    <lastBuildDate>Sun, 18 Nov 2012 00:00:00 +0000</lastBuildDate><atom:link href="https://maciejmroz.com/tags/lean/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Right is not the same as intuitive in product development</title>
       <link>https://maciejmroz.com/2012/11/18/right-is-not-the-same-as-intuitive-in-product-development/</link>
       <pubDate>Sun, 18 Nov 2012 00:00:00 +0000</pubDate>
       
       <guid>https://maciejmroz.com/2012/11/18/right-is-not-the-same-as-intuitive-in-product-development/</guid>
-      <description>&lt;p&gt;Some introductory note: I&amp;rsquo;ve written this post before reading &lt;a href=&#34;http://www.amazon.com/The-Lean-Startup-Entrepreneurs-Continuous/dp/0307887898/&#34;&gt;Lean Startup&lt;/a&gt; by Eric Ries. Recently I finally found time to do it and &amp;hellip; I wish this book existed five years ago :) The problems I describe below are not unique. If what you read resonates with you in any way, go and read the book - it explains these ideas in a lot greater detail, touching on some more complicated subjects like product life cycle and company structure. Anyway, here&amp;rsquo;s the post, only slightly edited.&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;You have new great idea. Or perhaps someone else has the idea and you are just executing it. Doesn&amp;rsquo;t really matter. It goes into production, team gets assembled and a year later they come back with a working product. The developers did their job correctly, the product works as intended, incorporates most of the changes management has introduced in the past year, and everyone says it&amp;rsquo;s ready. So it gets released and &amp;hellip; nobody buys it. Customers don&amp;rsquo;t want it, and you have no idea why.&lt;/p&gt;
-
-&lt;p&gt;Everything seemed so perfect a year ago: the business plan, market research data, focus tests &amp;hellip; whatever was used to &amp;lsquo;prove&amp;rsquo; the idea is right. The product is right, and of good quality, so you start refining it, adding features, buying marketing campaigns &amp;hellip; all with little to no effect on the product performance, and all taking even more effort. Sounds familiar? Been there, done that :( Ok, what now? Blaming begins?&lt;/p&gt;
-
-&lt;p&gt;Unfortunately, in corporate environments that&amp;rsquo;s very often the case. Smart people jump off the ship before it crashes, and when failure is not tolerated, it&amp;rsquo;s really the only thing to do: abandon the project before it fails. Except it&amp;rsquo;s not the solution. But, what actually went wrong? Just one thing, and it&amp;rsquo;s a mistake so common it&amp;rsquo;s not even funny: treating assumptions as truth.&lt;/p&gt;
-
-&lt;p&gt;Want a list? Ok, here are some typically made in the product development process:&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;The business plan is actually worth anything.&lt;/li&gt;
-&lt;li&gt;The focus group is representative of your customers. In other words, you know what customers want.&lt;/li&gt;
-&lt;li&gt;Value of the product shipped a year from now is the same as if it was shipped today.&lt;/li&gt;
-&lt;li&gt;Your customers perceive quality the same way you do.&lt;/li&gt;
-&lt;li&gt;Your customers value product features the same way you do.&lt;/li&gt;
-&lt;li&gt;You know who your customers are before you actually start selling the product.&lt;/li&gt;
-&lt;li&gt;It&amp;rsquo;s industry best practice, so it has to be put in the product.&lt;/li&gt;
-&lt;li&gt;It works for the competition, so it has to work for you, too.
-Now, a catch: some of these assumptions can turn out to be true. But which ones? Even if you have hard data (i.e. from past project) this data is by definition about another customer, another product, and another time. While anything you know shout not be ignored, it also shouldn&amp;rsquo;t be blindly trusted. What we want is fix the process and make it look less like gambling with huge amounts of money. Can it be done? Yes, but that requires thinking a bit on the unothodox side :)&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;The goal is not to eliminate mistakes, that&amp;rsquo;s just impossible. It only pushes you further the road outlined at the beginning, and solves nothing. What you should do is in fact a lot simpler:&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;List your assumptions.&lt;/li&gt;
-&lt;li&gt;Prepare a plan to deal with them - prioritize your development around confirming or disproving there assumptions. Note: customer value of product feature is also an assumption!&lt;/li&gt;
-&lt;li&gt;Ship early, ship often. &amp;ldquo;A year from now&amp;rdquo; is not really different from &amp;ldquo;forever&amp;rdquo;.&lt;/li&gt;
-&lt;li&gt;Constantly adjust - you don&amp;rsquo;t know what product you are going to build. It&amp;rsquo;s not your decision really, it&amp;rsquo;s the customers who decide.&lt;/li&gt;
-&lt;li&gt;Don&amp;rsquo;t be afraid to kill products. It&amp;rsquo;s better than continuing death march and waiting for the miracle to happen. Spend your effort where you actually have the chance to succeed.&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;The product development process should never be about getting everything right at the beginning. It&amp;rsquo;s about getting some stuff right, and being able to clearly identify the good and the bad things. It&amp;rsquo;s about learning and adjusting. If it looks like adapting agile software development methods to product development, well &amp;hellip; it should. It all really comes down to dealing with uncertainties, instead of pretending they are not there.&lt;/p&gt;
-</description>
+      <description>Some introductory note: I&amp;rsquo;ve written this post before reading Lean Startup by Eric Ries. Recently I finally found time to do it and &amp;hellip; I wish this book existed five years ago :) The problems I describe below are not unique. If what you read resonates with you in any way, go and read the book - it explains these ideas in a lot greater detail, touching on some more complicated subjects like product life cycle and company structure.</description>
     </item>
     
   </channel>

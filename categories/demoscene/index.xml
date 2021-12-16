@@ -1,27 +1,22 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Maciej Mróz Personal Blog</title>
-    <link>https://maciejmroz.com/categories/demoscene/index.xml</link>
-    <description>Recent content on Maciej Mróz Personal Blog</description>
+    <title>Demoscene on Maciej Mróz Personal Blog</title>
+    <link>https://maciejmroz.com/categories/demoscene/</link>
+    <description>Recent content in Demoscene on Maciej Mróz Personal Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <atom:link href="https://maciejmroz.com/categories/demoscene/index.xml" rel="self" type="application/rss+xml" />
-    
+    <lastBuildDate>Sat, 10 Dec 2011 00:00:00 +0000</lastBuildDate><atom:link href="https://maciejmroz.com/categories/demoscene/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>My old demos finally on YouTube</title>
       <link>https://maciejmroz.com/2011/12/10/my-old-demos-finally-on-youtube/</link>
       <pubDate>Sat, 10 Dec 2011 00:00:00 +0000</pubDate>
       
       <guid>https://maciejmroz.com/2011/12/10/my-old-demos-finally-on-youtube/</guid>
-      <description>&lt;p&gt;A friend of mine did something I was too lazy to do for a long time - a YouTube version of our old demos.&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://www.youtube.com/watch?v=AWe1SmHWxE4&#34;&gt;http://www.youtube.com/watch?v=AWe1SmHWxE4&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://www.youtube.com/watch?v=7RbkCS2xtuU&#34;&gt;http://www.youtube.com/watch?v=7RbkCS2xtuU&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;Seems like it was ages ago. I have great memories of these times, and have to admit I miss coding just for the pure fun of it. Commercial software development might be fun (especially when making games) but it&amp;rsquo;s really hard to compare.&lt;/p&gt;
-</description>
+      <description>A friend of mine did something I was too lazy to do for a long time - a YouTube version of our old demos.
+http://www.youtube.com/watch?v=AWe1SmHWxE4
+http://www.youtube.com/watch?v=7RbkCS2xtuU
+Seems like it was ages ago. I have great memories of these times, and have to admit I miss coding just for the pure fun of it. Commercial software development might be fun (especially when making games) but it&amp;rsquo;s really hard to compare.</description>
     </item>
     
   </channel>

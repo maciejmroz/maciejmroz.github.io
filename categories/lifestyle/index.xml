@@ -1,39 +1,19 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Maciej Mróz Personal Blog</title>
-    <link>https://maciejmroz.com/categories/lifestyle/index.xml</link>
-    <description>Recent content on Maciej Mróz Personal Blog</description>
+    <title>Lifestyle on Maciej Mróz Personal Blog</title>
+    <link>https://maciejmroz.com/categories/lifestyle/</link>
+    <description>Recent content in Lifestyle on Maciej Mróz Personal Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <atom:link href="https://maciejmroz.com/categories/lifestyle/index.xml" rel="self" type="application/rss+xml" />
-    
+    <lastBuildDate>Mon, 09 Sep 2013 00:00:00 +0000</lastBuildDate><atom:link href="https://maciejmroz.com/categories/lifestyle/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Am I a marketing person now?</title>
       <link>https://maciejmroz.com/2013/09/09/am-i-a-marketing-person-now/</link>
       <pubDate>Mon, 09 Sep 2013 00:00:00 +0000</pubDate>
       
       <guid>https://maciejmroz.com/2013/09/09/am-i-a-marketing-person-now/</guid>
-      <description>&lt;p&gt;Yesterday I was talking to my Dad on Skype about the book I just finished reading. The book title was &amp;ldquo;Running Lean&amp;rdquo; and it is a very good take on the lean approach to product development/management originally made popular by Eric Ries. What struck me was that while I was talking, my Dad suddenly interrupted me and asked a simple question: &amp;ldquo;Are you a marketing guy now?&amp;rdquo;. Of course I denied, it just sounded completely bizarre and out of place! I am a technologist!&lt;/p&gt;
-
-&lt;p&gt;I would probably leave it at that and forget the thing, but my state of mind recently is &amp;ldquo;challenge everything&amp;rdquo;. I dug deeper. He asked the question because I was so passionate about the book, and that wasn&amp;rsquo;t even in face to face conversation, my excitement was showing over Skype voice call! I had to come clean and force myself to realize some things - things that turned out to be not that suprising once I started to connect the dots (Steve Jobs analogy seems fitting here, sorry :) ).&lt;/p&gt;
-
-&lt;p&gt;Like most self taught coders, I was pretty good at science (doing integrals at the age of 14 may even qualify as brilliant), but the real first dot is not my primary school or high school, but the demoscene. This was what pushed me to learn math on my own, and to learn programming down to assembly level before I even started my computer science studies. Side note: knowing how to program before starting the studies was insane advantage during studies. I could spend time learning what I wanted to learn, and had a lot better feel for what&amp;rsquo;s actually important.&lt;/p&gt;
-
-&lt;p&gt;In my opinion, the demoscene wasn&amp;rsquo;t really about computers. It was about what you could do &lt;strong&gt;with&lt;/strong&gt; computers. Everyone involved was there because of burning desire to create something new, to amaze people, and to push boundaries of what&amp;rsquo;s considered possible. And we did things that were considered impossible, because nobody told us they are impossible. We didn&amp;rsquo;t go extra mile to get things done, everyone went extra 10 miles. You were either &amp;ldquo;elite&amp;rdquo; or you were a &amp;ldquo;lamer&amp;rdquo; (or &amp;ldquo;wannabe&amp;rdquo;). Sure we were bunch of nerdy kids back then, but we were also a bunch of kinds whose currency was our ability to create. There was no money on the table, it was all out of pure passion. The finished effect: code, graphics, music, and overarching design together were what counted. You either had it all, or you had nothing. You had to work in teams, you had to be bloody efficient, and you had to trust each other to do their part. The goal wasn&amp;rsquo;t to just do well, the goal was &lt;strong&gt;always&lt;/strong&gt; to win.&lt;/p&gt;
-
-&lt;p&gt;The second dot is my professional career. Like most people from the demoscene I went straight into game development (some people went into movies/vfx/advertising but most are in game development right now), hoping it would be good outlet for my creativity and skills. I quickly learned that even in game development with its pretty loose standards, we are actually making commercial software, and this one is a completely different beast :) I was lucky enough to join the company of just a few people (it wasn&amp;rsquo;t even called a startup back then :) ), and actually experience and see growth from ~5 people to 60+.&lt;/p&gt;
-
-&lt;p&gt;When people ask me: &amp;ldquo;How could you spend 10 years in one company?&amp;rdquo; I laugh and quite honestly answer: &amp;ldquo;I worked in at least five different companies, only the name was the same :)&amp;ldquo;. My career path, condensed, looks mostly like this: dev + ops, lead dev + product + ops, lead dev + product, product only (here i stopped producing tons of code), and eventually backend technology (which is in reality a little dev + ops + shared technology management and roadmap + software architecture).&lt;/p&gt;
-
-&lt;p&gt;The thing is, after many years of directly managing consumer facing products, I again went hardcore with technology. Back to square one. It doesn&amp;rsquo;t make sense, does it? Well, not exactly. First of all, I am passionate about technology. How could I be not? Besides, it&amp;rsquo;s my job description to be on top of this stuff. Second thing is that at some point I was so overworked that i had to give up something. There wasn&amp;rsquo;t much extraordinary happening at the time with our flagship products, it was mostly a very predictable chore that took a lot of my time. And we had the person capable of taking it over. At the same time I knew that our backend tech needed a lot of attention, so did software development in general - we were in the early stages of introducing Scrum process at the company, and it wasn&amp;rsquo;t easy.&lt;/p&gt;
-
-&lt;p&gt;Moving away from product management was not really a choice, because the alternative was epic engineering disaster down the line. While I do not miss the products I used to work on (further work on them would not advance my skills in any way), it is pretty clear to me now that I deeply miss product work in general. Taking care of backend tech is stressful, challenging, and rarely rewarding. When it is rewarding, it&amp;rsquo;s quite powerful, but there&amp;rsquo;s simply no &amp;lsquo;instant gratification&amp;rsquo; factor that&amp;rsquo;s omnipresent when managing an online game and pushing updates several times a day (it&amp;rsquo;s almost addictive).&lt;/p&gt;
-
-&lt;p&gt;Final dot was just today. I still love talking to out product teams and seeing what they are up to. And so I did today. One of product owners was showing me a new game by competition and we started discussing it. I suddenly started asking a ton of questions, none of which were technical in nature, and none of which were easy to answer. They were all about what makes the competitive game tick, and is &lt;strong&gt;not&lt;/strong&gt; game play. Essentially, I was talking about marketing. I realized I know so much about it there&amp;rsquo;s no way to deny it: whether I like it or not, I am a marketing person. At the same time, I am also a technologist. It&amp;rsquo;s like two sides of the same coin. The interesting question right now is: which of these two things I love doing most? :)&lt;/p&gt;
-
-&lt;p&gt;PS. About two years ago I was talking to a guest at our company, and we ended up talking about what I actually do at work. He concluded: &amp;ldquo;So you are both CTO and CPO in one person?&amp;rdquo; He was a very smart guy, I just didn&amp;rsquo;t appreciate significance of his conclusion back then.&lt;/p&gt;
-</description>
+      <description>Yesterday I was talking to my Dad on Skype about the book I just finished reading. The book title was &amp;ldquo;Running Lean&amp;rdquo; and it is a very good take on the lean approach to product development/management originally made popular by Eric Ries. What struck me was that while I was talking, my Dad suddenly interrupted me and asked a simple question: &amp;ldquo;Are you a marketing guy now?&amp;rdquo;. Of course I denied, it just sounded completely bizarre and out of place!</description>
     </item>
     
     <item>
@@ -42,10 +22,7 @@
       <pubDate>Mon, 09 Jan 2012 00:00:00 +0000</pubDate>
       
       <guid>https://maciejmroz.com/2012/01/09/my-2012-resolution/</guid>
-      <description>&lt;p&gt;&lt;em&gt;OMG! Another one who promises to lose weight in 2012, please kill me now!&lt;/em&gt; Worry not, it&amp;rsquo;s quite the opposite :) Also, while it might be a bit suprising, there will be only one resolution. I will not promise anyone to lose weight. What&amp;rsquo;s more, I will not promise to: exercise, drink less alcohol, sleep 8 hours a day, control my finances, go to specific place, or do whatever else.&lt;/p&gt;
-
-&lt;p&gt;There&amp;rsquo;s only one promise I can make, and one I am able to keep: &lt;strong&gt;I will maximize my happiness.&lt;/strong&gt; That&amp;rsquo;s it. I will do this by eliminating negative energy from my life, and bringing in any positive influence I can possibly find. If staying healthy makes me happier, I&amp;rsquo;ll go for it (sometimes it actually does). If going to Nepal is the thing, I&amp;rsquo;ll surely be there. But I honestly have no idea right now. As a byproduct of this approach, I might be nicer to people around me. No guarantees, my motives are 100% selfish. On the 31st of December the only success metric will be: &amp;ldquo;Am I happier than I was a year ago?&amp;rdquo;. Of course that&amp;rsquo;s assuming there will be a chance do any summary. After all Maians could be right and 2012 will turn out to be the end of the world &amp;hellip; or I could simply die doing something stupid :)&lt;/p&gt;
-</description>
+      <description>OMG! Another one who promises to lose weight in 2012, please kill me now! Worry not, it&amp;rsquo;s quite the opposite :) Also, while it might be a bit suprising, there will be only one resolution. I will not promise anyone to lose weight. What&amp;rsquo;s more, I will not promise to: exercise, drink less alcohol, sleep 8 hours a day, control my finances, go to specific place, or do whatever else.</description>
     </item>
     
   </channel>

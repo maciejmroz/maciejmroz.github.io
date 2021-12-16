@@ -1,194 +1,352 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://maciejmroz.com/</loc>
+    <loc>https://maciejmroz.com/categories/</loc>
     <lastmod>2017-02-05T13:17:09+01:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
+    <loc>https://maciejmroz.com/tags/golang/</loc>
+    <lastmod>2017-02-05T13:17:09+01:00</lastmod>
+  </url><url>
     <loc>https://maciejmroz.com/2017/02/05/implementing-password-storage-with-golang/</loc>
     <lastmod>2017-02-05T13:17:09+01:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
+    <loc>https://maciejmroz.com/</loc>
+    <lastmod>2017-02-05T13:17:09+01:00</lastmod>
+  </url><url>
+    <loc>https://maciejmroz.com/post/</loc>
+    <lastmod>2017-02-05T13:17:09+01:00</lastmod>
+  </url><url>
+    <loc>https://maciejmroz.com/categories/programming/</loc>
+    <lastmod>2017-02-05T13:17:09+01:00</lastmod>
+  </url><url>
+    <loc>https://maciejmroz.com/categories/security/</loc>
+    <lastmod>2017-02-05T13:17:09+01:00</lastmod>
+  </url><url>
+    <loc>https://maciejmroz.com/categories/server-side/</loc>
+    <lastmod>2017-02-05T13:17:09+01:00</lastmod>
+  </url><url>
+    <loc>https://maciejmroz.com/tags/</loc>
+    <lastmod>2017-02-05T13:17:09+01:00</lastmod>
+  </url><url>
+    <loc>https://maciejmroz.com/tags/echo/</loc>
+    <lastmod>2016-12-27T17:03:44+01:00</lastmod>
+  </url><url>
     <loc>https://maciejmroz.com/2016/12/27/going-for-simplicity-with-go/</loc>
     <lastmod>2016-12-27T17:03:44+01:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
+    <loc>https://maciejmroz.com/tags/hsts/</loc>
+    <lastmod>2016-12-27T17:03:44+01:00</lastmod>
+  </url><url>
+    <loc>https://maciejmroz.com/tags/https/</loc>
+    <lastmod>2016-12-27T17:03:44+01:00</lastmod>
+  </url><url>
+    <loc>https://maciejmroz.com/tags/lets-encrypt/</loc>
+    <lastmod>2016-12-27T17:03:44+01:00</lastmod>
+  </url><url>
+    <loc>https://maciejmroz.com/tags/blog/</loc>
+    <lastmod>2016-11-26T16:03:03+01:00</lastmod>
+  </url><url>
+    <loc>https://maciejmroz.com/categories/blog/</loc>
+    <lastmod>2016-11-26T16:03:03+01:00</lastmod>
+  </url><url>
+    <loc>https://maciejmroz.com/tags/cloudflare/</loc>
+    <lastmod>2016-11-26T16:03:03+01:00</lastmod>
+  </url><url>
+    <loc>https://maciejmroz.com/tags/git/</loc>
+    <lastmod>2016-11-26T16:03:03+01:00</lastmod>
+  </url><url>
+    <loc>https://maciejmroz.com/tags/github/</loc>
+    <lastmod>2016-11-26T16:03:03+01:00</lastmod>
+  </url><url>
+    <loc>https://maciejmroz.com/tags/hugo/</loc>
+    <lastmod>2016-11-26T16:03:03+01:00</lastmod>
+  </url><url>
     <loc>https://maciejmroz.com/2016/11/26/moving-the-blog-to-hugo/</loc>
     <lastmod>2016-11-26T16:03:03+01:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
+    <loc>https://maciejmroz.com/tags/octopress/</loc>
+    <lastmod>2016-11-26T16:03:03+01:00</lastmod>
+  </url><url>
+    <loc>https://maciejmroz.com/categories/technology/</loc>
+    <lastmod>2016-11-26T16:03:03+01:00</lastmod>
+  </url><url>
+    <loc>https://maciejmroz.com/tags/aws/</loc>
+    <lastmod>2015-01-01T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://maciejmroz.com/2015/01/01/beyond-virtualization/</loc>
     <lastmod>2015-01-01T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
+    <loc>https://maciejmroz.com/tags/cloud-computing/</loc>
+    <lastmod>2015-01-01T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://maciejmroz.com/tags/containers/</loc>
+    <lastmod>2015-01-01T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://maciejmroz.com/tags/docker/</loc>
+    <lastmod>2015-01-01T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://maciejmroz.com/tags/microservices/</loc>
+    <lastmod>2015-01-01T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://maciejmroz.com/tags/virtualization/</loc>
+    <lastmod>2015-01-01T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://maciejmroz.com/2014/11/04/ltv-of-a-service/</loc>
     <lastmod>2014-11-04T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
+    <loc>https://maciejmroz.com/categories/product-management/</loc>
+    <lastmod>2014-11-04T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://maciejmroz.com/2013/09/22/functional-programming-trojan-horse/</loc>
     <lastmod>2013-09-22T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
+    <loc>https://maciejmroz.com/tags/jvm/</loc>
+    <lastmod>2013-09-22T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://maciejmroz.com/tags/scala/</loc>
+    <lastmod>2013-09-22T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://maciejmroz.com/2013/09/09/am-i-a-marketing-person-now/</loc>
     <lastmod>2013-09-09T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
+    <loc>https://maciejmroz.com/categories/lifestyle/</loc>
+    <lastmod>2013-09-09T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://maciejmroz.com/tags/c&#43;&#43;/</loc>
+    <lastmod>2013-05-04T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://maciejmroz.com/tags/c&#43;&#43;11/</loc>
+    <lastmod>2013-05-04T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://maciejmroz.com/2013/05/04/c11-goodness/</loc>
     <lastmod>2013-05-04T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
+    <loc>https://maciejmroz.com/tags/analytics/</loc>
+    <lastmod>2013-03-09T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://maciejmroz.com/tags/big-data/</loc>
+    <lastmod>2013-03-09T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://maciejmroz.com/tags/databases/</loc>
+    <lastmod>2013-03-09T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://maciejmroz.com/2013/03/09/the-structure-in-unstructured-data/</loc>
     <lastmod>2013-03-09T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://maciejmroz.com/2013/02/24/the-rationale-behind-ab-testing/</loc>
     <lastmod>2013-02-24T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
+    <loc>https://maciejmroz.com/tags/economy/</loc>
+    <lastmod>2013-01-04T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://maciejmroz.com/categories/game-development/</loc>
+    <lastmod>2013-01-04T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://maciejmroz.com/tags/math/</loc>
+    <lastmod>2013-01-04T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://maciejmroz.com/tags/models/</loc>
+    <lastmod>2013-01-04T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://maciejmroz.com/2013/01/04/simulating-loot-based-virtual-economy/</loc>
     <lastmod>2013-01-04T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://maciejmroz.com/2012/12/19/is-virtualization-a-failure-of-operating-systems/</loc>
     <lastmod>2012-12-19T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
+    <loc>https://maciejmroz.com/tags/virualization/</loc>
+    <lastmod>2012-12-19T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://maciejmroz.com/tags/cocos2d/</loc>
+    <lastmod>2012-12-01T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://maciejmroz.com/categories/games/</loc>
+    <lastmod>2012-12-01T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://maciejmroz.com/tags/python/</loc>
+    <lastmod>2012-12-01T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://maciejmroz.com/2012/12/01/what-can-one-day-of-coding-bring/</loc>
     <lastmod>2012-12-01T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
+    <loc>https://maciejmroz.com/tags/lean/</loc>
+    <lastmod>2012-11-18T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://maciejmroz.com/categories/product-development/</loc>
+    <lastmod>2012-11-18T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://maciejmroz.com/2012/11/18/right-is-not-the-same-as-intuitive-in-product-development/</loc>
     <lastmod>2012-11-18T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
+    <loc>https://maciejmroz.com/tags/diablo-3/</loc>
+    <lastmod>2012-07-28T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://maciejmroz.com/2012/07/28/diablo-3-review/</loc>
     <lastmod>2012-07-28T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
+    <loc>https://maciejmroz.com/tags/apache/</loc>
+    <lastmod>2012-07-07T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://maciejmroz.com/2012/07/07/enter-the-node-js/</loc>
     <lastmod>2012-07-07T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
+    <loc>https://maciejmroz.com/tags/nginx/</loc>
+    <lastmod>2012-07-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://maciejmroz.com/tags/node.js/</loc>
+    <lastmod>2012-07-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://maciejmroz.com/tags/agile/</loc>
+    <lastmod>2012-04-27T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://maciejmroz.com/categories/software-engineering/</loc>
+    <lastmod>2012-04-27T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://maciejmroz.com/2012/04/27/what-is-agile-anyway/</loc>
     <lastmod>2012-04-27T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
+    <loc>https://maciejmroz.com/tags/apple/</loc>
+    <lastmod>2012-04-17T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://maciejmroz.com/categories/game-industry/</loc>
+    <lastmod>2012-04-17T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://maciejmroz.com/tags/microsoft/</loc>
+    <lastmod>2012-04-17T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://maciejmroz.com/tags/nintendo/</loc>
+    <lastmod>2012-04-17T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://maciejmroz.com/tags/sony/</loc>
+    <lastmod>2012-04-17T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://maciejmroz.com/2012/04/17/the-next-console-generation-aint-what-it-used-to-be/</loc>
     <lastmod>2012-04-17T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
+    <loc>https://maciejmroz.com/tags/hdd/</loc>
+    <lastmod>2012-03-18T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://maciejmroz.com/tags/server-side/</loc>
+    <lastmod>2012-03-18T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://maciejmroz.com/tags/ssd/</loc>
+    <lastmod>2012-03-18T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://maciejmroz.com/categories/storage/</loc>
+    <lastmod>2012-03-18T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://maciejmroz.com/2012/03/18/the-demise-of-spinning-disks/</loc>
     <lastmod>2012-03-18T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
+    <loc>https://maciejmroz.com/categories/books/</loc>
+    <lastmod>2012-03-04T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://maciejmroz.com/2012/03/04/if-you-havent-noticed-opengl-api-is-alive-and-kicking/</loc>
     <lastmod>2012-03-04T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
+    <loc>https://maciejmroz.com/tags/opengl/</loc>
+    <lastmod>2012-03-04T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://maciejmroz.com/2012/02/22/is-the-era-of-dedicated-gaming-devices-coming-to-an-end/</loc>
     <lastmod>2012-02-22T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
+    <loc>https://maciejmroz.com/categories/mobile/</loc>
+    <lastmod>2012-02-22T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://maciejmroz.com/tags/playstation/</loc>
+    <lastmod>2012-02-22T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://maciejmroz.com/tags/copyright/</loc>
+    <lastmod>2012-01-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://maciejmroz.com/tags/creative-commons/</loc>
+    <lastmod>2012-01-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://maciejmroz.com/categories/culture/</loc>
+    <lastmod>2012-01-23T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://maciejmroz.com/2012/01/23/its-time-for-culture-2-0/</loc>
     <lastmod>2012-01-23T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
+    <loc>https://maciejmroz.com/categories/media/</loc>
+    <lastmod>2012-01-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://maciejmroz.com/tags/android/</loc>
+    <lastmod>2012-01-12T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://maciejmroz.com/tags/html5/</loc>
+    <lastmod>2012-01-12T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://maciejmroz.com/tags/ios/</loc>
+    <lastmod>2012-01-12T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://maciejmroz.com/2012/01/12/is-html5-a-viable-platform-for-games/</loc>
     <lastmod>2012-01-12T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://maciejmroz.com/2012/01/09/my-2012-resolution/</loc>
     <lastmod>2012-01-09T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://maciejmroz.com/2012/01/07/some-thoughts-on-the-mobile-revolution/</loc>
     <lastmod>2012-01-07T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
+    <loc>https://maciejmroz.com/tags/onswipe/</loc>
+    <lastmod>2012-01-04T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://maciejmroz.com/2012/01/04/onswipe-entering-the-era-of-tablet-publishing/</loc>
     <lastmod>2012-01-04T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
+    <loc>https://maciejmroz.com/tags/wordpress/</loc>
+    <lastmod>2012-01-04T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://maciejmroz.com/categories/demoscene/</loc>
+    <lastmod>2011-12-10T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://maciejmroz.com/2011/12/10/my-old-demos-finally-on-youtube/</loc>
     <lastmod>2011-12-10T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://maciejmroz.com/2011/12/03/why-pc-sales-are-slowing-down/</loc>
     <lastmod>2011-12-03T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://maciejmroz.com/2011/05/08/is-it-time-to-try-an-adroid-phone-now/</loc>
     <lastmod>2011-05-08T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://maciejmroz.com/2011/04/17/reboot-this-time-only-visual/</loc>
     <lastmod>2011-04-17T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
+    <loc>https://maciejmroz.com/tags/gamecube/</loc>
+    <lastmod>2011-04-16T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://maciejmroz.com/2011/04/16/what-will-happen-to-nintendo-after-the-wii-and-more/</loc>
     <lastmod>2011-04-16T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://maciejmroz.com/2011/03/06/the-lines-are-really-getting-blurry/</loc>
     <lastmod>2011-03-06T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
+    <loc>https://maciejmroz.com/tags/psp/</loc>
+    <lastmod>2011-01-30T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://maciejmroz.com/tags/psp2/</loc>
+    <lastmod>2011-01-30T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://maciejmroz.com/2011/01/30/why-psp2-is-going-to-succeed/</loc>
     <lastmod>2011-01-30T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
+    <loc>https://maciejmroz.com/tags/ipad/</loc>
+    <lastmod>2011-01-20T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://maciejmroz.com/2011/01/20/what-to-expect-from-ipad-2/</loc>
     <lastmod>2011-01-20T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://maciejmroz.com/2010/09/09/hacked/</loc>
     <lastmod>2010-09-09T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://maciejmroz.com/2010/02/06/apple-ipad-first-thoughts/</loc>
     <lastmod>2010-02-06T11:52:02+01:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://maciejmroz.com/demoscene/</loc>
     <lastmod>2007-03-02T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://maciejmroz.com/tags/a/b-testing/</loc>
   </url>
-  
 </urlset>

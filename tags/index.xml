@@ -1,0 +1,524 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tags on Maciej Mróz Personal Blog</title>
+    <link>https://maciejmroz.com/tags/</link>
+    <description>Recent content in Tags on Maciej Mróz Personal Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 05 Feb 2017 13:17:09 +0100</lastBuildDate><atom:link href="https://maciejmroz.com/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Golang</title>
+      <link>https://maciejmroz.com/tags/golang/</link>
+      <pubDate>Sun, 05 Feb 2017 13:17:09 +0100</pubDate>
+      
+      <guid>https://maciejmroz.com/tags/golang/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Echo</title>
+      <link>https://maciejmroz.com/tags/echo/</link>
+      <pubDate>Tue, 27 Dec 2016 17:03:44 +0100</pubDate>
+      
+      <guid>https://maciejmroz.com/tags/echo/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>HSTS</title>
+      <link>https://maciejmroz.com/tags/hsts/</link>
+      <pubDate>Tue, 27 Dec 2016 17:03:44 +0100</pubDate>
+      
+      <guid>https://maciejmroz.com/tags/hsts/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>HTTPS</title>
+      <link>https://maciejmroz.com/tags/https/</link>
+      <pubDate>Tue, 27 Dec 2016 17:03:44 +0100</pubDate>
+      
+      <guid>https://maciejmroz.com/tags/https/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Let&#39;s Encrypt</title>
+      <link>https://maciejmroz.com/tags/lets-encrypt/</link>
+      <pubDate>Tue, 27 Dec 2016 17:03:44 +0100</pubDate>
+      
+      <guid>https://maciejmroz.com/tags/lets-encrypt/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Blog</title>
+      <link>https://maciejmroz.com/tags/blog/</link>
+      <pubDate>Sat, 26 Nov 2016 16:03:03 +0100</pubDate>
+      
+      <guid>https://maciejmroz.com/tags/blog/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>CloudFlare</title>
+      <link>https://maciejmroz.com/tags/cloudflare/</link>
+      <pubDate>Sat, 26 Nov 2016 16:03:03 +0100</pubDate>
+      
+      <guid>https://maciejmroz.com/tags/cloudflare/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Git</title>
+      <link>https://maciejmroz.com/tags/git/</link>
+      <pubDate>Sat, 26 Nov 2016 16:03:03 +0100</pubDate>
+      
+      <guid>https://maciejmroz.com/tags/git/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>GitHub</title>
+      <link>https://maciejmroz.com/tags/github/</link>
+      <pubDate>Sat, 26 Nov 2016 16:03:03 +0100</pubDate>
+      
+      <guid>https://maciejmroz.com/tags/github/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Hugo</title>
+      <link>https://maciejmroz.com/tags/hugo/</link>
+      <pubDate>Sat, 26 Nov 2016 16:03:03 +0100</pubDate>
+      
+      <guid>https://maciejmroz.com/tags/hugo/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Octopress</title>
+      <link>https://maciejmroz.com/tags/octopress/</link>
+      <pubDate>Sat, 26 Nov 2016 16:03:03 +0100</pubDate>
+      
+      <guid>https://maciejmroz.com/tags/octopress/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>AWS</title>
+      <link>https://maciejmroz.com/tags/aws/</link>
+      <pubDate>Thu, 01 Jan 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://maciejmroz.com/tags/aws/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Cloud Computing</title>
+      <link>https://maciejmroz.com/tags/cloud-computing/</link>
+      <pubDate>Thu, 01 Jan 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://maciejmroz.com/tags/cloud-computing/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Containers</title>
+      <link>https://maciejmroz.com/tags/containers/</link>
+      <pubDate>Thu, 01 Jan 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://maciejmroz.com/tags/containers/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Docker</title>
+      <link>https://maciejmroz.com/tags/docker/</link>
+      <pubDate>Thu, 01 Jan 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://maciejmroz.com/tags/docker/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Microservices</title>
+      <link>https://maciejmroz.com/tags/microservices/</link>
+      <pubDate>Thu, 01 Jan 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://maciejmroz.com/tags/microservices/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Virtualization</title>
+      <link>https://maciejmroz.com/tags/virtualization/</link>
+      <pubDate>Thu, 01 Jan 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://maciejmroz.com/tags/virtualization/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>JVM</title>
+      <link>https://maciejmroz.com/tags/jvm/</link>
+      <pubDate>Sun, 22 Sep 2013 00:00:00 +0000</pubDate>
+      
+      <guid>https://maciejmroz.com/tags/jvm/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Scala</title>
+      <link>https://maciejmroz.com/tags/scala/</link>
+      <pubDate>Sun, 22 Sep 2013 00:00:00 +0000</pubDate>
+      
+      <guid>https://maciejmroz.com/tags/scala/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>C&#43;&#43;</title>
+      <link>https://maciejmroz.com/tags/c&#43;&#43;/</link>
+      <pubDate>Sat, 04 May 2013 00:00:00 +0000</pubDate>
+      
+      <guid>https://maciejmroz.com/tags/c&#43;&#43;/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>C&#43;&#43;11</title>
+      <link>https://maciejmroz.com/tags/c&#43;&#43;11/</link>
+      <pubDate>Sat, 04 May 2013 00:00:00 +0000</pubDate>
+      
+      <guid>https://maciejmroz.com/tags/c&#43;&#43;11/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Analytics</title>
+      <link>https://maciejmroz.com/tags/analytics/</link>
+      <pubDate>Sat, 09 Mar 2013 00:00:00 +0000</pubDate>
+      
+      <guid>https://maciejmroz.com/tags/analytics/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Big Data</title>
+      <link>https://maciejmroz.com/tags/big-data/</link>
+      <pubDate>Sat, 09 Mar 2013 00:00:00 +0000</pubDate>
+      
+      <guid>https://maciejmroz.com/tags/big-data/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Databases</title>
+      <link>https://maciejmroz.com/tags/databases/</link>
+      <pubDate>Sat, 09 Mar 2013 00:00:00 +0000</pubDate>
+      
+      <guid>https://maciejmroz.com/tags/databases/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Economy</title>
+      <link>https://maciejmroz.com/tags/economy/</link>
+      <pubDate>Fri, 04 Jan 2013 00:00:00 +0000</pubDate>
+      
+      <guid>https://maciejmroz.com/tags/economy/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Math</title>
+      <link>https://maciejmroz.com/tags/math/</link>
+      <pubDate>Fri, 04 Jan 2013 00:00:00 +0000</pubDate>
+      
+      <guid>https://maciejmroz.com/tags/math/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Models</title>
+      <link>https://maciejmroz.com/tags/models/</link>
+      <pubDate>Fri, 04 Jan 2013 00:00:00 +0000</pubDate>
+      
+      <guid>https://maciejmroz.com/tags/models/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Virualization</title>
+      <link>https://maciejmroz.com/tags/virualization/</link>
+      <pubDate>Wed, 19 Dec 2012 00:00:00 +0000</pubDate>
+      
+      <guid>https://maciejmroz.com/tags/virualization/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Cocos2D</title>
+      <link>https://maciejmroz.com/tags/cocos2d/</link>
+      <pubDate>Sat, 01 Dec 2012 00:00:00 +0000</pubDate>
+      
+      <guid>https://maciejmroz.com/tags/cocos2d/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Python</title>
+      <link>https://maciejmroz.com/tags/python/</link>
+      <pubDate>Sat, 01 Dec 2012 00:00:00 +0000</pubDate>
+      
+      <guid>https://maciejmroz.com/tags/python/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Lean</title>
+      <link>https://maciejmroz.com/tags/lean/</link>
+      <pubDate>Sun, 18 Nov 2012 00:00:00 +0000</pubDate>
+      
+      <guid>https://maciejmroz.com/tags/lean/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Diablo 3</title>
+      <link>https://maciejmroz.com/tags/diablo-3/</link>
+      <pubDate>Sat, 28 Jul 2012 00:00:00 +0000</pubDate>
+      
+      <guid>https://maciejmroz.com/tags/diablo-3/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Apache</title>
+      <link>https://maciejmroz.com/tags/apache/</link>
+      <pubDate>Sat, 07 Jul 2012 00:00:00 +0000</pubDate>
+      
+      <guid>https://maciejmroz.com/tags/apache/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>nginx</title>
+      <link>https://maciejmroz.com/tags/nginx/</link>
+      <pubDate>Sat, 07 Jul 2012 00:00:00 +0000</pubDate>
+      
+      <guid>https://maciejmroz.com/tags/nginx/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>node.js</title>
+      <link>https://maciejmroz.com/tags/node.js/</link>
+      <pubDate>Sat, 07 Jul 2012 00:00:00 +0000</pubDate>
+      
+      <guid>https://maciejmroz.com/tags/node.js/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Agile</title>
+      <link>https://maciejmroz.com/tags/agile/</link>
+      <pubDate>Fri, 27 Apr 2012 00:00:00 +0000</pubDate>
+      
+      <guid>https://maciejmroz.com/tags/agile/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Apple</title>
+      <link>https://maciejmroz.com/tags/apple/</link>
+      <pubDate>Tue, 17 Apr 2012 00:00:00 +0000</pubDate>
+      
+      <guid>https://maciejmroz.com/tags/apple/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Microsoft</title>
+      <link>https://maciejmroz.com/tags/microsoft/</link>
+      <pubDate>Tue, 17 Apr 2012 00:00:00 +0000</pubDate>
+      
+      <guid>https://maciejmroz.com/tags/microsoft/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Nintendo</title>
+      <link>https://maciejmroz.com/tags/nintendo/</link>
+      <pubDate>Tue, 17 Apr 2012 00:00:00 +0000</pubDate>
+      
+      <guid>https://maciejmroz.com/tags/nintendo/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Sony</title>
+      <link>https://maciejmroz.com/tags/sony/</link>
+      <pubDate>Tue, 17 Apr 2012 00:00:00 +0000</pubDate>
+      
+      <guid>https://maciejmroz.com/tags/sony/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>HDD</title>
+      <link>https://maciejmroz.com/tags/hdd/</link>
+      <pubDate>Sun, 18 Mar 2012 00:00:00 +0000</pubDate>
+      
+      <guid>https://maciejmroz.com/tags/hdd/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Server Side</title>
+      <link>https://maciejmroz.com/tags/server-side/</link>
+      <pubDate>Sun, 18 Mar 2012 00:00:00 +0000</pubDate>
+      
+      <guid>https://maciejmroz.com/tags/server-side/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>SSD</title>
+      <link>https://maciejmroz.com/tags/ssd/</link>
+      <pubDate>Sun, 18 Mar 2012 00:00:00 +0000</pubDate>
+      
+      <guid>https://maciejmroz.com/tags/ssd/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>OpenGL</title>
+      <link>https://maciejmroz.com/tags/opengl/</link>
+      <pubDate>Sun, 04 Mar 2012 00:00:00 +0000</pubDate>
+      
+      <guid>https://maciejmroz.com/tags/opengl/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Playstation</title>
+      <link>https://maciejmroz.com/tags/playstation/</link>
+      <pubDate>Wed, 22 Feb 2012 00:00:00 +0000</pubDate>
+      
+      <guid>https://maciejmroz.com/tags/playstation/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Copyright</title>
+      <link>https://maciejmroz.com/tags/copyright/</link>
+      <pubDate>Mon, 23 Jan 2012 00:00:00 +0000</pubDate>
+      
+      <guid>https://maciejmroz.com/tags/copyright/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Creative Commons</title>
+      <link>https://maciejmroz.com/tags/creative-commons/</link>
+      <pubDate>Mon, 23 Jan 2012 00:00:00 +0000</pubDate>
+      
+      <guid>https://maciejmroz.com/tags/creative-commons/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Android</title>
+      <link>https://maciejmroz.com/tags/android/</link>
+      <pubDate>Thu, 12 Jan 2012 00:00:00 +0000</pubDate>
+      
+      <guid>https://maciejmroz.com/tags/android/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>HTML5</title>
+      <link>https://maciejmroz.com/tags/html5/</link>
+      <pubDate>Thu, 12 Jan 2012 00:00:00 +0000</pubDate>
+      
+      <guid>https://maciejmroz.com/tags/html5/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>iOS</title>
+      <link>https://maciejmroz.com/tags/ios/</link>
+      <pubDate>Thu, 12 Jan 2012 00:00:00 +0000</pubDate>
+      
+      <guid>https://maciejmroz.com/tags/ios/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Onswipe</title>
+      <link>https://maciejmroz.com/tags/onswipe/</link>
+      <pubDate>Wed, 04 Jan 2012 00:00:00 +0000</pubDate>
+      
+      <guid>https://maciejmroz.com/tags/onswipe/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Wordpress</title>
+      <link>https://maciejmroz.com/tags/wordpress/</link>
+      <pubDate>Wed, 04 Jan 2012 00:00:00 +0000</pubDate>
+      
+      <guid>https://maciejmroz.com/tags/wordpress/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>GameCube</title>
+      <link>https://maciejmroz.com/tags/gamecube/</link>
+      <pubDate>Sat, 16 Apr 2011 00:00:00 +0000</pubDate>
+      
+      <guid>https://maciejmroz.com/tags/gamecube/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>PSP</title>
+      <link>https://maciejmroz.com/tags/psp/</link>
+      <pubDate>Sun, 30 Jan 2011 00:00:00 +0000</pubDate>
+      
+      <guid>https://maciejmroz.com/tags/psp/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>PSP2</title>
+      <link>https://maciejmroz.com/tags/psp2/</link>
+      <pubDate>Sun, 30 Jan 2011 00:00:00 +0000</pubDate>
+      
+      <guid>https://maciejmroz.com/tags/psp2/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>iPad</title>
+      <link>https://maciejmroz.com/tags/ipad/</link>
+      <pubDate>Thu, 20 Jan 2011 00:00:00 +0000</pubDate>
+      
+      <guid>https://maciejmroz.com/tags/ipad/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>A/B Testing</title>
+      <link>https://maciejmroz.com/tags/a/b-testing/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://maciejmroz.com/tags/a/b-testing/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

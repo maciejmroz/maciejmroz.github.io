@@ -1,164 +1,19 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Maciej Mróz Personal Blog</title>
-    <link>https://maciejmroz.com/index.xml</link>
+    <link>https://maciejmroz.com/</link>
     <description>Recent content on Maciej Mróz Personal Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 05 Feb 2017 13:17:09 +0100</lastBuildDate>
-    <atom:link href="https://maciejmroz.com/index.xml" rel="self" type="application/rss+xml" />
-    
+    <lastBuildDate>Sun, 05 Feb 2017 13:17:09 +0100</lastBuildDate><atom:link href="https://maciejmroz.com/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Implementing password storage with Golang</title>
       <link>https://maciejmroz.com/2017/02/05/implementing-password-storage-with-golang/</link>
       <pubDate>Sun, 05 Feb 2017 13:17:09 +0100</pubDate>
       
       <guid>https://maciejmroz.com/2017/02/05/implementing-password-storage-with-golang/</guid>
-      <description>&lt;p&gt;The common wisdom says: &amp;ldquo;Do not implement password storage on your own&amp;rdquo; &amp;hellip; Considering amount of things that can be done wrong, perhaps relying on one of plenty of external providers is the right thing to do :) If you still want to do this, read &lt;a href=&#34;https://www.owasp.org/index.php/Password_Storage_Cheat_Sheet&#34;&gt;OWASP Password Storage Cheat Sheet&lt;/a&gt; as a first step. After that, read &lt;a href=&#34;https://www.owasp.org/index.php/Authentication_Cheat_Sheet&#34;&gt;OWASP Authentication Cheat Sheet&lt;/a&gt; - password storage and authentication are close layers and most likely you&amp;rsquo;ll be working on both.&lt;/p&gt;
-
-&lt;p&gt;What modern password storage attempts to achieve is to make life harder for an attacker when password database &lt;strong&gt;is already compromised&lt;/strong&gt;. In the era of GPU/FPGA password cracking MD5 will not suffice. This may sound trivial, but apparently &lt;a href=&#34;https://twitter.com/maciejmroz/status/809396388597563392&#34;&gt;it&amp;rsquo;s not&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;Jokes aside, at the very minimum use:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;computationally expensive password hashing function, preferably one with tunable cost&lt;/li&gt;
-&lt;li&gt;dedicataded random salt for every credential you store&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Password storage for every credential should contain:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;cost - so that if you decide that it is too low compared to what computing power potential attacker has at his/her disposal (you can assume it&amp;rsquo;s proportional to your business value).&lt;/li&gt;
-&lt;li&gt;random salt - I&amp;rsquo;ll restate it: unique for every user, stored together with hashed password. Salt &lt;strong&gt;is not&lt;/strong&gt; an encryption measure, if your db is compromised, so is the app, and so is the salt. What it really protects from is &amp;ldquo;rainbow table&amp;rdquo; kind of attack. With unique salt for every credential you also make it impossible to hash en entire dictionary and fish for something that matches.&lt;/li&gt;
-&lt;li&gt;hashed password (obviously salted :) )&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Good news and bad news coming. Good one: if you use modern platform/framework, it is likely that there exist libraries that take care of the above. In case of Go, you have &lt;a href=&#34;https://godoc.org/golang.org/x/crypto/bcrypt&#34;&gt;golang.org/x/crypto/bcrypt&lt;/a&gt; package for that. It is trivial to use, and contrary to some StackOverflow answers there&amp;rsquo;s absolutely no need to add salt in your own code - the library is already doing it for you.&lt;/p&gt;
-
-&lt;p&gt;Now time for the bad news, or to be more specific, bad news and a little example of why Go is an awesome language. The problem is, by using computationally expensive hashing function, you expose your website to an extremely easy denial of service attack. All that needs to be done to put website on its knees is to flood it with login requests - in typical scenario it will consume all your CPU resources and bring all your servers to a halt. And this is vulnerability we introduced ourselves: in the world of thousand requests per second we intentionally made part of the application very, very slow.&lt;/p&gt;
-
-&lt;p&gt;How to deal with it? There are many ways, and probably more than one should be used. Below I&amp;rsquo;ll show how to limit resources used by delegating expensive processing to a configurable pool of goroutines, and show how to introduce backpressure in this design.&lt;/p&gt;
-
-&lt;p&gt;At the highest level, in the service initialization code create channels used to communicate with goroutines and run requested number of them:&lt;/p&gt;
-
-&lt;div class=&#34;highlight&#34; style=&#34;background: #272822&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span style=&#34;color: #66d9ef&#34;&gt;func&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;NewAccountService&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;db&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;*&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;mgo&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;Database&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;BCryptCost&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;int&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;BcryptQueueDepth&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;int&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;BcryptConcurrency&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;int&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;AccountService&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;{&lt;/span&gt;
-
-    &lt;span style=&#34;color: #f8f8f2&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color: #f92672&#34;&gt;...&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;)&lt;/span&gt;
-
-    &lt;span style=&#34;color: #a6e22e&#34;&gt;as&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;&amp;amp;&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;accountService&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;{&lt;/span&gt;
-	    &lt;span style=&#34;color: #a6e22e&#34;&gt;BcryptCost&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;:&lt;/span&gt;        &lt;span style=&#34;color: #a6e22e&#34;&gt;BCryptCost&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;,&lt;/span&gt;
-	    &lt;span style=&#34;color: #a6e22e&#34;&gt;fromPasswordQueue&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;make(&lt;/span&gt;&lt;span style=&#34;color: #66d9ef&#34;&gt;chan&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;generateFromPasswordRequest&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;BcryptQueueDepth&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;),&lt;/span&gt;
-	    &lt;span style=&#34;color: #a6e22e&#34;&gt;compareQueue&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;:&lt;/span&gt;      &lt;span style=&#34;color: #f8f8f2&#34;&gt;make(&lt;/span&gt;&lt;span style=&#34;color: #66d9ef&#34;&gt;chan&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;compareHashAndPasswordRequest&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;BcryptQueueDepth&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;),&lt;/span&gt;
-    &lt;span style=&#34;color: #f8f8f2&#34;&gt;}&lt;/span&gt;
-
-    &lt;span style=&#34;color: #66d9ef&#34;&gt;for&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;i&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color: #ae81ff&#34;&gt;0&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;;&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;i&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;BcryptConcurrency&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;;&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;i&lt;/span&gt;&lt;span style=&#34;color: #f92672&#34;&gt;++&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;{&lt;/span&gt;
-	    &lt;span style=&#34;color: #66d9ef&#34;&gt;go&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;bcryptRequestHandler&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;as&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;fromPasswordQueue&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;as&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;compareQueue&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;)&lt;/span&gt;
-    &lt;span style=&#34;color: #f8f8f2&#34;&gt;}&lt;/span&gt;
-
-    &lt;span style=&#34;color: #66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;as&lt;/span&gt;
-&lt;span style=&#34;color: #f8f8f2&#34;&gt;}&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;It is important that buffered channels are used above. It allows certain number of requests to be enqueued, and allows us to respond properly when channel is full. Simply blocking on full channel is not desireable because we run a goroutine per request and in case of DoS attack we&amp;rsquo;ll limit the CPU but will continue to leak memory by spawning tons of goroutines (or hit hard limit of the web server and become inaccessible). I&amp;rsquo;ll show how to deal with that later. The request/response types are really simple, as the execution goroutine is very thin wrapper over bcrypt:&lt;/p&gt;
-
-&lt;div class=&#34;highlight&#34; style=&#34;background: #272822&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span style=&#34;color: #66d9ef&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;generateFromPasswordResult&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;struct&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;{&lt;/span&gt;
-	&lt;span style=&#34;color: #a6e22e&#34;&gt;hashedPassword&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;[]&lt;/span&gt;&lt;span style=&#34;color: #66d9ef&#34;&gt;byte&lt;/span&gt;
-	&lt;span style=&#34;color: #a6e22e&#34;&gt;err&lt;/span&gt;            &lt;span style=&#34;color: #66d9ef&#34;&gt;error&lt;/span&gt;
-&lt;span style=&#34;color: #f8f8f2&#34;&gt;}&lt;/span&gt;
-
-&lt;span style=&#34;color: #66d9ef&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;generateFromPasswordRequest&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;struct&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;{&lt;/span&gt;
-	&lt;span style=&#34;color: #a6e22e&#34;&gt;password&lt;/span&gt;   &lt;span style=&#34;color: #f8f8f2&#34;&gt;[]&lt;/span&gt;&lt;span style=&#34;color: #66d9ef&#34;&gt;byte&lt;/span&gt;
-	&lt;span style=&#34;color: #a6e22e&#34;&gt;BCryptCost&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;int&lt;/span&gt;
-
-	&lt;span style=&#34;color: #a6e22e&#34;&gt;result&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;chan&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;generateFromPasswordResult&lt;/span&gt;
-&lt;span style=&#34;color: #f8f8f2&#34;&gt;}&lt;/span&gt;
-
-&lt;span style=&#34;color: #66d9ef&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;compareHashAndPasswordRequest&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;struct&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;{&lt;/span&gt;
-	&lt;span style=&#34;color: #a6e22e&#34;&gt;password&lt;/span&gt;       &lt;span style=&#34;color: #f8f8f2&#34;&gt;[]&lt;/span&gt;&lt;span style=&#34;color: #66d9ef&#34;&gt;byte&lt;/span&gt;
-	&lt;span style=&#34;color: #a6e22e&#34;&gt;hashedPassword&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;[]&lt;/span&gt;&lt;span style=&#34;color: #66d9ef&#34;&gt;byte&lt;/span&gt;
-
-	&lt;span style=&#34;color: #a6e22e&#34;&gt;result&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;chan&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;error&lt;/span&gt;
-&lt;span style=&#34;color: #f8f8f2&#34;&gt;}&lt;/span&gt;
-
-&lt;span style=&#34;color: #66d9ef&#34;&gt;func&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;bcryptRequestHandler&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;fromPasswordQueue&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;chan&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;generateFromPasswordRequest&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;compareQueue&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;chan&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;compareHashAndPasswordRequest&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;{&lt;/span&gt;
-	&lt;span style=&#34;color: #66d9ef&#34;&gt;for&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;{&lt;/span&gt;
-		&lt;span style=&#34;color: #66d9ef&#34;&gt;select&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;{&lt;/span&gt;
-		&lt;span style=&#34;color: #66d9ef&#34;&gt;case&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;rq&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;&amp;lt;-&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;fromPasswordQueue&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;:&lt;/span&gt;
-			&lt;span style=&#34;color: #a6e22e&#34;&gt;hashedPassword&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;err&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;bcrypt&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;GenerateFromPassword&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;rq&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;password&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;rq&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;BCryptCost&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;)&lt;/span&gt;
-			&lt;span style=&#34;color: #a6e22e&#34;&gt;rq&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;result&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;&amp;lt;-&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;generateFromPasswordResult&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;{&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;hashedPassword&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;err&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;}&lt;/span&gt;
-		&lt;span style=&#34;color: #66d9ef&#34;&gt;case&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;rq&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;&amp;lt;-&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;compareQueue&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;:&lt;/span&gt;
-			&lt;span style=&#34;color: #a6e22e&#34;&gt;rq&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;result&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;&amp;lt;-&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;bcrypt&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;CompareHashAndPassword&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;rq&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;hashedPassword&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;rq&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;password&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;)&lt;/span&gt;
-		&lt;span style=&#34;color: #f8f8f2&#34;&gt;}&lt;/span&gt;
-	&lt;span style=&#34;color: #f8f8f2&#34;&gt;}&lt;/span&gt;
-&lt;span style=&#34;color: #f8f8f2&#34;&gt;}&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;Pretty neat thing about Go: you send channel over which response is sent together with the request. While this is a common pattern in Go, people unfamiliar with Go concurrency and CSP model assume that communication topology must be static. In fact, ephemeral constructs like this one are quite normal in Go. You can also see it as a similarity to sending return address along with Akka actor message. After all, these models are computationally equivalent, just with different semantics. By the way, if you look for other platform that easily allows you to pin some processing to a group of threads, yes, JVM is great at this stuff, and no, node.js can&amp;rsquo;t do it :)&lt;/p&gt;
-
-&lt;p&gt;Ok, let&amp;rsquo;s introduce backpressure:&lt;/p&gt;
-
-&lt;div class=&#34;highlight&#34; style=&#34;background: #272822&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span style=&#34;color: #66d9ef&#34;&gt;func&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;s&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;*&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;accountService&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;newFromPasswordRequest&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;password&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;string&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color: #66d9ef&#34;&gt;chan&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;generateFromPasswordResult&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;error&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;{&lt;/span&gt;
-	&lt;span style=&#34;color: #66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;len(&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;s&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;fromPasswordQueue&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;&amp;gt;=&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;cap(&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;s&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;fromPasswordQueue&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;{&lt;/span&gt;
-		&lt;span style=&#34;color: #66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;nil&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;ErrOverload&lt;/span&gt;
-	&lt;span style=&#34;color: #f8f8f2&#34;&gt;}&lt;/span&gt;
-	&lt;span style=&#34;color: #a6e22e&#34;&gt;rq&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;generateFromPasswordRequest&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;{&lt;/span&gt;
-		&lt;span style=&#34;color: #a6e22e&#34;&gt;password&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;:&lt;/span&gt;   &lt;span style=&#34;color: #f8f8f2&#34;&gt;[]byte(&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;password&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;),&lt;/span&gt;
-		&lt;span style=&#34;color: #a6e22e&#34;&gt;BCryptCost&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;s&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;BcryptCost&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;,&lt;/span&gt;
-		&lt;span style=&#34;color: #a6e22e&#34;&gt;result&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;:&lt;/span&gt;     &lt;span style=&#34;color: #f8f8f2&#34;&gt;make(&lt;/span&gt;&lt;span style=&#34;color: #66d9ef&#34;&gt;chan&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;generateFromPasswordResult&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color: #ae81ff&#34;&gt;0&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;),&lt;/span&gt;
-	&lt;span style=&#34;color: #f8f8f2&#34;&gt;}&lt;/span&gt;
-	&lt;span style=&#34;color: #a6e22e&#34;&gt;s&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;fromPasswordQueue&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;&amp;lt;-&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;rq&lt;/span&gt;
-	&lt;span style=&#34;color: #66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;rq&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;result&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;nil&lt;/span&gt;
-&lt;span style=&#34;color: #f8f8f2&#34;&gt;}&lt;/span&gt;
-
-&lt;span style=&#34;color: #66d9ef&#34;&gt;func&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;s&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;*&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;accountService&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;newCompareRequest&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;hashedPassword&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;string&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;password&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;string&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color: #66d9ef&#34;&gt;chan&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;error&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;error&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;{&lt;/span&gt;
-	&lt;span style=&#34;color: #66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;len(&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;s&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;compareQueue&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;&amp;gt;=&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;cap(&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;s&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;compareQueue&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;{&lt;/span&gt;
-		&lt;span style=&#34;color: #66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;nil&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;ErrOverload&lt;/span&gt;
-	&lt;span style=&#34;color: #f8f8f2&#34;&gt;}&lt;/span&gt;
-	&lt;span style=&#34;color: #a6e22e&#34;&gt;rq&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;compareHashAndPasswordRequest&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;{&lt;/span&gt;
-		&lt;span style=&#34;color: #a6e22e&#34;&gt;hashedPassword&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;[]byte(&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;hashedPassword&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;),&lt;/span&gt;
-		&lt;span style=&#34;color: #a6e22e&#34;&gt;password&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;:&lt;/span&gt;       &lt;span style=&#34;color: #f8f8f2&#34;&gt;[]byte(&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;password&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;),&lt;/span&gt;
-		&lt;span style=&#34;color: #a6e22e&#34;&gt;result&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;:&lt;/span&gt;         &lt;span style=&#34;color: #f8f8f2&#34;&gt;make(&lt;/span&gt;&lt;span style=&#34;color: #66d9ef&#34;&gt;chan&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;error&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color: #ae81ff&#34;&gt;0&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;),&lt;/span&gt;
-	&lt;span style=&#34;color: #f8f8f2&#34;&gt;}&lt;/span&gt;
-	&lt;span style=&#34;color: #a6e22e&#34;&gt;s&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;compareQueue&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;&amp;lt;-&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;rq&lt;/span&gt;
-	&lt;span style=&#34;color: #66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;rq&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;result&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;nil&lt;/span&gt;
-&lt;span style=&#34;color: #f8f8f2&#34;&gt;}&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;The functions above return channel or error (unfortunately there&amp;rsquo;s no equivalent of Scala&amp;rsquo;s Either[A,B] type in Go). The magic is in comparison &lt;em&gt;len(channel) &amp;gt;= cap(channel)&lt;/em&gt;: if we ever reach channel capacity, just return error indicating overload and let upstream code decide what to do about it (the approach will likely be different in a user facing website and different in a REST service consumed by a machine but in any case should be some sort of &amp;ldquo;try again later&amp;rdquo; signal). From the perspective of code that makes use of our wrappers, things are pretty simple:&lt;/p&gt;
-
-&lt;p&gt;&lt;div class=&#34;highlight&#34; style=&#34;background: #272822&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span style=&#34;color: #75715e&#34;&gt;//hashing password&lt;/span&gt;
-&lt;span style=&#34;color: #f8f8f2&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color: #f92672&#34;&gt;...&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;)&lt;/span&gt;
-&lt;span style=&#34;color: #a6e22e&#34;&gt;resChannel&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;err&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;s&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;newFromPasswordRequest&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;password&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;)&lt;/span&gt;
-&lt;span style=&#34;color: #66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;err&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;!=&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;nil&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;{&lt;/span&gt;
-    &lt;span style=&#34;color: #66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;nil&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;err&lt;/span&gt;
-&lt;span style=&#34;color: #f8f8f2&#34;&gt;}&lt;/span&gt;
-&lt;span style=&#34;color: #a6e22e&#34;&gt;res&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;&amp;lt;-&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;resChannel&lt;/span&gt;
-&lt;span style=&#34;color: #a6e22e&#34;&gt;hashedPassword&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;err&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;res&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;hashedPassword&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;res&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;err&lt;/span&gt;
-&lt;span style=&#34;color: #66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;err&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;!=&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;nil&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;{&lt;/span&gt;
-    &lt;span style=&#34;color: #66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;nil&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;err&lt;/span&gt;
-&lt;span style=&#34;color: #f8f8f2&#34;&gt;}&lt;/span&gt;
-&lt;span style=&#34;color: #f8f8f2&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color: #f92672&#34;&gt;...&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;)&lt;/span&gt;
-
-&lt;span style=&#34;color: #75715e&#34;&gt;//checking password against hashed value&lt;/span&gt;
-&lt;span style=&#34;color: #f8f8f2&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color: #f92672&#34;&gt;...&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;)&lt;/span&gt;
-&lt;span style=&#34;color: #a6e22e&#34;&gt;resChannel&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;err&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;s&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;newCompareRequest&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;account&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;HashedPassword&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;password&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;)&lt;/span&gt;
-&lt;span style=&#34;color: #66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;err&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;!=&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;nil&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;{&lt;/span&gt;
-    &lt;span style=&#34;color: #66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;nil&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;err&lt;/span&gt;
-&lt;span style=&#34;color: #f8f8f2&#34;&gt;}&lt;/span&gt;
-&lt;span style=&#34;color: #a6e22e&#34;&gt;err&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;&amp;lt;-&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;resChannel&lt;/span&gt;
-&lt;span style=&#34;color: #66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;err&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;!=&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;nil&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;{&lt;/span&gt;
-    &lt;span style=&#34;color: #66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;nil&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;err&lt;/span&gt;
-&lt;span style=&#34;color: #f8f8f2&#34;&gt;}&lt;/span&gt;
-&lt;span style=&#34;color: #f8f8f2&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color: #f92672&#34;&gt;...&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-&lt;/p&gt;
-
-&lt;p&gt;Obviously, a proper password storage and authentication is going to be much, much more complicated :) Also, the problem of protecting yourself from DoS or DDoS is much more complex, and a lot of measures need to be taken, not only at the application layer. Still, I consider this pattern of putting a controllable upper bound on resources consumed by certain module in the application &lt;strong&gt;without breaking it into microservices&lt;/strong&gt; very useful, especially when combined with proper profiling and monitoring.&lt;/p&gt;
-</description>
+      <description>The common wisdom says: &amp;ldquo;Do not implement password storage on your own&amp;rdquo; &amp;hellip; Considering amount of things that can be done wrong, perhaps relying on one of plenty of external providers is the right thing to do :) If you still want to do this, read OWASP Password Storage Cheat Sheet as a first step. After that, read OWASP Authentication Cheat Sheet - password storage and authentication are close layers and most likely you&amp;rsquo;ll be working on both.</description>
     </item>
     
     <item>
@@ -167,122 +22,8 @@
       <pubDate>Tue, 27 Dec 2016 17:03:44 +0100</pubDate>
       
       <guid>https://maciejmroz.com/2016/12/27/going-for-simplicity-with-go/</guid>
-      <description>
-
-&lt;p&gt;If you are backend engineer, you probably treat nonfunctional requirements like security, availability, scalability etc. just as if they were laws of physics. And that&amp;rsquo;s good when working on mature, mission critical systems. But what if you don&amp;rsquo;t need all that and want to simply focus on getting something simple but professionally looking out there? Something like MVP/early stage product?&lt;/p&gt;
-
-&lt;p&gt;Do you really need microservices, containers, service discovery, load balancers, caches, multiple databases, all clustered and replicated accross multiple availability zones? Hint: you are not making any money yet and there&amp;rsquo;s big chance you will not get to the point where you have product/market fit.&lt;/p&gt;
-
-&lt;p&gt;So, let&amp;rsquo;s take a step back and optimize for something else entirely: ease and speed of development. There are many possible ways to approach a problem framed this way. I&amp;rsquo;ll show how to do that using Go language and &lt;a href=&#34;https://echo.labstack.com/&#34;&gt;Labstack Echo&lt;/a&gt; framework.&lt;/p&gt;
-
-&lt;p&gt;I initially thought of putting the code on GitHub, but essentially it&amp;rsquo;s a compilation of few samples from Echo docs, so I&amp;rsquo;ll just paste it here:&lt;/p&gt;
-
-&lt;div class=&#34;highlight&#34; style=&#34;background: #272822&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span style=&#34;color: #f92672&#34;&gt;package&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;main&lt;/span&gt;
-
-&lt;span style=&#34;color: #f92672&#34;&gt;import&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;(&lt;/span&gt;
-	&lt;span style=&#34;color: #e6db74&#34;&gt;&amp;quot;flag&amp;quot;&lt;/span&gt;
-
-	&lt;span style=&#34;color: #e6db74&#34;&gt;&amp;quot;golang.org/x/crypto/acme/autocert&amp;quot;&lt;/span&gt;
-
-	&lt;span style=&#34;color: #e6db74&#34;&gt;&amp;quot;github.com/labstack/echo&amp;quot;&lt;/span&gt;
-	&lt;span style=&#34;color: #e6db74&#34;&gt;&amp;quot;github.com/labstack/echo/middleware&amp;quot;&lt;/span&gt;
-&lt;span style=&#34;color: #f8f8f2&#34;&gt;)&lt;/span&gt;
-
-&lt;span style=&#34;color: #66d9ef&#34;&gt;func&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;redirectHTTP&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;()&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;{&lt;/span&gt;
-	&lt;span style=&#34;color: #a6e22e&#34;&gt;e&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;echo&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;New&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;()&lt;/span&gt;
-	&lt;span style=&#34;color: #a6e22e&#34;&gt;e&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;Use&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;middleware&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;HTTPSRedirect&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;())&lt;/span&gt;
-	&lt;span style=&#34;color: #66d9ef&#34;&gt;go&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;func&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;()&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;{&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;e&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;Logger&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;Fatal&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;e&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;Start&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color: #e6db74&#34;&gt;&amp;quot;:80&amp;quot;&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;))&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;}()&lt;/span&gt;
-&lt;span style=&#34;color: #f8f8f2&#34;&gt;}&lt;/span&gt;
-
-&lt;span style=&#34;color: #66d9ef&#34;&gt;func&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;main&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;()&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;{&lt;/span&gt;
-
-	&lt;span style=&#34;color: #a6e22e&#34;&gt;devFlagPtr&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;flag&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;Bool&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color: #e6db74&#34;&gt;&amp;quot;dev&amp;quot;&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;false&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color: #e6db74&#34;&gt;&amp;quot;Run on dev port, no TLS&amp;quot;&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;)&lt;/span&gt;
-	&lt;span style=&#34;color: #a6e22e&#34;&gt;flag&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;Parse&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;()&lt;/span&gt;
-
-	&lt;span style=&#34;color: #a6e22e&#34;&gt;e&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;echo&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;New&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;()&lt;/span&gt;
-	&lt;span style=&#34;color: #a6e22e&#34;&gt;e&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;Use&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;middleware&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;Gzip&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;())&lt;/span&gt;
-
-	&lt;span style=&#34;color: #a6e22e&#34;&gt;e&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;Static&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color: #e6db74&#34;&gt;&amp;quot;/css&amp;quot;&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color: #e6db74&#34;&gt;&amp;quot;static/css&amp;quot;&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;)&lt;/span&gt;
-	&lt;span style=&#34;color: #a6e22e&#34;&gt;e&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;Static&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color: #e6db74&#34;&gt;&amp;quot;/fonts&amp;quot;&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color: #e6db74&#34;&gt;&amp;quot;static/fonts&amp;quot;&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;)&lt;/span&gt;
-	&lt;span style=&#34;color: #a6e22e&#34;&gt;e&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;Static&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color: #e6db74&#34;&gt;&amp;quot;/js&amp;quot;&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color: #e6db74&#34;&gt;&amp;quot;static/js&amp;quot;&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;)&lt;/span&gt;
-	&lt;span style=&#34;color: #a6e22e&#34;&gt;e&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;File&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color: #e6db74&#34;&gt;&amp;quot;/&amp;quot;&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color: #e6db74&#34;&gt;&amp;quot;static/index.html&amp;quot;&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;)&lt;/span&gt;
-
-	&lt;span style=&#34;color: #66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;*&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;devFlagPtr&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;{&lt;/span&gt;
-		&lt;span style=&#34;color: #a6e22e&#34;&gt;e&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;Logger&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;Fatal&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;e&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;Start&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color: #e6db74&#34;&gt;&amp;quot;:1323&amp;quot;&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;))&lt;/span&gt;
-	&lt;span style=&#34;color: #f8f8f2&#34;&gt;}&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;{&lt;/span&gt;
-		&lt;span style=&#34;color: #a6e22e&#34;&gt;redirectHTTP&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;()&lt;/span&gt;
-		&lt;span style=&#34;color: #a6e22e&#34;&gt;e&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;Use&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;middleware&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;SecureWithConfig&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;middleware&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;SecureConfig&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;{&lt;/span&gt;
-			&lt;span style=&#34;color: #a6e22e&#34;&gt;HSTSMaxAge&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color: #ae81ff&#34;&gt;63072000&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;,&lt;/span&gt;
-		&lt;span style=&#34;color: #f8f8f2&#34;&gt;}))&lt;/span&gt;
-		&lt;span style=&#34;color: #a6e22e&#34;&gt;e&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;AutoTLSManager&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;Cache&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;autocert&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;DirCache&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color: #e6db74&#34;&gt;&amp;quot;.&amp;quot;&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;)&lt;/span&gt;
-		&lt;span style=&#34;color: #a6e22e&#34;&gt;e&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;AutoTLSManager&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;HostPolicy&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;autocert&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;HostWhitelist&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color: #e6db74&#34;&gt;&amp;quot;cs.maciejmroz.com&amp;quot;&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;)&lt;/span&gt;
-		&lt;span style=&#34;color: #a6e22e&#34;&gt;e&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;Logger&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;Fatal&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;e&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;StartAutoTLS&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color: #e6db74&#34;&gt;&amp;quot;:443&amp;quot;&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;))&lt;/span&gt;
-	&lt;span style=&#34;color: #f8f8f2&#34;&gt;}&lt;/span&gt;
-&lt;span style=&#34;color: #f8f8f2&#34;&gt;}&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;What you see above is a concurrent http server serving content over HTTPS with certificate obtained automatically from &lt;a href=&#34;https://letsencrypt.org/&#34;&gt;Let&amp;rsquo;s Encrypt&lt;/a&gt;, also bound to port 80 redirecting everything there to 443 (where &lt;a href=&#34;https://en.wikipedia.org/wiki/HTTP_Strict_Transport_Security&#34;&gt;HSTS&lt;/a&gt; headers are served), all with support for TLS 1.2 and HTTP/2. When deployed to Digital Ocean droplet, it is reachable over IPv6 and gets A+ grade from &lt;a href=&#34;https://www.ssllabs.com/&#34;&gt;SSL Labs&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;There are more considerations if you want to put &lt;a href=&#34;https://blog.gopheracademy.com/advent-2016/exposing-go-on-the-internet/&#34;&gt;Go-based website in production&lt;/a&gt; but this is nice starting point for something more featured.&lt;/p&gt;
-
-&lt;h2 id=&#34;where-are-we&#34;&gt;Where are we?&lt;/h2&gt;
-
-&lt;p&gt;Pretty much no moving parts except main executable:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;No load balancer&lt;/strong&gt; in front. Go performance is high enough you will not need horizontal scaling for a very long time. And you don&amp;rsquo;t need HA yet.&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;No web/application server&lt;/strong&gt;. Another piece of software you don&amp;rsquo;t need. Go supports Websockets, HTTP/2 and TLS 1.2 out of the box. Echo makes it trivial to acquire certificate from Let&amp;rsquo;s Encrypt.&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;No runtime&lt;/strong&gt;. Go is a compiled language and everything is statically linked. You don&amp;rsquo;t need to worry about version of PHP/Python/Ruby/node installed on your server, and whether the libraries are in correct versions. For Go, it&amp;rsquo;s all build time affair, what you deploy is ELF binary + static files (in fact, there are solutions to bundle these togother, too). There is really no need to bother with packaking the app inside a Docker (or rkt, or whatever) container. Just run single binary directly from systemd, with config file like this:&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;div class=&#34;highlight&#34; style=&#34;background: #272822&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span style=&#34;color: #66d9ef&#34;&gt;[Unit]&lt;/span&gt;
-&lt;span style=&#34;color: #a6e22e&#34;&gt;Description&lt;/span&gt;&lt;span style=&#34;color: #f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color: #e6db74&#34;&gt;Go web app&lt;/span&gt;
-&lt;span style=&#34;color: #a6e22e&#34;&gt;Documentation&lt;/span&gt;&lt;span style=&#34;color: #f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color: #e6db74&#34;&gt;https://cs.maciejmroz.com/&lt;/span&gt;
-&lt;span style=&#34;color: #a6e22e&#34;&gt;After&lt;/span&gt;&lt;span style=&#34;color: #f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color: #e6db74&#34;&gt;network.target&lt;/span&gt;
-
-&lt;span style=&#34;color: #66d9ef&#34;&gt;[Service]&lt;/span&gt;
-&lt;span style=&#34;color: #a6e22e&#34;&gt;User&lt;/span&gt;&lt;span style=&#34;color: #f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color: #e6db74&#34;&gt;app&lt;/span&gt;
-&lt;span style=&#34;color: #a6e22e&#34;&gt;WorkingDirectory&lt;/span&gt;&lt;span style=&#34;color: #f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color: #e6db74&#34;&gt;/opt/app/&lt;/span&gt;
-&lt;span style=&#34;color: #a6e22e&#34;&gt;LimitNOFILE&lt;/span&gt;&lt;span style=&#34;color: #f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color: #e6db74&#34;&gt;4096&lt;/span&gt;
-&lt;span style=&#34;color: #a6e22e&#34;&gt;ExecStart&lt;/span&gt;&lt;span style=&#34;color: #f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color: #e6db74&#34;&gt;/opt/app/app-linux-amd64&lt;/span&gt;
-&lt;span style=&#34;color: #a6e22e&#34;&gt;Restart&lt;/span&gt;&lt;span style=&#34;color: #f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color: #e6db74&#34;&gt;on-failure&lt;/span&gt;
-&lt;span style=&#34;color: #a6e22e&#34;&gt;StartLimitInterval&lt;/span&gt;&lt;span style=&#34;color: #f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color: #e6db74&#34;&gt;60&lt;/span&gt;
-
-&lt;span style=&#34;color: #66d9ef&#34;&gt;[Install]&lt;/span&gt;
-&lt;span style=&#34;color: #a6e22e&#34;&gt;WantedBy&lt;/span&gt;&lt;span style=&#34;color: #f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color: #e6db74&#34;&gt;multi-user.target&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;You don&amp;rsquo;t even need Linux machine/Vagrant VM to build the binary thanks to excellent cross compilation support in Go. It just works, here&amp;rsquo;s the Makefile I use on Mac OS X so I don&amp;rsquo;t need to type too much:&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&#34;highlight&#34; style=&#34;background: #272822&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;all&lt;/span&gt;&lt;span style=&#34;color: #f92672&#34;&gt;:&lt;/span&gt;
-	&lt;span style=&#34;color: #f8f8f2&#34;&gt;GOOS&lt;/span&gt;&lt;span style=&#34;color: #f92672&#34;&gt;=&lt;/span&gt;linux &lt;span style=&#34;color: #f8f8f2&#34;&gt;GOARCH&lt;/span&gt;&lt;span style=&#34;color: #f92672&#34;&gt;=&lt;/span&gt;amd64 go build -o app-linux-amd64
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;ul&gt;
-&lt;li&gt;A tip for the less savvy on modern Linux, in order to bind non-root process to port &amp;lt;1024, you need something like this (as root or via sudo, of course :) ):&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&#34;highlight&#34; style=&#34;background: #272822&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span&gt;&lt;/span&gt;setcap &lt;span style=&#34;color: #e6db74&#34;&gt;&amp;#39;cap_net_bind_service=+ep&amp;#39;&lt;/span&gt; /opt/app/app-linux-amd64
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;h2 id=&#34;what-next&#34;&gt;What next?&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Application level caching is easy - at the simplest you can get any concurrent cache out there and just do it in-process. No HA, remember? Biggest instance on Digital Ocean has 64 GB RAM, on Amazon you can get many, many times more. Eventually you will move towards something like &lt;a href=&#34;https://github.com/golang/groupcache&#34;&gt;groupcache&lt;/a&gt; also solving &amp;ldquo;thundering herd&amp;rdquo; problem properly.&lt;/li&gt;
-&lt;li&gt;How about async jobs? RabbitMQ to the rescue, right? Wrong. Less moving parts, remember? In Go, when you want to launch an async job you launch a goroutine, or communicate with one that already exists via channel. Point is, you use concurrency features of the language. You don&amp;rsquo;t need to get truly distributed yet - you get up to 20 cores on DO, more on Amazon. When you run compiled language with good concurrency support, that&amp;rsquo;s a lot.&lt;/li&gt;
-&lt;li&gt;At the database level I&amp;rsquo;d actually backtrack a bit a suggest you run MongoDB yourself. It&amp;rsquo;s not much work to set it up and productivity on the app level is worth it. It sounds tempting to go with 100% managed solution, but without traffic and paying customers in my opinion it&amp;rsquo;s not really worth it. I&amp;rsquo;m not religious on this point - i.e. if you are fluent with DynamoDB and do your hosting on Amazon, or perhaps use some equivalent db service on the GCE, by all means go for it.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&#34;ending-words&#34;&gt;Ending words&lt;/h2&gt;
-
-&lt;p&gt;Nobody builds with LAMP stack any more - there are plenty of other ways. MEAN (MongoDB, Express, Angular, Node) seems to be chosen by a lot of people. If you are strong with JavaScript/TypeScript it is not really a bad choice. But it&amp;rsquo;s not the only one out there. I hope that this post will get someone at least a bit curious about the alternatives :)&lt;/p&gt;
-</description>
+      <description>If you are backend engineer, you probably treat nonfunctional requirements like security, availability, scalability etc. just as if they were laws of physics. And that&amp;rsquo;s good when working on mature, mission critical systems. But what if you don&amp;rsquo;t need all that and want to simply focus on getting something simple but professionally looking out there? Something like MVP/early stage product?
+Do you really need microservices, containers, service discovery, load balancers, caches, multiple databases, all clustered and replicated accross multiple availability zones?</description>
     </item>
     
     <item>
@@ -291,51 +32,7 @@
       <pubDate>Sat, 26 Nov 2016 16:03:03 +0100</pubDate>
       
       <guid>https://maciejmroz.com/2016/11/26/moving-the-blog-to-hugo/</guid>
-      <description>
-
-&lt;p&gt;Quite a chunk of time has passed since my last update to this blog. While primary reason is my super busy life (on both proffessional and personal fronts) there was also another one I have finally addressed, along with a few extras. The reason was that over the years I simply grew tired of WordPress software. The point to migrate away from it occupied my TODO list for too long. I am not going to bash WP here, I used it for many years, and for that I am grateful to its authors. However, for me at least the time has come to move towards something else.&lt;/p&gt;
-
-&lt;h2 id=&#34;back-to-simplicity&#34;&gt;Back to simplicity&lt;/h2&gt;
-
-&lt;p&gt;I remember that when I was in high school my friend was running entire e-commerce site using static HTML generator written in Perl, combined with some CGI scripts to chandle checkout process. Going even further back, I remember the times when I actually used notepad to edit HTML 3 files, and upload that with FTP over a 28k modem connection to a hosting provider. Things were simple back then, and I truly miss that simplicity.&lt;/p&gt;
-
-&lt;p&gt;Having to run entire LAMP stack on my own just to run simple website is standing contrary to the rule of keeping things simple. That&amp;rsquo;s exactly what I was doing for the past few years, and that&amp;rsquo;s what I wanted to change. This is the primary reason I decided to look at static website generators as a new blogging platform. All these CMS systems have been created for people who don&amp;rsquo;t know their way around computers. Hackers know better :)&lt;/p&gt;
-
-&lt;p&gt;There is quite a few modern generators to choose from. My initial favorite was &lt;a href=&#34;http://octopress.org/&#34;&gt;Octopress&lt;/a&gt;, but eventually I settled on &lt;a href=&#34;https://gohugo.io/&#34;&gt;Hugo&lt;/a&gt; but with Octopress-inspited theme. Hugo is simple, easy to customize, trivial to install, comes with built in webserver that watches file changes, and reloads the pages in your browser just when you save source file via JavaScript magic. It&amp;rsquo;s also very, very fast - regenerating this website in its entirety takes 200-300 ms on my MacBook Pro.&lt;/p&gt;
-
-&lt;p&gt;Hugo, similar to other generators, uses Markdown as source file format. I guess the format has been popularized by GitHub (and likely other hosted Git solutions) with automatic rendering of README.md in the repositories. Regardless of the reason, it is well known and liked by hacker types. It has some limitations, but also lets you focus on the content and not its form. With Hugo you can easily work around Markdown limitations by using your own macros that expand to HTML during rendering. So, while 99% of the time sticking to plain Markdown syntax is enough, you are not left alone in the corner cases.&lt;/p&gt;
-
-&lt;h2 id=&#34;github-pages&#34;&gt;GitHub Pages&lt;/h2&gt;
-
-&lt;p&gt;GitHub has launched &lt;a href=&#34;https://pages.github.com/&#34;&gt;GitHub Pages&lt;/a&gt; quite a while ago. It&amp;rsquo;s totally free service that let&amp;rsquo;s you serve static web content to the world. There are traffic limitations but not at the level that matters for a personal blog. Should you somehow run into these limitations, there are plenty of other options, Amazon S3 among them. For now, sticking to GitHub gives me very nice publishing flow. In your website directory:&lt;/p&gt;
-
-&lt;div class=&#34;highlight&#34; style=&#34;background: #272822&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span&gt;&lt;/span&gt;MaciekMBP:hugo maciek$ hugo
-Started building sites ...
-Built site &lt;span style=&#34;color: #66d9ef&#34;&gt;for&lt;/span&gt; language en:
-&lt;span style=&#34;color: #ae81ff&#34;&gt;0&lt;/span&gt; draft content
-&lt;span style=&#34;color: #ae81ff&#34;&gt;0&lt;/span&gt; future content
-&lt;span style=&#34;color: #ae81ff&#34;&gt;0&lt;/span&gt; expired content
-&lt;span style=&#34;color: #ae81ff&#34;&gt;35&lt;/span&gt; pages created
-&lt;span style=&#34;color: #ae81ff&#34;&gt;0&lt;/span&gt; non-page files copied
-&lt;span style=&#34;color: #ae81ff&#34;&gt;6&lt;/span&gt; paginator pages created
-&lt;span style=&#34;color: #ae81ff&#34;&gt;45&lt;/span&gt; tags created
-&lt;span style=&#34;color: #ae81ff&#34;&gt;17&lt;/span&gt; categories created
-total in &lt;span style=&#34;color: #ae81ff&#34;&gt;227&lt;/span&gt; ms
-MaciekMBP:hugo maciek$ &lt;span style=&#34;color: #f8f8f2&#34;&gt;cd&lt;/span&gt; public
-MaciekMBP:public maciek$ git add -A
-MaciekMBP:public maciek$ git commit -m &lt;span style=&#34;color: #e6db74&#34;&gt;&amp;quot;New version info&amp;quot;&lt;/span&gt;
-MaciekMBP:public maciek$ git push
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;That&amp;rsquo;s all, new site version is live!!! Of course you can (and should :) ) use version control tools for your source files, too. For ambitious types: implement building and publishing of your website via continuous integration server :)&lt;/p&gt;
-
-&lt;h2 id=&#34;cloudflare&#34;&gt;CloudFlare&lt;/h2&gt;
-
-&lt;p&gt;Serving static website from GitHub is very quick, and supports HTTPS within github.io domain. What if you want HTTPS on your own domain? Here is where &lt;a href=&#34;https://www.cloudflare.com/&#34;&gt;CloudFlare&lt;/a&gt; steps in. Within their &lt;strong&gt;free&lt;/strong&gt; plan you can get not only free HTTPS, but with great options like: redirecting HTTP straffic to HTTPS, turning on HSTS (HTTP Strict Stransport Security) for the site, or even forcing TLS 1.3 use (beta feature). While going crazy with security on personal blog that&amp;rsquo;s available on GitHub anyway may seem like an overkill, I strongly believe that in the era of &lt;a href=&#34;https://letsencrypt.org/&#34;&gt;Let&amp;rsquo;s Encrypt&lt;/a&gt;, non-encrypted HTTP traffic should just die. Using CloudFlare has an additional advantage of speed: it&amp;rsquo;s not just about encryption, but also a CDN sitting in front of GitHub. To make it even sweeter, CloudFlare fully supports HTTP/2 and SPDY protocols.&lt;/p&gt;
-
-&lt;p&gt;And one more thing: thanks to CloudFlare &lt;a href=&#34;https://blog.cloudflare.com/introducing-cname-flattening-rfc-compliant-cnames-at-a-domains-root/&#34;&gt;CNAME Flattening&lt;/a&gt; you can have CNAME at top level of your domain &lt;strong&gt;without breaking the RFC&lt;/strong&gt;. As a result, the address for this blog from now on will be just &lt;a href=&#34;https://maciejmroz.com&#34;&gt;https://maciejmroz.com&lt;/a&gt;, served to you at zero cost in &amp;ldquo;cloud native&amp;rdquo; way :)&lt;/p&gt;
-</description>
+      <description>Quite a chunk of time has passed since my last update to this blog. While primary reason is my super busy life (on both proffessional and personal fronts) there was also another one I have finally addressed, along with a few extras. The reason was that over the years I simply grew tired of WordPress software. The point to migrate away from it occupied my TODO list for too long. I am not going to bash WP here, I used it for many years, and for that I am grateful to its authors.</description>
     </item>
     
     <item>
@@ -344,40 +41,7 @@ MaciekMBP:public maciek$ git push
       <pubDate>Thu, 01 Jan 2015 00:00:00 +0000</pubDate>
       
       <guid>https://maciejmroz.com/2015/01/01/beyond-virtualization/</guid>
-      <description>&lt;p&gt;I guess it&amp;rsquo;s time to sum up recent trends in how we build, deploy, and operate complex server side software. Virtualization and cloud computing have been with us for quite a while but right now the era of containers is coming, with entire Docker ecosystem paving the way. You might want to ask a very valid question: &amp;ldquo;What&amp;rsquo;s in it for me?&amp;rdquo; :) I will focus on business implications of the technology. But let&amp;rsquo;s set the context first.&lt;/p&gt;
-
-&lt;p&gt;The explosion of cloud computing in recent years literally changed the way we think. Well, you probably could treat Amazon EC2 instances as if they were ordinary machines, but &amp;ldquo;in the cloud&amp;rdquo;. That of course would be &lt;strong&gt;totally&lt;/strong&gt; missing the point. The key advantages of cloud computing are on the intersection of operations, software architecture and development - these cannot be realized without moving to true DevOps. Trying to slap &amp;ldquo;cloud computing&amp;rdquo; sticker on top of existing organization with IT/Operations/Development (add more if needed to fit your case) silos will not give anyone much value. Once you change your approach, you suddenly get the true benefits:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Shorter cycle time from concept to delivering customer value&lt;/li&gt;
-&lt;li&gt;Ability to to a lot more ad-hoc without unnecessary risk&lt;/li&gt;
-&lt;li&gt;Resilient and scalable application architecture - one that&amp;rsquo;s flexible and evolving, not set in stone&lt;/li&gt;
-&lt;li&gt;Reduced TCO thanks to automation, completely new usage patterns (i.e. instance that runs once a day for an hour) and services that cloud computing provider can operate way more efficiently than everyone else&lt;/li&gt;
-&lt;li&gt;If everything else fails, ability to brute force your way out of many problems :)
-The real cloud computing usage scenarios could look like this:&lt;/li&gt;
-&lt;li&gt;The developer spins up new game instance because the team anticipates that the changes deployed just minutes ago will require more processing power. It happens in less than five minutes, instance is automatically put in proper security group, attached to load balancer (if necessary), tagged, monitoring is set up so that any problems with the instance are escalated to the team that launched it, and serving traffic! By the way, instance is based on a machine image that was generated automatically by Jenkins job triggered in the morning by change to the Git repository - few hours earlier someone found and fixed race condition in the gaming platform. All with single click or call of a command line.&lt;/li&gt;
-&lt;li&gt;An analyst spins up an database instance with the last snapshot of production data, runs some very expensive SQL query, then shuts it down. All happening without any disruption to production service, at very low infrastructure cost, without bothering anyone. CEO gets the report he ordered a lot quicker than expected :)&lt;/li&gt;
-&lt;li&gt;We get huge traffic spike on some of our smaller apps - this time somebody on the team actually makes decision to move to bigger instance type and spins up 3 larger instances, waits till they start serving traffic, then stops 4 smaller ones. Because of underlying automation, the new instances are automatically spread across availability zones. All this happens without any disruption to the service.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;All of these scenarios, and a lot more, could happen at my company. In fact, they happen all the time, sometimes in parallel. To us these are just events. Not issues, emergencies, or disasters, but events. Extensive planning, overprovisioning, delays, service disruptions &amp;hellip; with the right mindset, you no longer have to worry about these and can focus on solving other problems. At least most of the time, obviously it&amp;rsquo;s not always perfect and rosy :) Bottom line: once you truly embrace cloud computing, the value is huge. If we can do all this stuff, why are people so exctited about using containers instead of just spinning up VMs like we do now?  Here we come to the hard part, because if you are a software developer who used a public or private cloud the way it should be used, you just know that Docker is a huge deal. If you didn&amp;rsquo;t, you might have trouble here but I&amp;rsquo;ll try to explain anyway.&lt;/p&gt;
-
-&lt;p&gt;What public IaaS/PaaS services have really given us was a glimpse into the future. At the same time, they only took us half the way. With AWS etc, people have started to build resilient and scalable systems, but many wanted to take it further. Microservices are an obvious step but even cheapest and smallest VMs out there are just too powerful for that approach. If you imagine an app that&amp;rsquo;s deployed on 100+ micro instances for architectural reasons, well, that&amp;rsquo;s not pretty. We went to the cloud to reduce operational overhead, yet we found ourselves under pressure to actually increase it and to waste computing resources in the process. Containers enable reasonable isolation without overhead of using a VM. Starting a container is not really different from starting a process (in terms of both resource usage and speed!). Docker makes all that easy to use, and easy to build further automation on top of. All the missing pieces are suddenly in place. We get to:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Architecture described in code, possibly changing from version to version, deployed and scaled automatically&lt;/li&gt;
-&lt;li&gt;Heterogeneous environment that doesn&amp;rsquo;t dissolve into complete mess&lt;/li&gt;
-&lt;li&gt;Continuous delivery of user value with even lower risk - deployment at service level, very easy side by side deployments&lt;/li&gt;
-&lt;li&gt;Modularization enabling everyone to better control technology debt, and giving the option of rewriting stuff if absolutely necessary&lt;/li&gt;
-&lt;li&gt;Standardized workflow: developer machine, test, staging, production - all running the same code, just configured differently&lt;/li&gt;
-&lt;li&gt;All that without locking ourselves into using single IaaS/PaaS vendor (I don&amp;rsquo;t think of it as a big deal, but some people do)&lt;/li&gt;
-&lt;li&gt;With close to optimal resource usage because we can pack many containers per VM!&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;What does it all mean if I&amp;rsquo;m just starting? When I was finishing my studies, early into professional career, the cheapest way to set up a server was to use bare metal machine and pay $300/mo or something like that, very often on 12-months+ contract. And these servers weren&amp;rsquo;t really that powerful, iirc it was something like dual socket single core Xeon (several generations behind!) + 1 GB of memory and small SCSI disk. You want RAID? Load balancer and more machines for better availability or to scale performance? Dedicated DB machine? Costs were going up very, very quickly. Count in operational overhead of bare metal hw and you ended up with pretty high numbers (account for the fact that back then there was no Puppet/Chef/Ansible etc - we used bash and Perl to automate operations!).&lt;/p&gt;
-
-&lt;p&gt;Today you can get a fully featured VM for as little as $5/mo, so you can easily host replicated db + redundant web instances for $20/mo. You can scale it up when the needs arise, with provisioning within minutes. Thanks to Docker, you can use this setup to build using microservices from the very beginning, so there will be no need to go beyond these cheap VMs before you are actually resource limited. Realistically, we are talking 30-50x reduction in initial infrastructure costs. On operational side everything is also a lot easier thanks to APIs and much more mature tools. Setting up/tearing down test environments can be fully automated. If you go with AWS, for a slightly higher price you can get DB and storage services that require almost zero work on your side (for that reason AWS probably is the sweet spot when you are limited by time). What has also changed is the efficiency of our infrastructure usage - LAMP stack is pretty much dead now (except maybe for the DB part) and people moved towards things like node.js, Go, or some new JVM based stuff which bring further cost savings. Not only is the infrastructure cheaper, we can also get more from it, and all that without sacrificing application architecture. Obviously, you still have to know how to build distributed applications, but having that knowledge things are a lot easier now :)&lt;/p&gt;
-</description>
+      <description>I guess it&amp;rsquo;s time to sum up recent trends in how we build, deploy, and operate complex server side software. Virtualization and cloud computing have been with us for quite a while but right now the era of containers is coming, with entire Docker ecosystem paving the way. You might want to ask a very valid question: &amp;ldquo;What&amp;rsquo;s in it for me?&amp;rdquo; :) I will focus on business implications of the technology.</description>
     </item>
     
     <item>
@@ -386,29 +50,9 @@ The real cloud computing usage scenarios could look like this:&lt;/li&gt;
       <pubDate>Tue, 04 Nov 2014 00:00:00 +0000</pubDate>
       
       <guid>https://maciejmroz.com/2014/11/04/ltv-of-a-service/</guid>
-      <description>&lt;p&gt;A little story today. It goes like this. I drop by one of our teams, and within completely different discussion I get asked this very &amp;ldquo;simple&amp;rdquo; question:&lt;/p&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;&amp;ldquo;Can we overlay an actual development team cost on top of product revenues so that we know if we are in the red or in the green?&amp;rdquo;&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;If you haven&amp;rsquo;t noticed yet, there&amp;rsquo;s a flaw in this question. The problem is, it simply doesn&amp;rsquo;t make sense from economic point of view. For any project in any industry one thing is true: investment into project comes before realizing profit from that project. It&amp;rsquo;s pure logic, you just can&amp;rsquo;t defeat causality. Depending on the industry the distribution of investment and revenue over time axis will differ, but it might look like this:&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;https://maciejmroz.com/img/investment-vs-revenue_300.jpg&#34; alt=&#34;investment vs revenue_300&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;This offset between investment and revenue is the core of the problem: current development costs are &lt;strong&gt;always&lt;/strong&gt; out of sync with current revenue. Depending on the industry and project the gap will obviously vary but it&amp;rsquo;s always there. This is relatively simple and intiuitive concept when we talk about project-based work but it becomes somewhat more complex when we talk about online games, which are services. Some successful online games (like World of Warcraft) have been with us for a long time, but this is only because their developers keep working on them. In other words, the investment is continuous, and so is revenue (both curves do not have to be smooth!). These games wouldn&amp;rsquo;t have survived if they remained static in their entire life cycle, they evolved and changed together with their player base. In the world of game services, there&amp;rsquo;s huge overlap between the two curves from graph above but the truth remains: current investments create &lt;strong&gt;future&lt;/strong&gt; profits. Nothing new here, move along, and of post? Not really, this is where the fun actually begins.&lt;/p&gt;
-
-&lt;p&gt;Let&amp;rsquo;s talk about something I decided to call &lt;strong&gt;service decay model&lt;/strong&gt;. What happens to the service once we completely stop development and leave only essential stuff: server operations, customer support, traffic acquisition? How long before it no longer makes sense to keep it running? If the product becomes static, it will continue to make money, only less and less every month. The decline does not happen overnight, and the tail is very long, but (with rare exceptions) we can safely assume that there&amp;rsquo;s some upper cap on total profits that we can extract from service in the period between now and before killing it completely at some unknown point in future. This upper cap is life time value (LTV) of a service. Let&amp;rsquo;s call it LTVS, I love abbreviations (on a more serious side, economists/financial folks probably have some more established name for this). We have no way to know LTVS, we can only try to build model that predicts it. Building predictive models is so hardcore math that Steve Jobs would just say it&amp;rsquo;s magical (you should build that model anyway, just because everyone sucks at predictions). What is interesting is that LTVS lets us define the value of current development: it is the &lt;strong&gt;change&lt;/strong&gt; it causes to LTVS. In other words: &lt;strong&gt;The feature is profitable if the increase in future revenue is bigger than the cost of implementing the feature.&lt;/strong&gt; To put it in pseudo equation form: Cost(feature) &amp;lt; delta LTVS. Why is that stuff important?&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;When you are early in the service life, it is &amp;ldquo;sink or swim&amp;rdquo;, it has to grow or you should just cut your losses and move on.&lt;/li&gt;
-&lt;li&gt;When you are late in the service life, you should stop development way, way before you are in the red (in terms of service revenue vs development costs). When? When you no longer add value.&lt;/li&gt;
-&lt;li&gt;If your service gets huge, economy of scale comes into play - 0.1% improvement might still be worth it if you have 10M users.&lt;/li&gt;
-&lt;li&gt;Pulling the plug on service (killing it from end user perspective) may come long time after dev team moved on to other stuff.&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;By the way, this explains how larger companies came to the idea of separate product development (whose task is to deliver a product/service or make specific improvement/change in it) from operations (which is responsible for running the service day to day) and from marketing (which does user acquisition and community management). In theory it makes sense, but it also creates organizational silos and internal handoffs, along with numerous negative effects. You have been warned. An interesting (even if slightly bitter) thought to end this post is something I saw on Twitter few days ago: &amp;ldquo;There are two kinds of product features, those that improve product value, and those that justify someones job&amp;rdquo;.&lt;/p&gt;
-</description>
+      <description>A little story today. It goes like this. I drop by one of our teams, and within completely different discussion I get asked this very &amp;ldquo;simple&amp;rdquo; question:
+ &amp;ldquo;Can we overlay an actual development team cost on top of product revenues so that we know if we are in the red or in the green?&amp;rdquo;
+ If you haven&amp;rsquo;t noticed yet, there&amp;rsquo;s a flaw in this question. The problem is, it simply doesn&amp;rsquo;t make sense from economic point of view.</description>
     </item>
     
     <item>
@@ -417,74 +61,7 @@ The real cloud computing usage scenarios could look like this:&lt;/li&gt;
       <pubDate>Sun, 22 Sep 2013 00:00:00 +0000</pubDate>
       
       <guid>https://maciejmroz.com/2013/09/22/functional-programming-trojan-horse/</guid>
-      <description>
-
-&lt;p&gt;All of game server code at my current company is using C++, and we are still starting new projects using existing C++ framework. I gave a presentation on our server architecture a few months ago, available &lt;a href=&#34;http://www.slideshare.net/maciejmroz/architektura-serwera-gier-online&#34;&gt;here&lt;/a&gt; (it&amp;rsquo;s in Polish, it was local event here in Kraków). After giving the presentation I was approached by a guy (sorry, don&amp;rsquo;t remember the name) who said something like: &amp;ldquo;It&amp;rsquo;s cool you did all that in C++. It&amp;rsquo;d be interesting to see you talk next year about how you rewritten the whole thing in Java :)&amp;ldquo;. I instantly answered: &amp;ldquo;Right now I&amp;rsquo;d do it with Scala and Akka&amp;rdquo;.&lt;/p&gt;
-
-&lt;p&gt;I wasn&amp;rsquo;t even thinking about it, it was absolutely obvious: if I were to do it from scratch, it&amp;rsquo;d do it in Scala. It felt a bit like an inception coming to the surface of my mind. It became pretty clear to me to that the only reason I am working on C++ server technology is because of the mild lockin: the benefits of rewriting server framework are smaller than gains. It suits our needs very well, programmers are familiar with it, so why change something that just works? However, it remains true that not only it would take less time to implement using Scala and Akka, but Akka is in some areas vastly better than what we did in C++.&lt;/p&gt;
-
-&lt;h2 id=&#34;what-s-so-special-about-scala&#34;&gt;What&amp;rsquo;s so special about Scala?&lt;/h2&gt;
-
-&lt;p&gt;I would never advocate use of programming language because of a cool name (admit it, it is cool :) ). The reason I actually decided to learn Scala is very simple: for the kind of problems I&amp;rsquo;m dealing with (complex server side systems), JVM as a platform has won. Sure, there are alternatives, but platform is much more than a language: it&amp;rsquo;s also a vm, tools, libraries and community. On these fronts, JVM is a winner by wide margin. Because I generally dislike Java for being so verbose (it&amp;rsquo;s 21st century, and we are expected to write code in simplified version of C++?), after playing for a short while with Clojure (which is awesome, just as any other Lisp dialect out there :) ), I quickly settled on Scala. The fact that functional programming fits my way of thinking about solving problems helped a lot, too :) So far I have spent about six months learning Scala, and still feel a lot like a novice. However, I know my way around it enough to have an opinion: I think it is the most important programming language created in past 10 years. Scala also is what Java should have been in the first place, but failed to ever become.&lt;/p&gt;
-
-&lt;p&gt;Word of warning: Scala is a big language, and learning it will take a lot of effort. While on the surface it is &amp;ldquo;Java with sane syntax and traits&amp;rdquo; it is also a functional programming language. Sooner or later you are going to hear words like functor or monad. The good thing is that you can get started very quickly and learn new concepts as you go. I will not cover everything there is to know about Scala, only the parts I found to be the most important. In the end, if you wish to learn any new programming language, you&amp;rsquo;ll have to do it on your own.&lt;/p&gt;
-
-&lt;h2 id=&#34;syntax&#34;&gt;Syntax&lt;/h2&gt;
-
-&lt;p&gt;Over the years I have developed a fair bit of negative attitude towards languages with a lot of boilerplate. In fact I believe that longer code is the code with more bugs, regardless of programmer skill level. At the same time, I am a big fan of strong and static typing, which obviously creates a conflict. Both Java and C++ are very far from being expressive. Scala does a lot to remove boilerplate typically found in such languages, and allows the code to look much more similar to dynamic languages. You can write code like this:&lt;/p&gt;
-
-&lt;div class=&#34;highlight&#34; style=&#34;background: #272822&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span&gt;&lt;/span&gt;    &lt;span style=&#34;color: #66d9ef&#34;&gt;val&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;knownPermissionNames&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;Permissions&lt;/span&gt;&lt;span style=&#34;color: #f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;values&lt;/span&gt;&lt;span style=&#34;color: #f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;map&lt;/span&gt;&lt;span style=&#34;color: #f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color: #66d9ef&#34;&gt;_&lt;/span&gt;&lt;span style=&#34;color: #f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;toString&lt;/span&gt;&lt;span style=&#34;color: #f92672&#34;&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;This line of code produces a collection of String objects. However, collection type is never named explicitly here. The type is inferred by the compiler. Type inference saves a lot of completely unnecessary typing, but that&amp;rsquo;s not all you can see in code above. If you noticed that there&amp;rsquo;s no semicolon up there, congratulations. Most of the time, there&amp;rsquo;s no need to use it, because it also inferred by the compiler. What else is up there? Anonymous function passed to map, using shortened syntax with underscore character acting as placeholder for function argument. That&amp;rsquo;s still not all of the good stuff: in many cases you can omit parentheses on function calls, and there is no need for explicit return from function - the function value is simply the value of its last statement. In short: &lt;strong&gt;a lot&lt;/strong&gt; less typing, without sacrificing compile time type safety, and most of the time, actually improving code readability. What&amp;rsquo;s not to like? :)&lt;/p&gt;
-
-&lt;h2 id=&#34;functional-goodness&#34;&gt;Functional goodness&lt;/h2&gt;
-
-&lt;p&gt;Scala is not only an OO language, but also a functional one. That means functions are &amp;ldquo;first class&amp;rdquo; citizens of the language: they can be stored as values, passed around, and returned from other functions. Scala supports both partial function application and currying, which really comes in handy. You can define anonymous functions. Also functions can be nested inside one another (quite useful because nested function has access to enclosing scope). The compiler is capable of optimizing out tail recursion, which makes it nice alternative to using &amp;ldquo;while&amp;rdquo; loop (and btw: it is the only kind of loop that Scala really has, &amp;ldquo;for&amp;rdquo; keyword is not a loop!), and is just as efficient at bytecode level. Now, trying to argue functional vs OO is not my point here. Use it if you want to, or when you are ready to :) You&amp;rsquo;ll end up with code that&amp;rsquo;s loosely coupled, short, readable and maintainable. These are very good goals to have.&lt;/p&gt;
-
-&lt;p&gt;It&amp;rsquo;s time to talk about another very important concept closely tied to functional programming, which is data immutability. While immutability in Scala is not enforced, it is considered good programming style and is mostly default. Working with immutable data has a lot of advantages - there&amp;rsquo;s no real need to encapsulate state in objects, because there&amp;rsquo;s no way to mutate the state. For the same reason, there&amp;rsquo;s no need for doing any defensive copies. Once you start to think in terms of data transformation rather than mutation, programming becomes simpler: code is easier to understand and easier to reason about. Immutable data structures are thread safe by nature - you can pass them around like there&amp;rsquo;s no tomorrow. What I found very quickly when I started playing with Scala, was that it was very natural programming style to keep data and code that operates on it separate instead of tightly coupling them inside the same class (i.e. by using case class and its companion object). Scala has pretty awesome standard collection library, and most collections have mutable and immutable versions (with immutable being default). Learning to use collections effectively is probably going to take some time, but simply using map, fold and filter operations can get you very far very easily. Again, you can learn less commonly used methods on standard collections gradually (and it is absolutely worth it!).&lt;/p&gt;
-
-&lt;p&gt;Important feature that complements immutable data is pattern matching. It may initially look like &amp;ldquo;switch on steroids&amp;rdquo; but it is an understatement. Pattern matching is one of the most powerful features of the language. Because you are passing around data structures, you can easily match on the structure or part of it, and extract what&amp;rsquo;s needed, without writing extra utility functions or doing any intrusive modifications to classes holding the data (when data is immutable, there aren&amp;rsquo;t many reasons not to have everything public by default &amp;hellip;). Simple pattern matching looks like this (code from my pet project):&lt;/p&gt;
-
-&lt;div class=&#34;highlight&#34; style=&#34;background: #272822&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span&gt;&lt;/span&gt;    &lt;span style=&#34;color: #f8f8f2&#34;&gt;teamModificationResult&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;match&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;{&lt;/span&gt;
-        &lt;span style=&#34;color: #66d9ef&#34;&gt;case&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;models&lt;/span&gt;&lt;span style=&#34;color: #f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;TeamModificationNone&lt;/span&gt;&lt;span style=&#34;color: #f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;userId&lt;/span&gt;&lt;span style=&#34;color: #f92672&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;role&lt;/span&gt;&lt;span style=&#34;color: #f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;(...)&lt;/span&gt;
-        &lt;span style=&#34;color: #66d9ef&#34;&gt;case&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;models&lt;/span&gt;&lt;span style=&#34;color: #f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;TeamModificationMemberAddSuccess&lt;/span&gt;&lt;span style=&#34;color: #f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;userId&lt;/span&gt;&lt;span style=&#34;color: #f92672&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;role&lt;/span&gt;&lt;span style=&#34;color: #f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;(...)&lt;/span&gt;
-        &lt;span style=&#34;color: #f92672&#34;&gt;(...)&lt;/span&gt;
-    &lt;span style=&#34;color: #f92672&#34;&gt;}&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;You can do this kind of matching on arbitratily nested data structures, and destructure exactly the needed parts. Not enough? Destructuring process is actually programmable through feature called extractors. Conceptually, you can imagine that patterns are not really some fixed compile time constructs, but your own code. If you want to pattern match on string containing JSON encoded data, you can do it if you want to. Standard Scala regular expressions are also extractors, by the way :)&lt;/p&gt;
-
-&lt;p&gt;When talking about functional programming parts of the language, I believe it is important to mention for comprehensions. Scala ‘for’ is in fact syntactic abstraction over map, flatMap, filter and foreach methods. This is very important because it makes it possible to use for comprehensions with non-collection types. The type that implements map and flatMap methods is essentially what math people call a monad. Hence, you’ll cometimes see for comprehensions being referred to as monadic comprehensions. Worry not, while it initially is a bit mind bending, it is not rocket science :) Option[A] is an example of monad that is not a collection type. Because it has map and flatMap methods, it can be used in for comprehension. What’s important to remember is that ‘for’ in Scala is just a syntax sugar, and has nothing to do with loops!&lt;/p&gt;
-
-&lt;h2 id=&#34;error-handling&#34;&gt;Error handling&lt;/h2&gt;
-
-&lt;p&gt;In functional language, Java style exceptions are simply out of place. While there have been many discussions over the years about merits of using exceptions (or not), because exceptions break program control flow, they make it a lot harder to reason about program correctness.&lt;/p&gt;
-
-&lt;p&gt;Scala does support Java exceptions but it is mostly used to interface with Java code. In functional programming world, there are better solutions.
-The first very important and very commonly used thing is Option generic type. Option[T] can hold value of type T, or nothing (called None). When you return Option[T] you say “I’ll return a value of type T, but you can’t be sure it will really be there”. This may or may not be an error, sometimes not returning a valid value is entirely expected.&lt;/p&gt;
-
-&lt;p&gt;Why not simply pass around null references? :) The answer is obvious to any programmer out there: we don’t always check for null … and our code crashes a lot because of that :)&lt;/p&gt;
-
-&lt;p&gt;Option[T] has two interesting properties:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Option[A] can be transformed into Option[B] by using (A) =&amp;gt; B function passed to map, or (A) =&amp;gt; Option[B] function passed to flatMap. That means you can write your code as if “null case” doesn’t exist and code happy path only when doing computations. Option[T] propagates None value for you. That also means Option[A] is a monad and can be used with for comprehensions, as mentioned earlier.&lt;/li&gt;
-&lt;li&gt;When you actually want to get value out of Option, you have to do it manually. You can still get an exception at this stage (if you use plain get), but typically you’ll use pattern matching (on both value and None cases) or getOrElse method. Essentially the language encourages programmer to handle the None case, instead of encouraging programmer to assume everything is great and null will never be there.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;In general, using null in Scala is a bad style, there’s simply no need for it.&lt;/p&gt;
-
-&lt;p&gt;The second similar but a bit more complex type is called Either[A,B]. As name suggests, it holds either A or B. It is very common for Either to hold value or an error (which can even be an exception object, but it is passed around, not thrown). It can be transformed in similar way as Option by using mapping functions.&lt;/p&gt;
-
-&lt;h2 id=&#34;what-else-is-there&#34;&gt;What else is there?&lt;/h2&gt;
-
-&lt;p&gt;A lot. Most importantly concurrency features: actors, futures, parallel collections, software transactional memory. Also libraries like scalaz or shapeless that push functionals part of Scala pretty hard. I did not talk about OO parts at all, not because I don’t consider them important, but because it’s the first thing you’ll run into (along with constructs like cake pattern) when starting to learn the language.&lt;/p&gt;
-
-&lt;p&gt;In the title of this blog post I named Scala a ‘trojan horse’. That’s exactly what it is. While technological advancement makes writing certain classes of software easier and easier, it also pushes us towards solving problems we wouldn’t think of trying to solve 10 years ago. The biggest challenge right now is in distributed and concurrent systems. This is where we need every bit of correctness and abstraction we can get from compiler and language. This is really, really hard stuff and this is exactly where functional languages shine. However, languages like Haskell are alien to current breed of programmers who grew up writing imperative code most of their life (if not all of it). Distributed and concurrent systems are also exactly where the growth is right now (there are many trends that overlap: mobile devices, “Internet of things”, ubiquituous cloud computing, “big data” technologies etc). Scala is the bridge between old world and new one. The destination is not known (if history taught us anything, Scala will not be the last word and will be replaced by something better) but right now Scala seems to be the language best suited to face the future.&lt;/p&gt;
-</description>
+      <description>All of game server code at my current company is using C++, and we are still starting new projects using existing C++ framework. I gave a presentation on our server architecture a few months ago, available here (it&amp;rsquo;s in Polish, it was local event here in Kraków). After giving the presentation I was approached by a guy (sorry, don&amp;rsquo;t remember the name) who said something like: &amp;ldquo;It&amp;rsquo;s cool you did all that in C++.</description>
     </item>
     
     <item>
@@ -493,26 +70,7 @@ The first very important and very commonly used thing is Option generic type. Op
       <pubDate>Mon, 09 Sep 2013 00:00:00 +0000</pubDate>
       
       <guid>https://maciejmroz.com/2013/09/09/am-i-a-marketing-person-now/</guid>
-      <description>&lt;p&gt;Yesterday I was talking to my Dad on Skype about the book I just finished reading. The book title was &amp;ldquo;Running Lean&amp;rdquo; and it is a very good take on the lean approach to product development/management originally made popular by Eric Ries. What struck me was that while I was talking, my Dad suddenly interrupted me and asked a simple question: &amp;ldquo;Are you a marketing guy now?&amp;rdquo;. Of course I denied, it just sounded completely bizarre and out of place! I am a technologist!&lt;/p&gt;
-
-&lt;p&gt;I would probably leave it at that and forget the thing, but my state of mind recently is &amp;ldquo;challenge everything&amp;rdquo;. I dug deeper. He asked the question because I was so passionate about the book, and that wasn&amp;rsquo;t even in face to face conversation, my excitement was showing over Skype voice call! I had to come clean and force myself to realize some things - things that turned out to be not that suprising once I started to connect the dots (Steve Jobs analogy seems fitting here, sorry :) ).&lt;/p&gt;
-
-&lt;p&gt;Like most self taught coders, I was pretty good at science (doing integrals at the age of 14 may even qualify as brilliant), but the real first dot is not my primary school or high school, but the demoscene. This was what pushed me to learn math on my own, and to learn programming down to assembly level before I even started my computer science studies. Side note: knowing how to program before starting the studies was insane advantage during studies. I could spend time learning what I wanted to learn, and had a lot better feel for what&amp;rsquo;s actually important.&lt;/p&gt;
-
-&lt;p&gt;In my opinion, the demoscene wasn&amp;rsquo;t really about computers. It was about what you could do &lt;strong&gt;with&lt;/strong&gt; computers. Everyone involved was there because of burning desire to create something new, to amaze people, and to push boundaries of what&amp;rsquo;s considered possible. And we did things that were considered impossible, because nobody told us they are impossible. We didn&amp;rsquo;t go extra mile to get things done, everyone went extra 10 miles. You were either &amp;ldquo;elite&amp;rdquo; or you were a &amp;ldquo;lamer&amp;rdquo; (or &amp;ldquo;wannabe&amp;rdquo;). Sure we were bunch of nerdy kids back then, but we were also a bunch of kinds whose currency was our ability to create. There was no money on the table, it was all out of pure passion. The finished effect: code, graphics, music, and overarching design together were what counted. You either had it all, or you had nothing. You had to work in teams, you had to be bloody efficient, and you had to trust each other to do their part. The goal wasn&amp;rsquo;t to just do well, the goal was &lt;strong&gt;always&lt;/strong&gt; to win.&lt;/p&gt;
-
-&lt;p&gt;The second dot is my professional career. Like most people from the demoscene I went straight into game development (some people went into movies/vfx/advertising but most are in game development right now), hoping it would be good outlet for my creativity and skills. I quickly learned that even in game development with its pretty loose standards, we are actually making commercial software, and this one is a completely different beast :) I was lucky enough to join the company of just a few people (it wasn&amp;rsquo;t even called a startup back then :) ), and actually experience and see growth from ~5 people to 60+.&lt;/p&gt;
-
-&lt;p&gt;When people ask me: &amp;ldquo;How could you spend 10 years in one company?&amp;rdquo; I laugh and quite honestly answer: &amp;ldquo;I worked in at least five different companies, only the name was the same :)&amp;ldquo;. My career path, condensed, looks mostly like this: dev + ops, lead dev + product + ops, lead dev + product, product only (here i stopped producing tons of code), and eventually backend technology (which is in reality a little dev + ops + shared technology management and roadmap + software architecture).&lt;/p&gt;
-
-&lt;p&gt;The thing is, after many years of directly managing consumer facing products, I again went hardcore with technology. Back to square one. It doesn&amp;rsquo;t make sense, does it? Well, not exactly. First of all, I am passionate about technology. How could I be not? Besides, it&amp;rsquo;s my job description to be on top of this stuff. Second thing is that at some point I was so overworked that i had to give up something. There wasn&amp;rsquo;t much extraordinary happening at the time with our flagship products, it was mostly a very predictable chore that took a lot of my time. And we had the person capable of taking it over. At the same time I knew that our backend tech needed a lot of attention, so did software development in general - we were in the early stages of introducing Scrum process at the company, and it wasn&amp;rsquo;t easy.&lt;/p&gt;
-
-&lt;p&gt;Moving away from product management was not really a choice, because the alternative was epic engineering disaster down the line. While I do not miss the products I used to work on (further work on them would not advance my skills in any way), it is pretty clear to me now that I deeply miss product work in general. Taking care of backend tech is stressful, challenging, and rarely rewarding. When it is rewarding, it&amp;rsquo;s quite powerful, but there&amp;rsquo;s simply no &amp;lsquo;instant gratification&amp;rsquo; factor that&amp;rsquo;s omnipresent when managing an online game and pushing updates several times a day (it&amp;rsquo;s almost addictive).&lt;/p&gt;
-
-&lt;p&gt;Final dot was just today. I still love talking to out product teams and seeing what they are up to. And so I did today. One of product owners was showing me a new game by competition and we started discussing it. I suddenly started asking a ton of questions, none of which were technical in nature, and none of which were easy to answer. They were all about what makes the competitive game tick, and is &lt;strong&gt;not&lt;/strong&gt; game play. Essentially, I was talking about marketing. I realized I know so much about it there&amp;rsquo;s no way to deny it: whether I like it or not, I am a marketing person. At the same time, I am also a technologist. It&amp;rsquo;s like two sides of the same coin. The interesting question right now is: which of these two things I love doing most? :)&lt;/p&gt;
-
-&lt;p&gt;PS. About two years ago I was talking to a guest at our company, and we ended up talking about what I actually do at work. He concluded: &amp;ldquo;So you are both CTO and CPO in one person?&amp;rdquo; He was a very smart guy, I just didn&amp;rsquo;t appreciate significance of his conclusion back then.&lt;/p&gt;
-</description>
+      <description>Yesterday I was talking to my Dad on Skype about the book I just finished reading. The book title was &amp;ldquo;Running Lean&amp;rdquo; and it is a very good take on the lean approach to product development/management originally made popular by Eric Ries. What struck me was that while I was talking, my Dad suddenly interrupted me and asked a simple question: &amp;ldquo;Are you a marketing guy now?&amp;rdquo;. Of course I denied, it just sounded completely bizarre and out of place!</description>
     </item>
     
     <item>
@@ -521,20 +79,7 @@ The first very important and very commonly used thing is Option generic type. Op
       <pubDate>Sat, 04 May 2013 00:00:00 +0000</pubDate>
       
       <guid>https://maciejmroz.com/2013/05/04/c11-goodness/</guid>
-      <description>&lt;p&gt;While most of my programming life used to be centered around C++, nowadays I do not really spend much time with the language at work (other than doing code reviews). I remain big fan of C++. Despite the fact it&amp;rsquo;s not very fashionable language, it is extremely efficient and quite flexible. What&amp;rsquo;s even more important it&amp;rsquo;s continuing to evolve, and it evolves in the right direction. I took some time to try out the C++11 features refactoring small private project, and it really looks good.&lt;/p&gt;
-
-&lt;p&gt;First of all: lambdas. This feature alone is a killer. C++ used to have &amp;ldquo;sort of lambdas&amp;rdquo; in the form of boost::lambda library, but this library was insanely hard to use beyond simple use cases, the syntax was alien, and when it broke the compiler errors were cryptic. It didn&amp;rsquo;t stop me from trying to use it, only to come up with the conclusion it doesn&amp;rsquo;t really improve my productivity in any way. I never used boost::lambda in any production code. C++11 lambdas are not like that. The lambda function body is written using normal C++ syntax. It&amp;rsquo;s ordinary code, just as readable as any other code. There&amp;rsquo;s no complex template voodoo happening. It looks just like any other function except for special syntax used to define it in place. If you do something wrong in the lambda, the compiler errors are what anyone would expect them to be. Ok, it&amp;rsquo;s all nice, but why all the fuss about anonymous functions? Because they are much more than just that! Using the variable capture specification you can create real closures. That&amp;rsquo;s closures as in: &amp;ldquo;Lisp has closures&amp;rdquo;. It means you can access enclosing state in the lambda body. All these small functors that proliferate like crazy when writing STL code are just not necessary any more! As a side note, you don&amp;rsquo;t have to use bind, either, because lambdas are perfectly fine as &amp;ldquo;glue code&amp;rdquo;! We get cleaner, shorter and more maintainable code, all thanks to the fact that compiler does what had to be done manually in the past. It doesn&amp;rsquo;t matter if it&amp;rsquo;s writing new code, or refactoring part of existing application. Lambdas offer real gains to productivity.&lt;/p&gt;
-
-&lt;p&gt;Another feature that&amp;rsquo;s similar in spirit, although much smaller in impact is range based for loop. It is so straightforward to use that I consider it a sin to use begin(), end() and temporary iterator in new code. There&amp;rsquo;s not much more to be said about it :) How about other C++11 language features? It&amp;rsquo;s the first published ISO C++ standard for many years, so there are a lot of new things!&lt;/p&gt;
-
-&lt;p&gt;Some of the features go along the same path of nicer syntax at the cost of making compiler a bit smarter (that&amp;rsquo;s for example &amp;lsquo;auto&amp;rsquo; keyword), others like rvalue references (combined with move constructors) go towards efficient code that looks more natural (possibly offering performance gains to some bad pre-C++11 code, because STL was updated to make use of move constructors).&lt;/p&gt;
-
-&lt;p&gt;I don&amp;rsquo;t think a blog post is right place to review all new things in C++, the changes are simply too vast to cover fully in so small space (especially considering that some of these deserve a blog post on their own :) ). I strongly suggest checking Wikipedia or other source for the details - it&amp;rsquo;s really worth it. I am not going to cover standard library changes here, too. Any self respecting C++ developer is already using boost, so there&amp;rsquo;s nothing new. The decision on whether to move to std:: versions of libraries is &amp;ldquo;case by case&amp;rdquo; one - there are no clear wins here.&lt;/p&gt;
-
-&lt;p&gt;Only very recently we got the first compiler that fully implements the standard (that&amp;rsquo;s Clang). Still, most of C++11 language can be used on any relatively recent compiler. I tried my code on both Visual Studio 2012 and Clang 3.2 (that&amp;rsquo;s default for Xcode on Mac OS X) and had zero problems with building it. Gcc seems to be very close to fully supporting the standard, too - although in case of gcc you will likely be forced to upgrade it manually (i.e. current CentOS Linux ships with gcc 4.4.x, which is ancient …).&lt;/p&gt;
-
-&lt;p&gt;Considering that some investment is needed to upgrade to start using C++11, should you do it? New standard is obviously cool for developers, but that&amp;rsquo;s not where value comes from (although employee engagement has value, it&amp;rsquo;s a bit intangible). This time it&amp;rsquo;s all about the value that comes from productivity and code quality improvements, and that makes the decision to migrate towards C++11 very simple from business point of view.&lt;/p&gt;
-</description>
+      <description>While most of my programming life used to be centered around C++, nowadays I do not really spend much time with the language at work (other than doing code reviews). I remain big fan of C++. Despite the fact it&amp;rsquo;s not very fashionable language, it is extremely efficient and quite flexible. What&amp;rsquo;s even more important it&amp;rsquo;s continuing to evolve, and it evolves in the right direction. I took some time to try out the C++11 features refactoring small private project, and it really looks good.</description>
     </item>
     
     <item>
@@ -543,18 +88,7 @@ The first very important and very commonly used thing is Option generic type. Op
       <pubDate>Sat, 09 Mar 2013 00:00:00 +0000</pubDate>
       
       <guid>https://maciejmroz.com/2013/03/09/the-structure-in-unstructured-data/</guid>
-      <description>&lt;p&gt;Working with data is something I personally consider one of the coolest things one can do right now in the tech industry. Typically when someone thinks or talks about &amp;ldquo;Big Data&amp;rdquo; it implies petabyte data sets and Hadoop clusters spanning 100+ nodes. The truth is, even a lot smaller data and humbler infrastructure can provide great insights and drive the product/service innovation. To me its really a lot closer to &amp;ldquo;Smart Data&amp;rdquo; than &amp;ldquo;Big Data&amp;rdquo; - it doesn&amp;rsquo;t matter how big your data set is, but how much you are able to do with it, and how quickly.&lt;/p&gt;
-
-&lt;p&gt;In my workplace we run our own data gathering, storage, and processing. Our own code, our own infrastructure. Managed, architected, and even partially implemented by yours truly. What is special about our system is that compared to most commercial systems, we allow our products to report pretty much arbitrary data. There are very basic guidelines that must be met for standard metrics to work, but what is actually possible goes way beyond that. Product teams have access to raw data and can create their own processing tools if they want/need to. They can also use Hive to query the data if they want to - very often you can just brute force your answer from data, so why not do it? Programmer&amp;rsquo;s time is expensive, after all.&lt;/p&gt;
-
-&lt;p&gt;The problem is that if you are not willing to throw a lot money at scaling your Hadoop installation, the queries start to become very slow, very quickly. And that really kills the organization agility: having to wait many hours for query result is not what anyone wants. The cycle from running set of queries to releasing new version of the game (or whatever the organization is doing) should optimally be possible to fit within one business day. Running single Hive query for many hours prevents that. It is a problem I consider to be strategically critical, so I decided to attack it myself.&lt;/p&gt;
-
-&lt;p&gt;Because my target was reducing query times from hours to minutes, I needed solution that&amp;rsquo;s radically different from simply getting more hardware. I needed to get smarter about how the data is processed. A word of warning: if you know what &lt;a href=&#34;http://en.wikipedia.org/wiki/OLAP_cube&#34;&gt;OLAP cube&lt;/a&gt; is, and explored how OLAP systems work, what I am about to say will likely sound very basic. You may stop reading now :) The first time I&amp;rsquo;ve been able to play with a system like that, I wasn&amp;rsquo;t really impressed by what it can do, but I was deeply impressed by how quickly it was coming up with responses. Seriously, if a system can answer your question about data set faster than it takes to read it from disk there&amp;rsquo;s something quite sophisticated happening behind the scenes. Obviously, they couldn&amp;rsquo;t just index the data for queries I was about to ask without knowing the queries. Classic btree indexes were not the answer. But it was still very quick. To understand why one needs to realize very simple thing: yes you can slice&amp;dice; through multidimensional data very quickly, but at the same time you are limited to quite simple queries. The data is preprocessed and stored in a way that makes specific type of queries run fast. Vast majority of analytical queries will fall into category of exploring the OLAP cube.&lt;/p&gt;
-
-&lt;p&gt;My first thought about the problem of preproprocessing the data was that we cannot do it because it has no fixed structure. It&amp;rsquo;s all JSON objects, the product teams can put anything they want inside, how am I going to do anything meningful with it? 100 milliseconds later I realized that calling our data unstructured is just not true. Yes, it would be hard to fit into fixed schema SQL table, but it has tons of regularities. In fact, our technical guidelines for analytics instrumentation specify recommended list of dimensions, we just call them differently! And, because I typically acted as an outside expert to the team when planning the instrumentation, the guidelines are actually followed!&lt;/p&gt;
-
-&lt;p&gt;Realizing that our data has a lot of structure was the tipping point. The idea looked good, I started some Python programming in order to implement a system that would process the raw data and store the aggregated cache for later processing. I decided to cut out some less important stuff (very noisy dimensions), and obviously cut out data that makes little sense aggregating. Coding, coding, coding &amp;hellip; done. Ok, perhaps it was slightly more complicated. For example, some dimensions were not known before processing and I had to use a bit of regexp magic :) Still, nothing I would really call hard. After launching the aggregator script I was very pleased with the results: depending on the project, I was getting 50-100x smaller data size compared to raw data set. That pretty much linearly translates into shorter query times. While the preprocessing is rather costly, it happens only once per data chunk so it&amp;rsquo;s not really an issue - just another cron job to run on one of servers (or more, should the need arise :P ). It&amp;rsquo;s not a solution to fit every single use case out there. In fact, I think this solution is just another great example of Pareto principle - I solved 80% of the problems with 20% of effort. What&amp;rsquo;s good is that now we have more time and computing resources to focus on the remaining 20% of data problems, which are a lot tougher than quickly generating simple reports :)&lt;/p&gt;
-</description>
+      <description>Working with data is something I personally consider one of the coolest things one can do right now in the tech industry. Typically when someone thinks or talks about &amp;ldquo;Big Data&amp;rdquo; it implies petabyte data sets and Hadoop clusters spanning 100+ nodes. The truth is, even a lot smaller data and humbler infrastructure can provide great insights and drive the product/service innovation. To me its really a lot closer to &amp;ldquo;Smart Data&amp;rdquo; than &amp;ldquo;Big Data&amp;rdquo; - it doesn&amp;rsquo;t matter how big your data set is, but how much you are able to do with it, and how quickly.</description>
     </item>
     
     <item>
@@ -563,26 +97,8 @@ The first very important and very commonly used thing is Option generic type. Op
       <pubDate>Sun, 24 Feb 2013 00:00:00 +0000</pubDate>
       
       <guid>https://maciejmroz.com/2013/02/24/the-rationale-behind-ab-testing/</guid>
-      <description>&lt;p&gt;A few days ago, while having a casual conversation over a beer, I was totally shocked when I heard something close to: &amp;ldquo;A/B testing is pointless on small project like ours because testing overhead is too high&amp;rdquo;. Is it? Let&amp;rsquo;s run the numbers :) Assumptions:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;The product costs X to operate monthly. 70% of the costs are development team, and 30% is administrative overhead and other costs like infrastructure, customer support and marketing expenses. The development cost obviously becomes much, much smaller percentage of the costs if the project is successful, but here we are taking about small project that still has to fight for success.&lt;/li&gt;
-&lt;li&gt;Typical cost of implementing a feature is 0.5 month of development team work, so in our case it is 0.35*X.&lt;/li&gt;
-&lt;li&gt;Averaged overhead of making new feature A/B testable is 10%. For a team that&amp;rsquo;s used to A/B testing stuff this is likely accurate number, for team that is not routinely doing it the overhead may be a lot higher, at least initially. If a feature that has base cost of 0.35*X, the A/B testing overhead is 0.035*X.&lt;/li&gt;
-&lt;li&gt;Our alternative to A/B testing is picking the variant manually by product owner intuition. I assume absolutely great PO is right 80% of the time.&lt;/li&gt;
-&lt;li&gt;Positive change brings the revenue up by 3%, negative change (a mistake) makes the revenue go down 2%.&lt;/li&gt;
-&lt;li&gt;The product makes X per month, essentially it&amp;rsquo;s on the edge of getting axed.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;The question: should we A/B test changes in this scenario? Now something very important, and something people tend to overlook a lot: &lt;strong&gt;anything&lt;/strong&gt; you do with the product impacts revenue over a long time. It&amp;rsquo;s not just one month, but possibly event years when the change is active. In order to properly think about A/B testing, we have to take this into account. Let&amp;rsquo;s take 6 month period:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Not running A/B test gives us expected payoff of (0.98*0.2+1.03*0.8)*6*X, which is 6.12*X.&lt;/li&gt;
-&lt;li&gt;Running A/B test means we are almost always right, and gives us payoff of 1.03*6*X, which is 6.18*X.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;We made 0.025*X (0.06 minus cost of A/B test) by running the A/B test! Note that the model I used to illustrate the need for A/B testing is highly simplified. For example, in reality there&amp;rsquo;s is some cost associated with delay introduced by testing, the product performance while tests are running is a mix of good and bad variant, the variants between which we are trying to decide may both be good, both bad, or one may be neutral etc etc. The result of this added complexity is not to abandon A/B testing! The goal is not to break even but to make the product make 10 times as much! Bear in mind that any mistake you make early in the product lifecycle will impact your future revenue. The model above shows A/B testing is profitable even if you play not to lose. If you play to win, A/B testing is something you just &lt;strong&gt;have to&lt;/strong&gt; be doing.&lt;/p&gt;
-</description>
+      <description>A few days ago, while having a casual conversation over a beer, I was totally shocked when I heard something close to: &amp;ldquo;A/B testing is pointless on small project like ours because testing overhead is too high&amp;rdquo;. Is it? Let&amp;rsquo;s run the numbers :) Assumptions:
+ The product costs X to operate monthly. 70% of the costs are development team, and 30% is administrative overhead and other costs like infrastructure, customer support and marketing expenses.</description>
     </item>
     
     <item>
@@ -591,143 +107,7 @@ The first very important and very commonly used thing is Option generic type. Op
       <pubDate>Fri, 04 Jan 2013 00:00:00 +0000</pubDate>
       
       <guid>https://maciejmroz.com/2013/01/04/simulating-loot-based-virtual-economy/</guid>
-      <description>
-
-&lt;p&gt;Just like many others, in 2012 I spent significant amount of time playing Diablo 3. While I enjoyed the experience a lot, playing the game also pushed me to think about its design. What I found most interesting was random loot system and auction house. Because of that, I recently started to think if I can produce simplified model of virtual currency economy in a game with random loot. Now, one very important caveat: I did not try to model Blizzard’s game. Diablo 3 is a very complex design with many variables, and for a technical designers/monetization guys at Blizzard was surely a big challenge. My model does not try to be complete, but rather give an insight into how an economy like that can behave, and perhaps give some ideas on how such economy can be regulated. It’s more like first step to making a game like that :)&lt;/p&gt;
-
-&lt;h2 id=&#34;simulation-basics&#34;&gt;Simulation basics&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;The model consists of many independent players who interact with each other only through auction house. Think of it as an agent system. I run the simulations for 10 000 players, which I consider big enough.&lt;/li&gt;
-&lt;li&gt;Simulation runs for 365 cycles&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&#34;items&#34;&gt;Items&lt;/h2&gt;
-
-&lt;p&gt;In every simulation cycle, player gets random amount of newly generated items, which they can use, destroy, or sell. The amount of items generated is uniformly distributed between 25 and 75. Every item is one of 10 different types, and one of 10 item tiers. Tier 0 is the most common (worst), and Tier 9 is the rarest (best). Players seek best item of every type, either through finding an item, or through buying it from other players. Destroying items it the only currency source in the game, giving players 100 virtual gold for every destroyed item. When an item is generated, algorithm works as follows:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;It assigns an item to random type, with uniform distribution&lt;/li&gt;
-&lt;li&gt;In the beginning an item tier is 0&lt;/li&gt;
-&lt;li&gt;There&amp;rsquo;s X% probability that item is promoted to Tier 1&lt;/li&gt;
-&lt;li&gt;If the promotion to Tier N succeeds and N&amp;lt;10, there&amp;rsquo;s X% probability of promoting it to Tier N+1&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;X depends on average tier of gear player already has:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Tier &amp;lt;=2 - 10%&lt;/li&gt;
-&lt;li&gt;Tier &amp;lt;=4 - 15%&lt;/li&gt;
-&lt;li&gt;Tier &amp;lt;=6 - 20%&lt;/li&gt;
-&lt;li&gt;Tier &amp;lt;=8 - 25%&lt;/li&gt;
-&lt;li&gt;Tier &amp;gt;8   - 30%&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;The changing value of X simulates player progression through game: as player starts using better items, he/she farms more advanced content, so the chance of even better items dropping increases.&lt;/p&gt;
-
-&lt;h2 id=&#34;player-ai&#34;&gt;Player AI&lt;/h2&gt;
-
-&lt;p&gt;The actions and decisions of players are probably the biggest leap of faith in this model. It’s really hard to imitate ingenuity of humans, after all :) Real people may try to play game like this as a trading game, do some strategic investments, try „last minute bidding”, or even exploit the market in ways that get you to prison if done in real life. Here, I decided to make player behavior as simple as possible. Here’s how simulation step for one player works:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;New items are generated and added to stash&lt;/li&gt;
-&lt;li&gt;If any of the found items is better than one used, player always uses it, and puts item previously used to stash, in this step player also equips items that were bought (they are sent to stash outside of player simulation)&lt;/li&gt;
-&lt;li&gt;Player finds 10 best (highest tier) items in stash, and lists them for sale, with initial price based on market data. These items are never better than ones used&lt;/li&gt;
-&lt;li&gt;Player destroys all other items left in stash&lt;/li&gt;
-&lt;li&gt;After that, players tries to upgrade items via bidding on available upgrades in the auction house. At first, player scans through owned items, and tries to upgrade worst one first. Player tries to find the highest tier affordable, and places &amp;ldquo;buy offer&amp;rdquo;, which blocks the amount of virtual currency equal to market price (transaction is initiated). Buy offer has to be at least 5% more than current price.&lt;/li&gt;
-&lt;li&gt;Player repeats the bidding process for every item type&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&#34;market&#34;&gt;Market&lt;/h2&gt;
-
-&lt;p&gt;Market operates in continuous way: occasionally after player logic finishes processing, market logic kicks in. It happens several times in a simulation cycle. Market does not control prices, players do it through bidding. However, it provides players price suggestion based on currently active offers, or last known price for an item if no offers for specific type/tier are present. Market logic itself does very simple thing - it picks up old enough offers and allows them to complete, either by returning unsold item to seller, or transfering an item to buyer and paying the seller item value, minus transaction 15% tax. This happens outside of player simulation - when player simulation is performed, player account already contains gold from sold items, and stash contains items successfully bought. Maximum offer age is set to 1.5 simulation cycle - so every single player in the system can act on it.&lt;/p&gt;
-
-&lt;h2 id=&#34;simulation&#34;&gt;Simulation&lt;/h2&gt;
-
-&lt;p&gt;I implemented this model in C++ and run the simulation for 10 000 players, over 365 cycles. Results are quite interesting, although they raise more questions than they answer. A first thing to do would be to look at player progression through game as time passes. In the model, average tier of items used by players is likely a good measure:&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;https://maciejmroz.com/img/loot_economy/average_tier.png&#34; alt=&#34;average_tier&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Looks nice, right? Player should progress quickly at first, and then the progress should gradually slow down. Well, it’s only an average. From single player perspective the picture is completely different. Lets look at how many players managed to do at least one upgrade in the simulation cycle:&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;https://maciejmroz.com/img/loot_economy/upgrade_count.png&#34; alt=&#34;upgrade_count&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Ooops! This really hurts! We see bad things happening:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;The graph has steps, which means that there are relatively short periods when game conditions quite rapidly change, and upgrade frequency becomes much worse. These are likely moments when average tier of items in the population reaches next step. At this point market supply for items of previous tier rapidly goes up. How to make graph less stepped? Probably good idea is to make item quality continuous, not tiered. Other idea would be to make items valuable even if their tier is low - so that players have reason to use them for prolonged periods of time.&lt;/li&gt;
-&lt;li&gt;The upgrade frequency for individual players becomes very low rather quickly. In an MMO game, it’s not unusual to have players who stay with the game for years. Yet, at the very end of this graph less than 1% of population manages to do any upgrade. In a real game, where you cannot count on having 100% retention, if player expected horizon for making any progress is 3+ months, that player is likely lost :) Here we can clearly see other need in design: give players other ways of making progress! If a game is centered around single number, this is bound to happen. Character damage in Diablo 3 is likely good example of such number that becomes very hard to upgrade forever. Paragon level system in the same game is an example of progress that happens even if primary item statistics stay the same.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Now the game economy. Here’s a graph of transaction count:&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;https://maciejmroz.com/img/loot_economy/total_tr_count.png&#34; alt=&#34;total_tr_count&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;There are some similarities, although overall shape is more dramatic :( Eventually number of transactions, just like upgrade count goes down to near zero. One would think looking at this graph that game economy becomes dead in time. Not so fast! Let’s look at transaction volume (sum of all transactions in simulation cycle):&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;https://maciejmroz.com/img/loot_economy/total_tr_volume.png&#34; alt=&#34;total_tr_volume&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Looks different, doesn’t it? Having few transactions does not mean the economy is dead. The transaction volume also seems to go through cycles, but every cycle seems to have its maximum higher than previous one! The question is: does anyone want a virtual economy like this one?&lt;/p&gt;
-
-&lt;p&gt;If it directly correlated to real revenue it would be hard to just say „Yeah, we went down 50% this quarter, but it’s fine, just wait a bit” Fortunately, even if company profits from selling virtual currency or items, the relation between revenue and virtual market health is almost never that obvious.
-The simulation used to produce graphs above definitely deserves deeper look into. I already indicated that tiered nature of items may be at fault here. It is worth taking a look at what happens to specific item tiers, then :)&lt;/p&gt;
-
-&lt;p&gt;I divided the graphs into two separate sets, one for tiers 0-4, and one for tiers 5-9. The reason for this division is very simple: economy for items of tiers 0-4 was dead after &amp;lt;50 simulation cycles. Transaction count:&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;https://maciejmroz.com/img/loot_economy/tier_04_tr_count.png&#34; alt=&#34;tier_04_tr_count&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Item tiers 0 and 1 don’t even register on the graph, they were never traded. Another interesting thing about this graph is that once transaction count reaches peak value, it goes down even faster. This is essentially a market crash for items of this tier.&lt;/p&gt;
-
-&lt;p&gt;Now lets look at average price of items:&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;https://maciejmroz.com/img/loot_economy/tier_04_avg_prices.png&#34; alt=&#34;tier_04_avg_prices&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Prices started to fall down long before anything bad was visible in transaction count graph. Maximum transaction count for items of tier 4 happens long after value of these items hits its low.&lt;/p&gt;
-
-&lt;p&gt;This is all reflected in transaction volume split by item tier:&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;https://maciejmroz.com/img/loot_economy/tier_04_tr_volume.png&#34; alt=&#34;tier_04_tr_volume&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;This is already a good indication into why total transaction volume graph looks the way it looks: it’s result of stacking data from separate tiers. While economy as a whole is alive, market for items of specific tiers grows and dies.&lt;/p&gt;
-
-&lt;p&gt;Let’s see if this repeats for higher item tiers. This is not obvious – probability of getting these items is quite low.&lt;/p&gt;
-
-&lt;p&gt;Transaction count:&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;https://maciejmroz.com/img/loot_economy/tier_59_tr_count.png&#34; alt=&#34;tier_59_tr_count&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;The story repeats itself. It doesn’t look good: what we can see on tiers 5 and 6 is that their transaction count gradually goes up, but after reaching their peak they essentially become untradeable over night.&lt;/p&gt;
-
-&lt;p&gt;How about average prices?&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;https://maciejmroz.com/img/loot_economy/tier_59_avg_prices.png&#34; alt=&#34;tier_59_avg_prices&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Again, transaction count peak happens long after price plateau is reached. One interesting thing: the prices of tiers diverge slowly. It’s more like they grow together but then lower tier just lets it go and stays behind. There isn’t really much difference in pricing between tier 8 and 9 on this graph. These items are best by and are acquired „at any cost”.&lt;/p&gt;
-
-&lt;p&gt;It is likely that price of absolutely best items will continue to grow for a long time. This probably is a good hint for MMO players: items are bad long term investment, unless they are absolutely the best game has to offer. Even then, there’s risk that developer will introduce some new items that are even better. Value of virtual currency does not go down as fast because there’s direct relation between currency amount and effort needed to obtain it.&lt;/p&gt;
-
-&lt;p&gt;Finally, transaction volume graph is not really suprising:&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;https://maciejmroz.com/img/loot_economy/tier_59_tr_volume.png&#34; alt=&#34;tier_59_tr_volume&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Again we see waves that go up, each one slower, but with higher peak. Given long enough time it would likely happen with higher item tiers.&lt;/p&gt;
-
-&lt;h2 id=&#34;final-thoughts&#34;&gt;Final thoughts&lt;/h2&gt;
-
-&lt;p&gt;I hope that by now everyone realizes that making a multiplayer game with any kind of economy is not an easy thing to do. While people tend to come up with „easy fixes” that seem rational, any change to game rules may have profound effect on the economy, and by proxy on the community of players.&lt;/p&gt;
-
-&lt;p&gt;I would also like to stress that while I consider building models like that very important, it is also impossible to build a model that predicts reality. Simulations can validate or invalidate some design decisions, but after design is finalized and game launches, the story begins to be even more exciting, because that is the moment where model can be confronted with real player behavior data.&lt;/p&gt;
-
-&lt;h2 id=&#34;the-code&#34;&gt;The code&lt;/h2&gt;
-
-&lt;p&gt;The code for simulation is avalable on GitHub:&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&#34;https://github.com/maciejmroz/LootEconomy&#34;&gt;https://github.com/maciejmroz/LootEconomy&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;It’s standard C++ with some Boost libraries. Don’t judge me on code quality :) It is not pretty and could definitely use some refactoring. There are no comments or any other form of documentation, if you wish to modify it, you are on your own.&lt;/p&gt;
-
-&lt;p&gt;I compiled it on 64-bit Mac using Xcode and Apple LLVM compiler, but there’s nothing that prevents it from working on some other platform.&lt;/p&gt;
-</description>
+      <description>Just like many others, in 2012 I spent significant amount of time playing Diablo 3. While I enjoyed the experience a lot, playing the game also pushed me to think about its design. What I found most interesting was random loot system and auction house. Because of that, I recently started to think if I can produce simplified model of virtual currency economy in a game with random loot. Now, one very important caveat: I did not try to model Blizzard’s game.</description>
     </item>
     
     <item>
@@ -736,12 +116,7 @@ The simulation used to produce graphs above definitely deserves deeper look into
       <pubDate>Wed, 19 Dec 2012 00:00:00 +0000</pubDate>
       
       <guid>https://maciejmroz.com/2012/12/19/is-virtualization-a-failure-of-operating-systems/</guid>
-      <description>&lt;p&gt;One thing has hit me while watching of this year&amp;rsquo;s LinuxCon Europe presentations - one of reasons virtualization exists in the first place is operating system inability to properly isolate the applications from each other. Look at it this way: the role of operating systems is abstracting the physical hardware from the applications. And what is the role of hypervisor? Abstracting the hardware from the opertaing system(s) … Which makes the operating system an application running under the hypervisor, doesn&amp;rsquo;t it?&lt;/p&gt;
-
-&lt;p&gt;Now, let&amp;rsquo;s think of it from other angle - why are we using virtualization? We are virtualizing applications, and operating system is only a required intermediary. Typical workload of virtual machine is exactly one application (in general case this is one-to-many relationship, because often single application spans multiple VMs). We do this partly to achieve good utilization of physical hardware, but also to achieve isolation at the level close to &amp;ldquo;physical box per every application&amp;rdquo;. Not as secure, but conceptually equivalent.&lt;/p&gt;
-
-&lt;p&gt;In fact, this level of isolation is desireable on the desktop, too. VM to run untrusted USB stick? Seems like a good idea, and that&amp;rsquo;s only one of possible use cases. If we are running entire operating system just to run one application, isn&amp;rsquo;t it a waste? What can run under the hypervisor doesn&amp;rsquo;t really have to be a complete operating system. There are projects like Erlang on Xen (&lt;a href=&#34;http://erlangonxen.org&#34;&gt;erlangonxen.org&lt;/a&gt;) or Mirage that seem to skip the OS and talk straight to the hypervisor API - I am not familiar with the implementation details of these projects, but that seems to be general idea. And that makes hypervisor … an operating system. An operating system that opens up plethora of new and exciting possibilities, and one much better fit for todays world - but still an operating system.&lt;/p&gt;
-</description>
+      <description>One thing has hit me while watching of this year&amp;rsquo;s LinuxCon Europe presentations - one of reasons virtualization exists in the first place is operating system inability to properly isolate the applications from each other. Look at it this way: the role of operating systems is abstracting the physical hardware from the applications. And what is the role of hypervisor? Abstracting the hardware from the opertaing system(s) … Which makes the operating system an application running under the hypervisor, doesn&amp;rsquo;t it?</description>
     </item>
     
     <item>
@@ -750,18 +125,7 @@ The simulation used to produce graphs above definitely deserves deeper look into
       <pubDate>Sat, 01 Dec 2012 00:00:00 +0000</pubDate>
       
       <guid>https://maciejmroz.com/2012/12/01/what-can-one-day-of-coding-bring/</guid>
-      <description>&lt;p&gt;We&amp;rsquo;ve had our first internal hackaton recently at Ganymede. We don&amp;rsquo;t have &amp;ldquo;20% time&amp;rdquo; rule or anything like that, so the entire thing was a huge experiment. What we did was to take not one, but two days (Thursday and Friday) off our normal schedule to allow people do some cool stuff.Obviosly, because we are a game development company, most teams decided to a game. With all my responsibilities, I did not commit to any team, but decided to do small project on my own - to last minute I did not actually know if I would be tied up in other stuff or not. Some things can wait, some can not :(&lt;/p&gt;
-
-&lt;p&gt;Fortunately, I was able to spend some time coding along with the rest of the company. I thank our hackaton for just that - an opportunity to actually write code. With all the work on project management, product management, process, and other organizational responsibilities (like, making our little code fest actually happen :) ) I tend to forget how great if feels to actually create something instead of just helping others do it. What did I do? Nothing truly innovative. I am crazy about iOS game called Super Hexagon, and I just wanted similar gameplay. These &amp;ldquo;one mistake&amp;rdquo; games (Temple Run is another great example) have addictive quality hard to find anywhere else.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;https://maciejmroz.com/img/revhex.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;There is no title screen and no highscore list. There is no network play, and no Facebook spamming. There are no achievements. Just the game you can play&amp;hellip;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;https://maciejmroz.com/img/revhex_end.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&amp;hellip; over and over :) The entire thing was written in Python using Cocos2D library. Graphics was done by one of our artists who was kind enough to do it on almost last minute, despite being involved with other project.&lt;/p&gt;
-</description>
+      <description>We&amp;rsquo;ve had our first internal hackaton recently at Ganymede. We don&amp;rsquo;t have &amp;ldquo;20% time&amp;rdquo; rule or anything like that, so the entire thing was a huge experiment. What we did was to take not one, but two days (Thursday and Friday) off our normal schedule to allow people do some cool stuff.Obviosly, because we are a game development company, most teams decided to a game. With all my responsibilities, I did not commit to any team, but decided to do small project on my own - to last minute I did not actually know if I would be tied up in other stuff or not.</description>
     </item>
     
     <item>
@@ -770,42 +134,7 @@ The simulation used to produce graphs above definitely deserves deeper look into
       <pubDate>Sun, 18 Nov 2012 00:00:00 +0000</pubDate>
       
       <guid>https://maciejmroz.com/2012/11/18/right-is-not-the-same-as-intuitive-in-product-development/</guid>
-      <description>&lt;p&gt;Some introductory note: I&amp;rsquo;ve written this post before reading &lt;a href=&#34;http://www.amazon.com/The-Lean-Startup-Entrepreneurs-Continuous/dp/0307887898/&#34;&gt;Lean Startup&lt;/a&gt; by Eric Ries. Recently I finally found time to do it and &amp;hellip; I wish this book existed five years ago :) The problems I describe below are not unique. If what you read resonates with you in any way, go and read the book - it explains these ideas in a lot greater detail, touching on some more complicated subjects like product life cycle and company structure. Anyway, here&amp;rsquo;s the post, only slightly edited.&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;You have new great idea. Or perhaps someone else has the idea and you are just executing it. Doesn&amp;rsquo;t really matter. It goes into production, team gets assembled and a year later they come back with a working product. The developers did their job correctly, the product works as intended, incorporates most of the changes management has introduced in the past year, and everyone says it&amp;rsquo;s ready. So it gets released and &amp;hellip; nobody buys it. Customers don&amp;rsquo;t want it, and you have no idea why.&lt;/p&gt;
-
-&lt;p&gt;Everything seemed so perfect a year ago: the business plan, market research data, focus tests &amp;hellip; whatever was used to &amp;lsquo;prove&amp;rsquo; the idea is right. The product is right, and of good quality, so you start refining it, adding features, buying marketing campaigns &amp;hellip; all with little to no effect on the product performance, and all taking even more effort. Sounds familiar? Been there, done that :( Ok, what now? Blaming begins?&lt;/p&gt;
-
-&lt;p&gt;Unfortunately, in corporate environments that&amp;rsquo;s very often the case. Smart people jump off the ship before it crashes, and when failure is not tolerated, it&amp;rsquo;s really the only thing to do: abandon the project before it fails. Except it&amp;rsquo;s not the solution. But, what actually went wrong? Just one thing, and it&amp;rsquo;s a mistake so common it&amp;rsquo;s not even funny: treating assumptions as truth.&lt;/p&gt;
-
-&lt;p&gt;Want a list? Ok, here are some typically made in the product development process:&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;The business plan is actually worth anything.&lt;/li&gt;
-&lt;li&gt;The focus group is representative of your customers. In other words, you know what customers want.&lt;/li&gt;
-&lt;li&gt;Value of the product shipped a year from now is the same as if it was shipped today.&lt;/li&gt;
-&lt;li&gt;Your customers perceive quality the same way you do.&lt;/li&gt;
-&lt;li&gt;Your customers value product features the same way you do.&lt;/li&gt;
-&lt;li&gt;You know who your customers are before you actually start selling the product.&lt;/li&gt;
-&lt;li&gt;It&amp;rsquo;s industry best practice, so it has to be put in the product.&lt;/li&gt;
-&lt;li&gt;It works for the competition, so it has to work for you, too.
-Now, a catch: some of these assumptions can turn out to be true. But which ones? Even if you have hard data (i.e. from past project) this data is by definition about another customer, another product, and another time. While anything you know shout not be ignored, it also shouldn&amp;rsquo;t be blindly trusted. What we want is fix the process and make it look less like gambling with huge amounts of money. Can it be done? Yes, but that requires thinking a bit on the unothodox side :)&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;The goal is not to eliminate mistakes, that&amp;rsquo;s just impossible. It only pushes you further the road outlined at the beginning, and solves nothing. What you should do is in fact a lot simpler:&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;List your assumptions.&lt;/li&gt;
-&lt;li&gt;Prepare a plan to deal with them - prioritize your development around confirming or disproving there assumptions. Note: customer value of product feature is also an assumption!&lt;/li&gt;
-&lt;li&gt;Ship early, ship often. &amp;ldquo;A year from now&amp;rdquo; is not really different from &amp;ldquo;forever&amp;rdquo;.&lt;/li&gt;
-&lt;li&gt;Constantly adjust - you don&amp;rsquo;t know what product you are going to build. It&amp;rsquo;s not your decision really, it&amp;rsquo;s the customers who decide.&lt;/li&gt;
-&lt;li&gt;Don&amp;rsquo;t be afraid to kill products. It&amp;rsquo;s better than continuing death march and waiting for the miracle to happen. Spend your effort where you actually have the chance to succeed.&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;The product development process should never be about getting everything right at the beginning. It&amp;rsquo;s about getting some stuff right, and being able to clearly identify the good and the bad things. It&amp;rsquo;s about learning and adjusting. If it looks like adapting agile software development methods to product development, well &amp;hellip; it should. It all really comes down to dealing with uncertainties, instead of pretending they are not there.&lt;/p&gt;
-</description>
+      <description>Some introductory note: I&amp;rsquo;ve written this post before reading Lean Startup by Eric Ries. Recently I finally found time to do it and &amp;hellip; I wish this book existed five years ago :) The problems I describe below are not unique. If what you read resonates with you in any way, go and read the book - it explains these ideas in a lot greater detail, touching on some more complicated subjects like product life cycle and company structure.</description>
     </item>
     
     <item>
@@ -814,67 +143,219 @@ Now, a catch: some of these assumptions can turn out to be true. But which ones?
       <pubDate>Sat, 28 Jul 2012 00:00:00 +0000</pubDate>
       
       <guid>https://maciejmroz.com/2012/07/28/diablo-3-review/</guid>
-      <description>&lt;p&gt;After a while of playing Diablo 3 it&amp;rsquo;s probably about time for me to publish my own opinion on the game. A warning: I was never really a Diablo 2 fan (at the time when it was big I was mostly playing a game called &amp;ldquo;Visual C++&amp;rdquo; :) ) so consider it a noob review if you want to :)&lt;/p&gt;
-
-&lt;p&gt;Like many people out there, I started out as a Monk. After one day of playing I said that this game is a lot like FarmVille, only for the hardcore crowd. Really, it was that easy. On Normal difficulty my first death was when I was wondering if these clouds of green gas from left by flowers from living trees are some kind of buff I should be collecting. Click, click, click, level up, click, click &amp;hellip; it&amp;rsquo;s just insane. I had some trouble with Belial because of that - it&amp;rsquo;s probably the only point early in the game where you actually have to avoid getting hit. Killed it on second or third attempt, then had one or two purely accidental deaths, killed Diablo.&lt;/p&gt;
-
-&lt;p&gt;It&amp;rsquo;s not really much different on two next difficulty levels - Nightmare and Hell. It could be, but once you find out about the Auction House (later AH), it&amp;rsquo;s &lt;strong&gt;even easier&lt;/strong&gt;. I started the final difficulty level (Inferno) and the first thing I noticed was that even &amp;ldquo;trash mobs&amp;rdquo; are quite durable. In my head appeared a thought &amp;ldquo;this may actually be hard&amp;rdquo;. And then I died :(&lt;/p&gt;
-
-&lt;p&gt;Once you reach level 60 and Inferno, the real, tough game starts. The only question is: why did I have to grind cow clicker for so long before hitting any challenge? This is serious design flaw, mostly related to the existence of Auction House - on first three difficulty levels you play overgeared all of the time because items on the AH are so cheap &amp;hellip; which means very little challenge, and very little sense of accomplishment. Most of the players I know never reached the Inferno. But this is where real game is.&lt;/p&gt;
-
-&lt;p&gt;Initially I died a lot. Then I understood something: for melee class Inferno has a lot to do with gear you have. It&amp;rsquo;s something players call &amp;ldquo;gear check&amp;rdquo;, and it means that without proper gear no amount of skill will be enough. Players playing as Monk/Barbarian have one thing that really makes Inferno hard - in order to deal any damage, they have to be able to take damage, too. It&amp;rsquo;s not something you really notice at lower difficulties but it becomes critical in the endgame. Ligtning speed progress through the game is no longer possible at this point, especially when gear that makes any difference is actually expensive on the AH now &amp;hellip; Someone from Blizzard said that Inferno should take months for an average player to finish - and looking at it from where I am (finished Act 2 and farming it) I fully agree - I&amp;rsquo;d be disappointed if I was able to complete the game by now. I have pretty high standard of what it means to finish the game in this case - I know that people have killed Inferno Diablo with stats worse than mine. For me finishing the game (or an Act) means &amp;ldquo;I can repeatably do it without dying, and without skipping any Elite pack&amp;rdquo;. With that definition of &amp;ldquo;finishing&amp;rdquo; it really takes time. Yes, you have to grind for items, you have to try different character skills, and different approaches to gearing your character. This is what this game is &lt;strong&gt;about&lt;/strong&gt;.&lt;/p&gt;
-
-&lt;p&gt;Make no mistake - it was never game about saving the world by killing Diablo, somehow surviving onslaught of Elite monsters on the road to final kill. In this game you &lt;strong&gt;hunt&lt;/strong&gt; the Elite monsters, over and over - because that&amp;rsquo;s how you get more gear. Obviously, there are problems with the game. Nothing is perfect, and Diablo 3 is no exception. The biggest problem that I see now is that melee players are forced to go into &amp;ldquo;survival mode&amp;rdquo; (this changes on the very, very high end, where damage per second is the only thing that really matters). I don&amp;rsquo;t know much about Barbarians, but for Monks it means that two out of three passive skills are pretty much the same for every single Inferno player out there (assuming the person is sane). It also means that &amp;ldquo;All Resistance&amp;rdquo; statistic is on every single item used, combined with some other resistance (class specific). Only on top of that one has some freedom to choose character build strategy. So - there&amp;rsquo;s little skill diversity (that can be fixed by buffing unpopular skills so that the tradeoff would seem fair) and there&amp;rsquo;s a lot of problems with getting right gear. We not only need rare high level gear, it has to have certain statistics, and their random values have to be in proper range. So, when I hit a rare high level item there&amp;rsquo;s a lot less chance that it would be useful for Monk than, say, Demon Hunter.&lt;/p&gt;
-
-&lt;p&gt;The problem of &amp;ldquo;stacking randomness&amp;rdquo; affects all character classes, especially late in the game. Imagine you need piece of highest level gear with three stats close to perfect (top 5% bracket). The item has to have certain combination of stats, and lets assume for a while that possibility of hitting that it also 5%. So you have four random, independent, events that have to line up for you. Independence of events is an assumption - and to be fair to Blizzard guys I have to admit it&amp;rsquo;s probably not entirely true, but lets make that assumption for now. The probablity of hitting a jackpot in our imaginary scenario is 1 in 160000 (that&amp;rsquo;s (&lt;sup&gt;1&lt;/sup&gt;&amp;frasl;&lt;sub&gt;20&lt;/sub&gt;)^4 &amp;hellip;). Think about me using the word &amp;ldquo;jackpot&amp;rdquo; for a while - in an abstract sense, core mechanic of Diablo 3 is not really much different from a slot machine. Casual player farming Act 1 Inferno, on average, gets 2 highest level (item level 63) items per session, hardcore player probably 10-15x that amount (obviously it&amp;rsquo;s more for players who can safely farm beyond Act 1). Conclusion is simple: typical player is unlikely to ever see a &amp;ldquo;jackpot&amp;rdquo; item. Remember, you have more than one piece of gear to upgrade, and for every piece of gear you are looking for specific combination of stats &amp;hellip;&lt;/p&gt;
-
-&lt;p&gt;I don&amp;rsquo;t know about others, but for me knowing that I&amp;rsquo;ll get better (not best!) gear perhaps 10 years from now is not good enough. I don&amp;rsquo;t mind hunting a few days or weeks, but years? Probably unintended, but highly logical outcome of the randomness is that the ability to craft items is utterly useless - because typically all you can craft is something like &amp;ldquo;a helm with 4 magical properties&amp;rdquo;. Welcome to &amp;ldquo;one in a million&amp;rdquo; world, again :( Blizzard can fix it many ways, but most of them will have an impact on the economy/overall game difficulty. Am am absolutely positive they should do something, but ideas below are in no way equal or perfect - just some thoughts. In fact, implementing &lt;strong&gt;all&lt;/strong&gt; of them would probably break the game. Here we go:&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;strong&gt;Increase the level cap&lt;/strong&gt;. Game is highly gear dependent, but there are still base character stats. Give people some way of improving them. This does not have to any extreme progression but once you go 10 levels up, there should be a difference. But going up 10 levels up should take months (and possibly years later) and not days as it is today. Still, leveling up should be achievable goal with some reward. Level 90 player with mediocre gear would still be worse than level 60 player with high end gear (i.e. he/she would have +150-200 on base stats), but on the other hand players who now &amp;ldquo;hit the wall&amp;rdquo; will have it slightly easier a year from now - but only if they continue playing. For hardcore crowd reaching the last level will be great long term goal, even if they have already beaten entire game. In my opinion it&amp;rsquo;s a win/win, and doesn&amp;rsquo;t really break existing item economy.&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;Add ability to add gem socket on existing items&lt;/strong&gt;. Blizzard designers must have thought a bit about the randomness of gear because the gem system looks like it is meant to at least partially overcome that – by putting one of four gem kinds in an items socket player can improve one of the statistics. Which one depends on the kind of gem and on the kind of item. While this system is a bit limited, it works and is already in the game. What’s more, on the high end having the same item with or without socket actually makes a lot of difference (especially on weapons and helms). Gems have predictable value coming directly from crafting cost, and while high level ones are very expensive, they are not beyond reach. The problem? Vast majority of items do not have a socket to put gem into! So something that could make randomness more bearable made it even worse – having a socket simply became new statistic to hunt in an item!&lt;/p&gt;
-
-&lt;p&gt;This could be solved by giving players an ability to add gem socket to an item that does not have it – by either Jeweler or Blacksmith. I think the idea is doable, but would require some care in order not to disrupt the economy. The thing is – right now anything with a socket is quite a bit more expensive on the AH than anything without it, and suddenly the price difference would not be justified any more (at least not in all cases). So universal ability to add it might be a risky move. However, what I believe can be done is:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Make it very, very expensive operation. The cost should probably be expressed in terms of some high level gems – these can easily go into millions of gold. The goal here is not to make game easier, but to make long term upgrade path achievable. It should not ever be a common practice to put socket on every single piece of gear right after getting it, it should be one thing to look forward to once someone reaches the endgame, and only on a gear that’s aready at least decent.&lt;/li&gt;
-&lt;li&gt;Limit access to it by using the plans system already present in the game. Plans could look like “Add socket to pants” (and the cost would be for example 3x Star Topaz + 1M Gold). Doing it this way would actually have great effect on the trading community, because not everyone could do everything. Also, change in economy would be gradual indead of disruptive.&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;Improve gem system by adding new gem types&lt;/strong&gt;. There are currently four gem types in the game. Low level gems drop while playing or can be crafted by the Jeweler, higher level ones can only be crafted or bought on the AH from people who crafted them. They also get very expensive very quickly. Gems generally give player some control over base stats everyone uses (Dexterity, Vitality, Intelligence, Strength) and in case of being put in weapon or helm over some other preselected stats.&lt;/p&gt;
-
-&lt;p&gt;This hardly covers all the possible stats the character has, and some of them very useful. Imagine gems for Critical Hit Chance, Increased Attack Speed, Life Regeneration, Life Steal, Extra Armor, All Resistances or specific resistance, Melee (or other) Damage Reduction, Life per Spirit Spent, Spirit Regeneration etc etc. If a system like that gets introduced, players gain choice, and a lot of it. It also means that one would never have every single stat maxed out – tradeoffs would be required because if you stack Crit or IAS, you obviously will not put All Resistance gems in your gear because the socket will aready be filled …&lt;/p&gt;
-
-&lt;p&gt;How one would get these gems? By crafting them! Imagine 3x Flawless Emerald + Flawless Topaz + 10 Tomes of Secrets + a lot of Gold giving you Flawless Diamond after combining. Of course, as in previous idea it does not have to be an universal ability – in order to do any combining player might very well have to put his (or hers) hands on the correct recipe and train the Jeweler in using it.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;Add ability to improve existing items&lt;/strong&gt;. Now it’s time to say something about the Blacksmith, arguably most useless design element of the game, at least today. The idea is that Blacksmith can do stuff if you give him resources, typically after being trained using plans (his default crafting skills are absolutely useless). Right now, it’s pure luck when you need “perfect item” – all the randomness is there. You only know what kind of item you are going to get, its level, and the number of affixes on it. You are still rolling the dice. It’s just a resource sink with slot machine mechanic :(&lt;/p&gt;
-
-&lt;p&gt;How about making Blacksmith complementary to normal item hunting? This is where comes the idea of taking an item you already have and doing something to improve it. At a cost, and with some randomness, but surely improving specific aspect of an item. You wouldn’t be able to improve an item infinitely, and every upgrade would cost more and more. But a year from now, your +200 of some stat would become +220.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;Add ability to put new stats on existing items&lt;/strong&gt; (without modyfying what’s already rolled). Many items have only 4 or so magical properties. But that value can go up to 6. That means there are “free slots” on these items. In also means that in the endgame item with 4 properties is a lot less valuable than item with 6, simply because every advantage matters. So, how about improving an item by adding new magical property to it? It would still be random (and possibly even useless) but it certainly wouldn’t hurt. Also, there could be some more specific recipes like “Add Critical Hit Chance to Helm”.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;Remove the caps on stat values&lt;/strong&gt;. This is more controversial one and would change how item generator in the game works. It also goes in completely other way than ideas I given so far. This idea is about embracing randomness instead of fighting it.&lt;/p&gt;
-
-&lt;p&gt;Right now an item stat is simply a random from specific range. I’ve got no idea about the distribution Blizzard is using, but my idea for improvement is simple: use Gaussian, adjust the mean/standard deviation based on item level, and then remove the upper cap on stats. Get the mean/std dev set up in a way that 0.1% rolls (or something like that) on a stat would go beyond current cap. Items beyond the cap would still be very rare, but not unheard of.&lt;/p&gt;
-
-&lt;p&gt;Imagine that item generator sees “mean of 100, and std dev of 20” and calculates according to that instruction: +200 items would be very rare, +300 probably would not exist at all. But perhaps they would – you can never know, and that’s the true beauty of randomness, one not present in the game right now.&lt;/p&gt;
-
-&lt;p&gt;There are interesting effects of this approach:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Items that you might normally consider crap may turn into realistic element of character build – because it becomes viable tradeoff to drop some other stats on the item and get them elsewhere. This would improve characted itemization diversity, which is a big endgame issue.&lt;/li&gt;
-&lt;li&gt;Pricing of items on the AH/RMAH becomes more complex – perfect items do not exist! Also, an item value would be more personal – some items would fit better than others. This effect exists even today, it would only be amplified.&lt;/li&gt;
-&lt;li&gt;Again, because perfect items do not exist, the longer the game is alive, the more chance of someone coming up with unique “uber-item” that trumps everything that’s rolled so far. Can you imagine the value of 2000 DPS weapon if there is only one? I am sure it would keep the hardcore players interested&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;Improve the Legendary items&lt;/strong&gt;. Currently Legendary items are just “bronze rares”. I’ve found a few myself, and they were all worthless. There’s absolutely zero thrill assiciated with finding a Legendary, because in the endgame it’s probably worse than what I am already using. This really defeats the purpose of their existence, doesn’t it? But it doesn’t have to be like this.&lt;/p&gt;
-
-&lt;p&gt;I am using exactly one item of this category – it’s String of Ears with 19% melee damage reduction. Assuming my math is correct, it seemed like a good tradeoff. The only reason you get SoE is because of melee damage reduction. It is the only item in the game (I think) where it can go that high. Which kind of proves previous point – in order to get one thing I considered very valuable, I had to sacrifice another. I think it’s fun to have this choice, but I am one of those who build Excel spreadsheets to determine character improvement strategy.&lt;/p&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;Final words: the game is not without flaws, but it’s a good one. If you like this type of games – definitely go for it, even before Blizzard patches it.&lt;/p&gt;
-</description>
+      <description>After a while of playing Diablo 3 it&amp;rsquo;s probably about time for me to publish my own opinion on the game. A warning: I was never really a Diablo 2 fan (at the time when it was big I was mostly playing a game called &amp;ldquo;Visual C++&amp;rdquo; :) ) so consider it a noob review if you want to :)
+Like many people out there, I started out as a Monk.</description>
+    </item>
+    
+    <item>
+      <title>Enter the Node.js</title>
+      <link>https://maciejmroz.com/2012/07/07/enter-the-node-js/</link>
+      <pubDate>Sat, 07 Jul 2012 00:00:00 +0000</pubDate>
+      
+      <guid>https://maciejmroz.com/2012/07/07/enter-the-node-js/</guid>
+      <description>The title says it all, but I probably still should paint some background to this article. Imagine a system where you need very high performance, you need it yesterday, and you don&amp;rsquo;t have infinite funds to simply throw more hardware at the problem. Very important component in this system is a web server. Very simple requests, always generated by code (while system in question does not provide data to end users, you can think of AJAX - definitely there&amp;rsquo;s a similarity).</description>
+    </item>
+    
+    <item>
+      <title>What is Agile, anyway?</title>
+      <link>https://maciejmroz.com/2012/04/27/what-is-agile-anyway/</link>
+      <pubDate>Fri, 27 Apr 2012 00:00:00 +0000</pubDate>
+      
+      <guid>https://maciejmroz.com/2012/04/27/what-is-agile-anyway/</guid>
+      <description>I was recently confronted with very interesting misconception: that Agile and SCRUM are the same thing. It really got me thinking. First, it means that one must be very careful when using the word &amp;ldquo;agile&amp;rdquo; in software development context. Less obvious: SCRUM is de facto standard agile method today, and very often the only one people know or heard about.
+Wikipedia lists 10+ different methods falling under &amp;ldquo;Agile&amp;rdquo; umbrella. It&amp;rsquo;s no suprise because agile manifesto is very vague and does not really tell much (if anything) about the how part.</description>
+    </item>
+    
+    <item>
+      <title>The next console generation ain&#39;t what it used to be</title>
+      <link>https://maciejmroz.com/2012/04/17/the-next-console-generation-aint-what-it-used-to-be/</link>
+      <pubDate>Tue, 17 Apr 2012 00:00:00 +0000</pubDate>
+      
+      <guid>https://maciejmroz.com/2012/04/17/the-next-console-generation-aint-what-it-used-to-be/</guid>
+      <description>The next generation of consoles will most likely come by the end of year 2013. One intersting question arise: how it should look like? Disclaimer: by &amp;ldquo;should&amp;rdquo; I mean &amp;ldquo;actually makes business sense for both platform holders and developers&amp;rdquo; and not &amp;ldquo;what hardcore gamers would like to see&amp;rdquo;. These meanings are at quite a big conflict, as we shall see later :)
+In order to think about next gen we have to take deeper look at the general trends in the entertainment industry.</description>
+    </item>
+    
+    <item>
+      <title>The demise of spinning disks</title>
+      <link>https://maciejmroz.com/2012/03/18/the-demise-of-spinning-disks/</link>
+      <pubDate>Sun, 18 Mar 2012 00:00:00 +0000</pubDate>
+      
+      <guid>https://maciejmroz.com/2012/03/18/the-demise-of-spinning-disks/</guid>
+      <description>It was quite some time ago when my company started using Fusion-IO (enterprise SSDs) on our database servers. We are happily using them till this day. The great part is that we could scale vertically and leave software layer unchanged. Even better: we still have room for growth, despite getting more users and our application stack getting more and more demanding. We were one of the first to switch to SSDs on server side - so right now it&amp;rsquo;s interesting that this idea propagated so quickly.</description>
+    </item>
+    
+    <item>
+      <title>If you haven&#39;t noticed, OpenGL API is alive and kicking</title>
+      <link>https://maciejmroz.com/2012/03/04/if-you-havent-noticed-opengl-api-is-alive-and-kicking/</link>
+      <pubDate>Sun, 04 Mar 2012 00:00:00 +0000</pubDate>
+      
+      <guid>https://maciejmroz.com/2012/03/04/if-you-havent-noticed-opengl-api-is-alive-and-kicking/</guid>
+      <description>Recently I somehow found enough time to read &amp;ldquo;OpenGL SuperBible, 5th edition&amp;rdquo;. It was something done purely for fun, just to see how things are looking today for modern graphics APIs. Last time I did any serious graphics programming, OpenGL was slowly dying.
+In fact, my M.Sc. thesis used Direct3D as implementation API. I simply had no choice. There was no standard for anything - every single important feature was exposed through extensions.</description>
+    </item>
+    
+    <item>
+      <title>Is the era of dedicated gaming devices coming to an end?</title>
+      <link>https://maciejmroz.com/2012/02/22/is-the-era-of-dedicated-gaming-devices-coming-to-an-end/</link>
+      <pubDate>Wed, 22 Feb 2012 00:00:00 +0000</pubDate>
+      
+      <guid>https://maciejmroz.com/2012/02/22/is-the-era-of-dedicated-gaming-devices-coming-to-an-end/</guid>
+      <description>Today was the day when PlayStation Vita launched worldwide. I had the chance to play most of the launch games already during GDC Europe last August and I think that both hardware and launch lineup are impressive. But I didn&amp;rsquo;t buy PS Vita on launch. It&amp;rsquo;s probably a very sad day for Sony, bacause &amp;ldquo;PlayStation&amp;rdquo; is my religion (on Facebook, at least :) ).
+What happended? I faced the truth - mainstream mobile gaming is already on Android and iOS, and a lot of titles are released every day.</description>
+    </item>
+    
+    <item>
+      <title>It’s time for Culture 2.0</title>
+      <link>https://maciejmroz.com/2012/01/23/its-time-for-culture-2-0/</link>
+      <pubDate>Mon, 23 Jan 2012 00:00:00 +0000</pubDate>
+      
+      <guid>https://maciejmroz.com/2012/01/23/its-time-for-culture-2-0/</guid>
+      <description>In the USA, SOPA is dead. Poland (and other countries) might not be so lucky with the ACTA. But let’s assume for a while it goes down, too. It’s a good thing, right? I am not so sure about that.
+First, I absolutely agree that intellectual property should be enforced. What I don’t like about the law and the agreement mentioned above is who is responsible for the enforcing, and who is held responsible for the breach of intellectual property.</description>
+    </item>
+    
+    <item>
+      <title>Is HTML5 a viable platform for games?</title>
+      <link>https://maciejmroz.com/2012/01/12/is-html5-a-viable-platform-for-games/</link>
+      <pubDate>Thu, 12 Jan 2012 00:00:00 +0000</pubDate>
+      
+      <guid>https://maciejmroz.com/2012/01/12/is-html5-a-viable-platform-for-games/</guid>
+      <description>If you ever tried to get deeper into it than just looking at press releases about &amp;ldquo;HTML5 companies&amp;rdquo; who just received some VC funding, it is indeed very interesting question. Let&amp;rsquo;s put aside the idea of building entire business on HTML5 tools/engines. What I want to touch to today is the topic of the technology in general, and it&amp;rsquo;s comparison with possible alternatives. Important distinction here - it&amp;rsquo;s about 2D casual games.</description>
+    </item>
+    
+    <item>
+      <title>My 2012 resolution</title>
+      <link>https://maciejmroz.com/2012/01/09/my-2012-resolution/</link>
+      <pubDate>Mon, 09 Jan 2012 00:00:00 +0000</pubDate>
+      
+      <guid>https://maciejmroz.com/2012/01/09/my-2012-resolution/</guid>
+      <description>OMG! Another one who promises to lose weight in 2012, please kill me now! Worry not, it&amp;rsquo;s quite the opposite :) Also, while it might be a bit suprising, there will be only one resolution. I will not promise anyone to lose weight. What&amp;rsquo;s more, I will not promise to: exercise, drink less alcohol, sleep 8 hours a day, control my finances, go to specific place, or do whatever else.</description>
+    </item>
+    
+    <item>
+      <title>Some thoughts on the mobile revolution</title>
+      <link>https://maciejmroz.com/2012/01/07/some-thoughts-on-the-mobile-revolution/</link>
+      <pubDate>Sat, 07 Jan 2012 00:00:00 +0000</pubDate>
+      
+      <guid>https://maciejmroz.com/2012/01/07/some-thoughts-on-the-mobile-revolution/</guid>
+      <description>People keep talking about &amp;ldquo;mobile&amp;rdquo;, how it&amp;rsquo;s going to be very important (i.e. &amp;ldquo;we have mobile first policy&amp;rdquo; &amp;hellip;) but recently it really struck me: most talking about mobile revolution have abolutely no idea. They just don&amp;rsquo;t get it. Which is a bit sad, actually, especially if you think that big media companies are still struggling to make sense of what to do with classic, web-based Internet. Mobile is a revolution can only be understood by mobile users.</description>
+    </item>
+    
+    <item>
+      <title>Onswipe - entering the era of tablet publishing</title>
+      <link>https://maciejmroz.com/2012/01/04/onswipe-entering-the-era-of-tablet-publishing/</link>
+      <pubDate>Wed, 04 Jan 2012 00:00:00 +0000</pubDate>
+      
+      <guid>https://maciejmroz.com/2012/01/04/onswipe-entering-the-era-of-tablet-publishing/</guid>
+      <description>Classic web is dying, even if slowly. I will write longer post about that soon. In the meantime, try to use Flipboard for a while … and you will notice that classic portals/blogs are just dinosaurs. They might not know it yet but it doesn&amp;rsquo;t change the facts.
+If you are using WordPress, there is a cure called Onswipe. It&amp;rsquo;s not perfect (in fact it is buggy as hell) but shows a lot of promise.</description>
+    </item>
+    
+    <item>
+      <title>My old demos finally on YouTube</title>
+      <link>https://maciejmroz.com/2011/12/10/my-old-demos-finally-on-youtube/</link>
+      <pubDate>Sat, 10 Dec 2011 00:00:00 +0000</pubDate>
+      
+      <guid>https://maciejmroz.com/2011/12/10/my-old-demos-finally-on-youtube/</guid>
+      <description>A friend of mine did something I was too lazy to do for a long time - a YouTube version of our old demos.
+http://www.youtube.com/watch?v=AWe1SmHWxE4
+http://www.youtube.com/watch?v=7RbkCS2xtuU
+Seems like it was ages ago. I have great memories of these times, and have to admit I miss coding just for the pure fun of it. Commercial software development might be fun (especially when making games) but it&amp;rsquo;s really hard to compare.</description>
+    </item>
+    
+    <item>
+      <title>Why PC sales are slowing down</title>
+      <link>https://maciejmroz.com/2011/12/03/why-pc-sales-are-slowing-down/</link>
+      <pubDate>Sat, 03 Dec 2011 00:00:00 +0000</pubDate>
+      
+      <guid>https://maciejmroz.com/2011/12/03/why-pc-sales-are-slowing-down/</guid>
+      <description>There has been a lot of talk lately about how tablets are eating into the classic PC market, that people don&amp;rsquo;t need PCs any more, and how doomed they are. It&amp;rsquo;s true that we are witnessing a decline of the PC platform, and that this trend will only intensify. At the same time I don&amp;rsquo;t believe that right now it has much to do with rapid growth of tablet market. There are many other resons it is bad to be a PC vendor right now.</description>
+    </item>
+    
+    <item>
+      <title>Is it time to try an Adroid phone now?</title>
+      <link>https://maciejmroz.com/2011/05/08/is-it-time-to-try-an-adroid-phone-now/</link>
+      <pubDate>Sun, 08 May 2011 00:00:00 +0000</pubDate>
+      
+      <guid>https://maciejmroz.com/2011/05/08/is-it-time-to-try-an-adroid-phone-now/</guid>
+      <description>I&amp;rsquo;ve been an IPhone user for loong time. While I did not own the &amp;ldquo;1G&amp;rdquo;, I have my 3G for more than two years now. And, to be honest, it begins to show its age. For quite some time, it wasn&amp;rsquo;t getting any of the new cool stuff in iOS, and iOS version 4 actually should have never been released on iPhone 3G because it makes a lot of stuff run noticeably slower.</description>
+    </item>
+    
+    <item>
+      <title>Reboot, this time only visual :)</title>
+      <link>https://maciejmroz.com/2011/04/17/reboot-this-time-only-visual/</link>
+      <pubDate>Sun, 17 Apr 2011 00:00:00 +0000</pubDate>
+      
+      <guid>https://maciejmroz.com/2011/04/17/reboot-this-time-only-visual/</guid>
+      <description>I just got the invoice for the domain, and decided that if I&amp;rsquo;m paying for it it might at least look half-decent. I no web designer, for me it&amp;rsquo;s mostly difference between &amp;ldquo;it sucks&amp;rdquo; and &amp;ldquo;ok&amp;rdquo;, with rare addition (&amp;lt;1%) of &amp;ldquo;awesome&amp;rdquo;. This theme is &amp;ldquo;ok&amp;rdquo; and I doubt I&amp;rsquo;m going to heavily tweak it, if at all. I am also doing some experiments with Facebook integration - sharing links to post is the first to go, later hopefully commenting with Facebook account and some sort of &amp;ldquo;fanpage connect&amp;rdquo; so that anything appearing here gets automatically propagated to my FB profile.</description>
+    </item>
+    
+    <item>
+      <title>What will happen to Nintendo after the Wii, and more</title>
+      <link>https://maciejmroz.com/2011/04/16/what-will-happen-to-nintendo-after-the-wii-and-more/</link>
+      <pubDate>Sat, 16 Apr 2011 00:00:00 +0000</pubDate>
+      
+      <guid>https://maciejmroz.com/2011/04/16/what-will-happen-to-nintendo-after-the-wii-and-more/</guid>
+      <description>Wii is nearing the end of life. Sure, there is huge installed base of consoles, but I bet that average Wii user does not buy as many games as PS3 or X360 user. Which means that from publisher/developer point of view overall value of all the Nintendo consoles out there is not as great as raw numbers would suggest. Sony and Microsoft are both doing well, and Nintendo is no longer outselling them.</description>
+    </item>
+    
+    <item>
+      <title>There is no such thing as best computing device</title>
+      <link>https://maciejmroz.com/2011/03/06/the-lines-are-really-getting-blurry/</link>
+      <pubDate>Sun, 06 Mar 2011 00:00:00 +0000</pubDate>
+      
+      <guid>https://maciejmroz.com/2011/03/06/the-lines-are-really-getting-blurry/</guid>
+      <description>The recent releases from Apple (iPad 2 and earlier new laptops) get me thinking a bit about evolution of computing devices and how we actually use them. The past was very simple: loud and powerful desktops, underpowered laptops with short battery life, and feature phones that couldn&amp;rsquo;t really do much. The technology progress changed things a lot.
+As desktops and laptops countinued to improve, smartphones were introduced to the world. It&amp;rsquo;s hard to tell when that happened, but at some point they could do quite a bit.</description>
+    </item>
+    
+    <item>
+      <title>Why PSP2 is going to succeed</title>
+      <link>https://maciejmroz.com/2011/01/30/why-psp2-is-going-to-succeed/</link>
+      <pubDate>Sun, 30 Jan 2011 00:00:00 +0000</pubDate>
+      
+      <guid>https://maciejmroz.com/2011/01/30/why-psp2-is-going-to-succeed/</guid>
+      <description>They actually call it NGP, standing for Next Generation Portable. I wouldn&amp;rsquo;t really be suprised that much if the name was left unchanged in final product. Anyway, I&amp;rsquo;ve seen some posts from respected sites saying that PSP2 is doomed, dead on arrival, etc etc &amp;hellip; which I think is completely wrong thinking. The basic problem is comparing it to a phone, usually the iPhone.
+It is true that games are huge on Apple platform, and they are only going to get bigger.</description>
+    </item>
+    
+    <item>
+      <title>What to expect from iPad 2</title>
+      <link>https://maciejmroz.com/2011/01/20/what-to-expect-from-ipad-2/</link>
+      <pubDate>Thu, 20 Jan 2011 00:00:00 +0000</pubDate>
+      
+      <guid>https://maciejmroz.com/2011/01/20/what-to-expect-from-ipad-2/</guid>
+      <description>Before CES, I&amp;rsquo;d say &amp;ldquo;not much&amp;rdquo;. The thing is, today Apple owns the tablet market (if defined as dedicated hardware running dedicated OS), there is almost no competition out there. But it is on the horizon. Take Motorola Xoom as an example. Hardware specs are way beyond iPad 1.0, and if Android 3.0 is going to be that good as people claim, Apple is going to be in real trouble if they release underpowered device.</description>
+    </item>
+    
+    <item>
+      <title>Hacked :(</title>
+      <link>https://maciejmroz.com/2010/09/09/hacked/</link>
+      <pubDate>Thu, 09 Sep 2010 00:00:00 +0000</pubDate>
+      
+      <guid>https://maciejmroz.com/2010/09/09/hacked/</guid>
+      <description>It had to happen eventually. What can one expect when running ages old WordPress installation? Anyway, someone has injected malicious JavaScript code at the end of every single post. So I deleted everything. Perhaps I overreacted a bit &amp;hellip; I have most of this stuff backed up but I am not going to waste my time recovering the backups. Life goes on.</description>
+    </item>
+    
+    <item>
+      <title>Apple Tablet</title>
+      <link>https://maciejmroz.com/2010/02/06/apple-ipad-first-thoughts/</link>
+      <pubDate>Sat, 06 Feb 2010 11:52:02 +0100</pubDate>
+      
+      <guid>https://maciejmroz.com/2010/02/06/apple-ipad-first-thoughts/</guid>
+      <description>Apple tablet is no longer a mystery. The question now is whether it meets the expectations or fits any real needs :) Basically it is an oversized iPhone - 1024x768 multitouch display, 16-64 GB of flash memory, 1 GHz custom CPU, WiFi, Bluetooth etc, and it runs iPhone OS. I already have an iPhone. Is iPad going to perform better enough to justify buying additional device?
+GMail support with push in the iPhone is most of the time sufficient for me.</description>
+    </item>
+    
+    <item>
+      <title>Demoscene</title>
+      <link>https://maciejmroz.com/demoscene/</link>
+      <pubDate>Fri, 02 Mar 2007 00:00:00 +0000</pubDate>
+      
+      <guid>https://maciejmroz.com/demoscene/</guid>
+      <description>This section of page is about demoscene stuff stuff that I did. I am still doing some non-commercial coding, but don&amp;rsquo;t really have much to do with computer graphics any more ) Will I ever come back to write another demoscene production? Who knows :)
+Liquid Forms This demo was released at Abstract 2004 party (pouet.net link), and ranked 2nd. This is the first real demo using LiquidReality engine (I don&amp;rsquo;t really count block.</description>
     </item>
     
   </channel>

@@ -1,18 +1,16 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
 <head>
-  <link href="http://gmpg.org/xfn/11" rel="profile">
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
 
   
-  <meta name="HandheldFriendly" content="True">
-  <meta name="MobileOptimized" content="320">
   <meta name="viewport" content="width=device-width,minimum-scale=1,maximum-scale=1">
 
   
-  
-  <link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
-  <link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+    
+    
+      <link href="/css/fonts.css" rel="stylesheet" type="text/css">
+    
   
 
   
@@ -20,39 +18,39 @@
 
   
   
-  <link rel="stylesheet" href="https://maciejmroz.com/css/hugo-octopress.css">
+  <link rel="stylesheet" href="/css/hugo-octopress.css">
 
   
   
 
   
-  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/fork-awesome.min.css">
+  
 
   
   <link href="https://maciejmroz.com/favicon.png" rel="icon">
 
   
   
-  
 
-  
-
-  <meta name="description" content="">
+  <meta name="description" content="" />
   <meta name="keywords" content="">
-
   <meta name="author" content="Maciej Mróz">
 
   
-  <meta name="generator" content="Hugo 0.17" />
+  <meta name="generator" content="Hugo 0.83.1" />
 
   
   
 
+  
+  
 </head>
 <body>
 
 
-<header role="banner"><hgroup>
+<header role="banner">
+<hgroup>
   
   <h1><a href="https://maciejmroz.com/">Maciej Mróz Personal Blog</a></h1>
     <h2>Because why not</h2>
@@ -60,6 +58,18 @@
 
 
 <nav role="navigation">
+<fieldset class="mobile-nav">
+  
+  <select onchange="location = this.value;">
+    <option value="">Navigate…</option>
+      
+        <option value="https://maciejmroz.com/">» Blog</option>
+      
+        <option value="https://maciejmroz.com/demoscene">» Demoscene</option>
+      
+  </select>
+</fieldset>
+
 
 <ul class="main-navigation">
   
@@ -74,10 +84,8 @@
   
 </ul>
 
-
 <ul class="subscription">
   
-
 </ul>
 
 
@@ -93,19 +101,18 @@
         
 
 <header>
-    <p class="meta">Feb 5, 2017
-         - 6 minute read 
-        
+  <p class="meta">Feb 5, 2017
+     - 6 minute read 
+    
 
-        
-        
-        
-            - <a class="label" href="https://maciejmroz.com/categories/programming/">Programming </a><a class="label" href="https://maciejmroz.com/categories/server-side/">Server Side </a><a class="label" href="https://maciejmroz.com/categories/security/">Security </a>
-        
-    </p>
-    <h1 class="entry-title">
-         Implementing password storage with Golang 
-    </h1>
+    
+    
+      - <a class="label" href="https://maciejmroz.com/categories/programming/">Programming </a><a class="label" href="https://maciejmroz.com/categories/server-side/">Server Side </a><a class="label" href="https://maciejmroz.com/categories/security/">Security </a>
+    
+  </p>
+  <h1 class="entry-title">
+     Implementing password storage with Golang 
+  </h1>
 </header>
 
 
@@ -114,147 +121,121 @@
           
           
           <p>The common wisdom says: &ldquo;Do not implement password storage on your own&rdquo; &hellip; Considering amount of things that can be done wrong, perhaps relying on one of plenty of external providers is the right thing to do :) If you still want to do this, read <a href="https://www.owasp.org/index.php/Password_Storage_Cheat_Sheet">OWASP Password Storage Cheat Sheet</a> as a first step. After that, read <a href="https://www.owasp.org/index.php/Authentication_Cheat_Sheet">OWASP Authentication Cheat Sheet</a> - password storage and authentication are close layers and most likely you&rsquo;ll be working on both.</p>
-
 <p>What modern password storage attempts to achieve is to make life harder for an attacker when password database <strong>is already compromised</strong>. In the era of GPU/FPGA password cracking MD5 will not suffice. This may sound trivial, but apparently <a href="https://twitter.com/maciejmroz/status/809396388597563392">it&rsquo;s not</a>.</p>
-
 <p>Jokes aside, at the very minimum use:</p>
-
 <ul>
 <li>computationally expensive password hashing function, preferably one with tunable cost</li>
 <li>dedicataded random salt for every credential you store</li>
 </ul>
-
 <p>Password storage for every credential should contain:</p>
-
 <ul>
 <li>cost - so that if you decide that it is too low compared to what computing power potential attacker has at his/her disposal (you can assume it&rsquo;s proportional to your business value).</li>
 <li>random salt - I&rsquo;ll restate it: unique for every user, stored together with hashed password. Salt <strong>is not</strong> an encryption measure, if your db is compromised, so is the app, and so is the salt. What it really protects from is &ldquo;rainbow table&rdquo; kind of attack. With unique salt for every credential you also make it impossible to hash en entire dictionary and fish for something that matches.</li>
 <li>hashed password (obviously salted :) )</li>
 </ul>
-
 <p>Good news and bad news coming. Good one: if you use modern platform/framework, it is likely that there exist libraries that take care of the above. In case of Go, you have <a href="https://godoc.org/golang.org/x/crypto/bcrypt">golang.org/x/crypto/bcrypt</a> package for that. It is trivial to use, and contrary to some StackOverflow answers there&rsquo;s absolutely no need to add salt in your own code - the library is already doing it for you.</p>
-
 <p>Now time for the bad news, or to be more specific, bad news and a little example of why Go is an awesome language. The problem is, by using computationally expensive hashing function, you expose your website to an extremely easy denial of service attack. All that needs to be done to put website on its knees is to flood it with login requests - in typical scenario it will consume all your CPU resources and bring all your servers to a halt. And this is vulnerability we introduced ourselves: in the world of thousand requests per second we intentionally made part of the application very, very slow.</p>
-
 <p>How to deal with it? There are many ways, and probably more than one should be used. Below I&rsquo;ll show how to limit resources used by delegating expensive processing to a configurable pool of goroutines, and show how to introduce backpressure in this design.</p>
-
 <p>At the highest level, in the service initialization code create channels used to communicate with goroutines and run requested number of them:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#8be9fd;font-style:italic">func</span> <span style="color:#50fa7b">NewAccountService</span>(db <span style="color:#ff79c6">*</span>mgo.Database, BCryptCost <span style="color:#8be9fd">int</span>, BcryptQueueDepth <span style="color:#8be9fd">int</span>, BcryptConcurrency <span style="color:#8be9fd">int</span>) AccountService {
 
-<div class="highlight" style="background: #272822"><pre style="line-height: 125%"><span></span><span style="color: #66d9ef">func</span> <span style="color: #a6e22e">NewAccountService</span><span style="color: #f8f8f2">(</span><span style="color: #a6e22e">db</span> <span style="color: #f92672">*</span><span style="color: #a6e22e">mgo</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">Database</span><span style="color: #f8f8f2">,</span> <span style="color: #a6e22e">BCryptCost</span> <span style="color: #66d9ef">int</span><span style="color: #f8f8f2">,</span> <span style="color: #a6e22e">BcryptQueueDepth</span> <span style="color: #66d9ef">int</span><span style="color: #f8f8f2">,</span> <span style="color: #a6e22e">BcryptConcurrency</span> <span style="color: #66d9ef">int</span><span style="color: #f8f8f2">)</span> <span style="color: #a6e22e">AccountService</span> <span style="color: #f8f8f2">{</span>
+    (<span style="color:#ff79c6">...</span>)
 
-    <span style="color: #f8f8f2">(</span><span style="color: #f92672">...</span><span style="color: #f8f8f2">)</span>
+    as <span style="color:#ff79c6">:=</span> <span style="color:#ff79c6">&amp;</span>accountService{
+	    BcryptCost:        BCryptCost,
+	    fromPasswordQueue: <span style="color:#8be9fd;font-style:italic">make</span>(<span style="color:#8be9fd;font-style:italic">chan</span> generateFromPasswordRequest, BcryptQueueDepth),
+	    compareQueue:      <span style="color:#8be9fd;font-style:italic">make</span>(<span style="color:#8be9fd;font-style:italic">chan</span> compareHashAndPasswordRequest, BcryptQueueDepth),
+    }
 
-    <span style="color: #a6e22e">as</span> <span style="color: #f92672">:=</span> <span style="color: #f92672">&amp;</span><span style="color: #a6e22e">accountService</span><span style="color: #f8f8f2">{</span>
-	    <span style="color: #a6e22e">BcryptCost</span><span style="color: #f8f8f2">:</span>        <span style="color: #a6e22e">BCryptCost</span><span style="color: #f8f8f2">,</span>
-	    <span style="color: #a6e22e">fromPasswordQueue</span><span style="color: #f8f8f2">:</span> <span style="color: #f8f8f2">make(</span><span style="color: #66d9ef">chan</span> <span style="color: #a6e22e">generateFromPasswordRequest</span><span style="color: #f8f8f2">,</span> <span style="color: #a6e22e">BcryptQueueDepth</span><span style="color: #f8f8f2">),</span>
-	    <span style="color: #a6e22e">compareQueue</span><span style="color: #f8f8f2">:</span>      <span style="color: #f8f8f2">make(</span><span style="color: #66d9ef">chan</span> <span style="color: #a6e22e">compareHashAndPasswordRequest</span><span style="color: #f8f8f2">,</span> <span style="color: #a6e22e">BcryptQueueDepth</span><span style="color: #f8f8f2">),</span>
-    <span style="color: #f8f8f2">}</span>
+    <span style="color:#ff79c6">for</span> i <span style="color:#ff79c6">:=</span> <span style="color:#bd93f9">0</span>; i &lt; BcryptConcurrency; i<span style="color:#ff79c6">++</span> {
+	    <span style="color:#ff79c6">go</span> <span style="color:#50fa7b">bcryptRequestHandler</span>(as.fromPasswordQueue, as.compareQueue)
+    }
 
-    <span style="color: #66d9ef">for</span> <span style="color: #a6e22e">i</span> <span style="color: #f92672">:=</span> <span style="color: #ae81ff">0</span><span style="color: #f8f8f2">;</span> <span style="color: #a6e22e">i</span> <span style="color: #f8f8f2">&lt;</span> <span style="color: #a6e22e">BcryptConcurrency</span><span style="color: #f8f8f2">;</span> <span style="color: #a6e22e">i</span><span style="color: #f92672">++</span> <span style="color: #f8f8f2">{</span>
-	    <span style="color: #66d9ef">go</span> <span style="color: #a6e22e">bcryptRequestHandler</span><span style="color: #f8f8f2">(</span><span style="color: #a6e22e">as</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">fromPasswordQueue</span><span style="color: #f8f8f2">,</span> <span style="color: #a6e22e">as</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">compareQueue</span><span style="color: #f8f8f2">)</span>
-    <span style="color: #f8f8f2">}</span>
-
-    <span style="color: #66d9ef">return</span> <span style="color: #a6e22e">as</span>
-<span style="color: #f8f8f2">}</span>
-</pre></div>
-
-
+    <span style="color:#ff79c6">return</span> as
+}</code></pre></div>
 <p>It is important that buffered channels are used above. It allows certain number of requests to be enqueued, and allows us to respond properly when channel is full. Simply blocking on full channel is not desireable because we run a goroutine per request and in case of DoS attack we&rsquo;ll limit the CPU but will continue to leak memory by spawning tons of goroutines (or hit hard limit of the web server and become inaccessible). I&rsquo;ll show how to deal with that later. The request/response types are really simple, as the execution goroutine is very thin wrapper over bcrypt:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#8be9fd;font-style:italic">type</span> generateFromPasswordResult <span style="color:#8be9fd;font-style:italic">struct</span> {
+	hashedPassword []<span style="color:#8be9fd">byte</span>
+	err            <span style="color:#8be9fd">error</span>
+}
 
-<div class="highlight" style="background: #272822"><pre style="line-height: 125%"><span></span><span style="color: #66d9ef">type</span> <span style="color: #a6e22e">generateFromPasswordResult</span> <span style="color: #66d9ef">struct</span> <span style="color: #f8f8f2">{</span>
-	<span style="color: #a6e22e">hashedPassword</span> <span style="color: #f8f8f2">[]</span><span style="color: #66d9ef">byte</span>
-	<span style="color: #a6e22e">err</span>            <span style="color: #66d9ef">error</span>
-<span style="color: #f8f8f2">}</span>
+<span style="color:#8be9fd;font-style:italic">type</span> generateFromPasswordRequest <span style="color:#8be9fd;font-style:italic">struct</span> {
+	password   []<span style="color:#8be9fd">byte</span>
+	BCryptCost <span style="color:#8be9fd">int</span>
 
-<span style="color: #66d9ef">type</span> <span style="color: #a6e22e">generateFromPasswordRequest</span> <span style="color: #66d9ef">struct</span> <span style="color: #f8f8f2">{</span>
-	<span style="color: #a6e22e">password</span>   <span style="color: #f8f8f2">[]</span><span style="color: #66d9ef">byte</span>
-	<span style="color: #a6e22e">BCryptCost</span> <span style="color: #66d9ef">int</span>
+	result <span style="color:#8be9fd;font-style:italic">chan</span> generateFromPasswordResult
+}
 
-	<span style="color: #a6e22e">result</span> <span style="color: #66d9ef">chan</span> <span style="color: #a6e22e">generateFromPasswordResult</span>
-<span style="color: #f8f8f2">}</span>
+<span style="color:#8be9fd;font-style:italic">type</span> compareHashAndPasswordRequest <span style="color:#8be9fd;font-style:italic">struct</span> {
+	password       []<span style="color:#8be9fd">byte</span>
+	hashedPassword []<span style="color:#8be9fd">byte</span>
 
-<span style="color: #66d9ef">type</span> <span style="color: #a6e22e">compareHashAndPasswordRequest</span> <span style="color: #66d9ef">struct</span> <span style="color: #f8f8f2">{</span>
-	<span style="color: #a6e22e">password</span>       <span style="color: #f8f8f2">[]</span><span style="color: #66d9ef">byte</span>
-	<span style="color: #a6e22e">hashedPassword</span> <span style="color: #f8f8f2">[]</span><span style="color: #66d9ef">byte</span>
+	result <span style="color:#8be9fd;font-style:italic">chan</span> <span style="color:#8be9fd">error</span>
+}
 
-	<span style="color: #a6e22e">result</span> <span style="color: #66d9ef">chan</span> <span style="color: #66d9ef">error</span>
-<span style="color: #f8f8f2">}</span>
-
-<span style="color: #66d9ef">func</span> <span style="color: #a6e22e">bcryptRequestHandler</span><span style="color: #f8f8f2">(</span><span style="color: #a6e22e">fromPasswordQueue</span> <span style="color: #66d9ef">chan</span> <span style="color: #a6e22e">generateFromPasswordRequest</span><span style="color: #f8f8f2">,</span> <span style="color: #a6e22e">compareQueue</span> <span style="color: #66d9ef">chan</span> <span style="color: #a6e22e">compareHashAndPasswordRequest</span><span style="color: #f8f8f2">)</span> <span style="color: #f8f8f2">{</span>
-	<span style="color: #66d9ef">for</span> <span style="color: #f8f8f2">{</span>
-		<span style="color: #66d9ef">select</span> <span style="color: #f8f8f2">{</span>
-		<span style="color: #66d9ef">case</span> <span style="color: #a6e22e">rq</span> <span style="color: #f92672">:=</span> <span style="color: #f92672">&lt;-</span><span style="color: #a6e22e">fromPasswordQueue</span><span style="color: #f8f8f2">:</span>
-			<span style="color: #a6e22e">hashedPassword</span><span style="color: #f8f8f2">,</span> <span style="color: #a6e22e">err</span> <span style="color: #f92672">:=</span> <span style="color: #a6e22e">bcrypt</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">GenerateFromPassword</span><span style="color: #f8f8f2">(</span><span style="color: #a6e22e">rq</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">password</span><span style="color: #f8f8f2">,</span> <span style="color: #a6e22e">rq</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">BCryptCost</span><span style="color: #f8f8f2">)</span>
-			<span style="color: #a6e22e">rq</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">result</span> <span style="color: #f92672">&lt;-</span> <span style="color: #a6e22e">generateFromPasswordResult</span><span style="color: #f8f8f2">{</span><span style="color: #a6e22e">hashedPassword</span><span style="color: #f8f8f2">,</span> <span style="color: #a6e22e">err</span><span style="color: #f8f8f2">}</span>
-		<span style="color: #66d9ef">case</span> <span style="color: #a6e22e">rq</span> <span style="color: #f92672">:=</span> <span style="color: #f92672">&lt;-</span><span style="color: #a6e22e">compareQueue</span><span style="color: #f8f8f2">:</span>
-			<span style="color: #a6e22e">rq</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">result</span> <span style="color: #f92672">&lt;-</span> <span style="color: #a6e22e">bcrypt</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">CompareHashAndPassword</span><span style="color: #f8f8f2">(</span><span style="color: #a6e22e">rq</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">hashedPassword</span><span style="color: #f8f8f2">,</span> <span style="color: #a6e22e">rq</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">password</span><span style="color: #f8f8f2">)</span>
-		<span style="color: #f8f8f2">}</span>
-	<span style="color: #f8f8f2">}</span>
-<span style="color: #f8f8f2">}</span>
-</pre></div>
-
-
+<span style="color:#8be9fd;font-style:italic">func</span> <span style="color:#50fa7b">bcryptRequestHandler</span>(fromPasswordQueue <span style="color:#8be9fd;font-style:italic">chan</span> generateFromPasswordRequest, compareQueue <span style="color:#8be9fd;font-style:italic">chan</span> compareHashAndPasswordRequest) {
+	<span style="color:#ff79c6">for</span> {
+		<span style="color:#ff79c6">select</span> {
+		<span style="color:#ff79c6">case</span> rq <span style="color:#ff79c6">:=</span> <span style="color:#ff79c6">&lt;-</span>fromPasswordQueue:
+			hashedPassword, err <span style="color:#ff79c6">:=</span> bcrypt.<span style="color:#50fa7b">GenerateFromPassword</span>(rq.password, rq.BCryptCost)
+			rq.result <span style="color:#ff79c6">&lt;-</span> generateFromPasswordResult{hashedPassword, err}
+		<span style="color:#ff79c6">case</span> rq <span style="color:#ff79c6">:=</span> <span style="color:#ff79c6">&lt;-</span>compareQueue:
+			rq.result <span style="color:#ff79c6">&lt;-</span> bcrypt.<span style="color:#50fa7b">CompareHashAndPassword</span>(rq.hashedPassword, rq.password)
+		}
+	}
+}</code></pre></div>
 <p>Pretty neat thing about Go: you send channel over which response is sent together with the request. While this is a common pattern in Go, people unfamiliar with Go concurrency and CSP model assume that communication topology must be static. In fact, ephemeral constructs like this one are quite normal in Go. You can also see it as a similarity to sending return address along with Akka actor message. After all, these models are computationally equivalent, just with different semantics. By the way, if you look for other platform that easily allows you to pin some processing to a group of threads, yes, JVM is great at this stuff, and no, node.js can&rsquo;t do it :)</p>
-
 <p>Ok, let&rsquo;s introduce backpressure:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#8be9fd;font-style:italic">func</span> (s <span style="color:#ff79c6">*</span>accountService) <span style="color:#50fa7b">newFromPasswordRequest</span>(password <span style="color:#8be9fd">string</span>) (<span style="color:#8be9fd;font-style:italic">chan</span> generateFromPasswordResult, <span style="color:#8be9fd">error</span>) {
+	<span style="color:#ff79c6">if</span> <span style="color:#8be9fd;font-style:italic">len</span>(s.fromPasswordQueue) <span style="color:#ff79c6">&gt;=</span> <span style="color:#8be9fd;font-style:italic">cap</span>(s.fromPasswordQueue) {
+		<span style="color:#ff79c6">return</span> <span style="color:#ff79c6">nil</span>, ErrOverload
+	}
+	rq <span style="color:#ff79c6">:=</span> generateFromPasswordRequest{
+		password:   []<span style="color:#8be9fd;font-style:italic">byte</span>(password),
+		BCryptCost: s.BcryptCost,
+		result:     <span style="color:#8be9fd;font-style:italic">make</span>(<span style="color:#8be9fd;font-style:italic">chan</span> generateFromPasswordResult, <span style="color:#bd93f9">0</span>),
+	}
+	s.fromPasswordQueue <span style="color:#ff79c6">&lt;-</span> rq
+	<span style="color:#ff79c6">return</span> rq.result, <span style="color:#ff79c6">nil</span>
+}
 
-<div class="highlight" style="background: #272822"><pre style="line-height: 125%"><span></span><span style="color: #66d9ef">func</span> <span style="color: #f8f8f2">(</span><span style="color: #a6e22e">s</span> <span style="color: #f92672">*</span><span style="color: #a6e22e">accountService</span><span style="color: #f8f8f2">)</span> <span style="color: #a6e22e">newFromPasswordRequest</span><span style="color: #f8f8f2">(</span><span style="color: #a6e22e">password</span> <span style="color: #66d9ef">string</span><span style="color: #f8f8f2">)</span> <span style="color: #f8f8f2">(</span><span style="color: #66d9ef">chan</span> <span style="color: #a6e22e">generateFromPasswordResult</span><span style="color: #f8f8f2">,</span> <span style="color: #66d9ef">error</span><span style="color: #f8f8f2">)</span> <span style="color: #f8f8f2">{</span>
-	<span style="color: #66d9ef">if</span> <span style="color: #f8f8f2">len(</span><span style="color: #a6e22e">s</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">fromPasswordQueue</span><span style="color: #f8f8f2">)</span> <span style="color: #f92672">&gt;=</span> <span style="color: #f8f8f2">cap(</span><span style="color: #a6e22e">s</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">fromPasswordQueue</span><span style="color: #f8f8f2">)</span> <span style="color: #f8f8f2">{</span>
-		<span style="color: #66d9ef">return</span> <span style="color: #66d9ef">nil</span><span style="color: #f8f8f2">,</span> <span style="color: #a6e22e">ErrOverload</span>
-	<span style="color: #f8f8f2">}</span>
-	<span style="color: #a6e22e">rq</span> <span style="color: #f92672">:=</span> <span style="color: #a6e22e">generateFromPasswordRequest</span><span style="color: #f8f8f2">{</span>
-		<span style="color: #a6e22e">password</span><span style="color: #f8f8f2">:</span>   <span style="color: #f8f8f2">[]byte(</span><span style="color: #a6e22e">password</span><span style="color: #f8f8f2">),</span>
-		<span style="color: #a6e22e">BCryptCost</span><span style="color: #f8f8f2">:</span> <span style="color: #a6e22e">s</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">BcryptCost</span><span style="color: #f8f8f2">,</span>
-		<span style="color: #a6e22e">result</span><span style="color: #f8f8f2">:</span>     <span style="color: #f8f8f2">make(</span><span style="color: #66d9ef">chan</span> <span style="color: #a6e22e">generateFromPasswordResult</span><span style="color: #f8f8f2">,</span> <span style="color: #ae81ff">0</span><span style="color: #f8f8f2">),</span>
-	<span style="color: #f8f8f2">}</span>
-	<span style="color: #a6e22e">s</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">fromPasswordQueue</span> <span style="color: #f92672">&lt;-</span> <span style="color: #a6e22e">rq</span>
-	<span style="color: #66d9ef">return</span> <span style="color: #a6e22e">rq</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">result</span><span style="color: #f8f8f2">,</span> <span style="color: #66d9ef">nil</span>
-<span style="color: #f8f8f2">}</span>
-
-<span style="color: #66d9ef">func</span> <span style="color: #f8f8f2">(</span><span style="color: #a6e22e">s</span> <span style="color: #f92672">*</span><span style="color: #a6e22e">accountService</span><span style="color: #f8f8f2">)</span> <span style="color: #a6e22e">newCompareRequest</span><span style="color: #f8f8f2">(</span><span style="color: #a6e22e">hashedPassword</span> <span style="color: #66d9ef">string</span><span style="color: #f8f8f2">,</span> <span style="color: #a6e22e">password</span> <span style="color: #66d9ef">string</span><span style="color: #f8f8f2">)</span> <span style="color: #f8f8f2">(</span><span style="color: #66d9ef">chan</span> <span style="color: #66d9ef">error</span><span style="color: #f8f8f2">,</span> <span style="color: #66d9ef">error</span><span style="color: #f8f8f2">)</span> <span style="color: #f8f8f2">{</span>
-	<span style="color: #66d9ef">if</span> <span style="color: #f8f8f2">len(</span><span style="color: #a6e22e">s</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">compareQueue</span><span style="color: #f8f8f2">)</span> <span style="color: #f92672">&gt;=</span> <span style="color: #f8f8f2">cap(</span><span style="color: #a6e22e">s</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">compareQueue</span><span style="color: #f8f8f2">)</span> <span style="color: #f8f8f2">{</span>
-		<span style="color: #66d9ef">return</span> <span style="color: #66d9ef">nil</span><span style="color: #f8f8f2">,</span> <span style="color: #a6e22e">ErrOverload</span>
-	<span style="color: #f8f8f2">}</span>
-	<span style="color: #a6e22e">rq</span> <span style="color: #f92672">:=</span> <span style="color: #a6e22e">compareHashAndPasswordRequest</span><span style="color: #f8f8f2">{</span>
-		<span style="color: #a6e22e">hashedPassword</span><span style="color: #f8f8f2">:</span> <span style="color: #f8f8f2">[]byte(</span><span style="color: #a6e22e">hashedPassword</span><span style="color: #f8f8f2">),</span>
-		<span style="color: #a6e22e">password</span><span style="color: #f8f8f2">:</span>       <span style="color: #f8f8f2">[]byte(</span><span style="color: #a6e22e">password</span><span style="color: #f8f8f2">),</span>
-		<span style="color: #a6e22e">result</span><span style="color: #f8f8f2">:</span>         <span style="color: #f8f8f2">make(</span><span style="color: #66d9ef">chan</span> <span style="color: #66d9ef">error</span><span style="color: #f8f8f2">,</span> <span style="color: #ae81ff">0</span><span style="color: #f8f8f2">),</span>
-	<span style="color: #f8f8f2">}</span>
-	<span style="color: #a6e22e">s</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">compareQueue</span> <span style="color: #f92672">&lt;-</span> <span style="color: #a6e22e">rq</span>
-	<span style="color: #66d9ef">return</span> <span style="color: #a6e22e">rq</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">result</span><span style="color: #f8f8f2">,</span> <span style="color: #66d9ef">nil</span>
-<span style="color: #f8f8f2">}</span>
-</pre></div>
-
-
+<span style="color:#8be9fd;font-style:italic">func</span> (s <span style="color:#ff79c6">*</span>accountService) <span style="color:#50fa7b">newCompareRequest</span>(hashedPassword <span style="color:#8be9fd">string</span>, password <span style="color:#8be9fd">string</span>) (<span style="color:#8be9fd;font-style:italic">chan</span> <span style="color:#8be9fd">error</span>, <span style="color:#8be9fd">error</span>) {
+	<span style="color:#ff79c6">if</span> <span style="color:#8be9fd;font-style:italic">len</span>(s.compareQueue) <span style="color:#ff79c6">&gt;=</span> <span style="color:#8be9fd;font-style:italic">cap</span>(s.compareQueue) {
+		<span style="color:#ff79c6">return</span> <span style="color:#ff79c6">nil</span>, ErrOverload
+	}
+	rq <span style="color:#ff79c6">:=</span> compareHashAndPasswordRequest{
+		hashedPassword: []<span style="color:#8be9fd;font-style:italic">byte</span>(hashedPassword),
+		password:       []<span style="color:#8be9fd;font-style:italic">byte</span>(password),
+		result:         <span style="color:#8be9fd;font-style:italic">make</span>(<span style="color:#8be9fd;font-style:italic">chan</span> <span style="color:#8be9fd">error</span>, <span style="color:#bd93f9">0</span>),
+	}
+	s.compareQueue <span style="color:#ff79c6">&lt;-</span> rq
+	<span style="color:#ff79c6">return</span> rq.result, <span style="color:#ff79c6">nil</span>
+}</code></pre></div>
 <p>The functions above return channel or error (unfortunately there&rsquo;s no equivalent of Scala&rsquo;s Either[A,B] type in Go). The magic is in comparison <em>len(channel) &gt;= cap(channel)</em>: if we ever reach channel capacity, just return error indicating overload and let upstream code decide what to do about it (the approach will likely be different in a user facing website and different in a REST service consumed by a machine but in any case should be some sort of &ldquo;try again later&rdquo; signal). From the perspective of code that makes use of our wrappers, things are pretty simple:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#6272a4">//hashing password
+</span><span style="color:#6272a4"></span>(<span style="color:#ff79c6">...</span>)
+resChannel, err <span style="color:#ff79c6">:=</span> s.<span style="color:#50fa7b">newFromPasswordRequest</span>(password)
+<span style="color:#ff79c6">if</span> err <span style="color:#ff79c6">!=</span> <span style="color:#ff79c6">nil</span> {
+    <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">nil</span>, err
+}
+res <span style="color:#ff79c6">:=</span> <span style="color:#ff79c6">&lt;-</span>resChannel
+hashedPassword, err <span style="color:#ff79c6">:=</span> res.hashedPassword, res.err
+<span style="color:#ff79c6">if</span> err <span style="color:#ff79c6">!=</span> <span style="color:#ff79c6">nil</span> {
+    <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">nil</span>, err
+}
+(<span style="color:#ff79c6">...</span>)
 
-<p><div class="highlight" style="background: #272822"><pre style="line-height: 125%"><span></span><span style="color: #75715e">//hashing password</span>
-<span style="color: #f8f8f2">(</span><span style="color: #f92672">...</span><span style="color: #f8f8f2">)</span>
-<span style="color: #a6e22e">resChannel</span><span style="color: #f8f8f2">,</span> <span style="color: #a6e22e">err</span> <span style="color: #f92672">:=</span> <span style="color: #a6e22e">s</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">newFromPasswordRequest</span><span style="color: #f8f8f2">(</span><span style="color: #a6e22e">password</span><span style="color: #f8f8f2">)</span>
-<span style="color: #66d9ef">if</span> <span style="color: #a6e22e">err</span> <span style="color: #f92672">!=</span> <span style="color: #66d9ef">nil</span> <span style="color: #f8f8f2">{</span>
-    <span style="color: #66d9ef">return</span> <span style="color: #66d9ef">nil</span><span style="color: #f8f8f2">,</span> <span style="color: #a6e22e">err</span>
-<span style="color: #f8f8f2">}</span>
-<span style="color: #a6e22e">res</span> <span style="color: #f92672">:=</span> <span style="color: #f92672">&lt;-</span><span style="color: #a6e22e">resChannel</span>
-<span style="color: #a6e22e">hashedPassword</span><span style="color: #f8f8f2">,</span> <span style="color: #a6e22e">err</span> <span style="color: #f92672">:=</span> <span style="color: #a6e22e">res</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">hashedPassword</span><span style="color: #f8f8f2">,</span> <span style="color: #a6e22e">res</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">err</span>
-<span style="color: #66d9ef">if</span> <span style="color: #a6e22e">err</span> <span style="color: #f92672">!=</span> <span style="color: #66d9ef">nil</span> <span style="color: #f8f8f2">{</span>
-    <span style="color: #66d9ef">return</span> <span style="color: #66d9ef">nil</span><span style="color: #f8f8f2">,</span> <span style="color: #a6e22e">err</span>
-<span style="color: #f8f8f2">}</span>
-<span style="color: #f8f8f2">(</span><span style="color: #f92672">...</span><span style="color: #f8f8f2">)</span>
-
-<span style="color: #75715e">//checking password against hashed value</span>
-<span style="color: #f8f8f2">(</span><span style="color: #f92672">...</span><span style="color: #f8f8f2">)</span>
-<span style="color: #a6e22e">resChannel</span><span style="color: #f8f8f2">,</span> <span style="color: #a6e22e">err</span> <span style="color: #f92672">:=</span> <span style="color: #a6e22e">s</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">newCompareRequest</span><span style="color: #f8f8f2">(</span><span style="color: #a6e22e">account</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">HashedPassword</span><span style="color: #f8f8f2">,</span> <span style="color: #a6e22e">password</span><span style="color: #f8f8f2">)</span>
-<span style="color: #66d9ef">if</span> <span style="color: #a6e22e">err</span> <span style="color: #f92672">!=</span> <span style="color: #66d9ef">nil</span> <span style="color: #f8f8f2">{</span>
-    <span style="color: #66d9ef">return</span> <span style="color: #66d9ef">nil</span><span style="color: #f8f8f2">,</span> <span style="color: #a6e22e">err</span>
-<span style="color: #f8f8f2">}</span>
-<span style="color: #a6e22e">err</span> <span style="color: #f8f8f2">=</span> <span style="color: #f92672">&lt;-</span><span style="color: #a6e22e">resChannel</span>
-<span style="color: #66d9ef">if</span> <span style="color: #a6e22e">err</span> <span style="color: #f92672">!=</span> <span style="color: #66d9ef">nil</span> <span style="color: #f8f8f2">{</span>
-    <span style="color: #66d9ef">return</span> <span style="color: #66d9ef">nil</span><span style="color: #f8f8f2">,</span> <span style="color: #a6e22e">err</span>
-<span style="color: #f8f8f2">}</span>
-<span style="color: #f8f8f2">(</span><span style="color: #f92672">...</span><span style="color: #f8f8f2">)</span>
-</pre></div>
-</p>
-
+<span style="color:#6272a4">//checking password against hashed value
+</span><span style="color:#6272a4"></span>(<span style="color:#ff79c6">...</span>)
+resChannel, err <span style="color:#ff79c6">:=</span> s.<span style="color:#50fa7b">newCompareRequest</span>(account.HashedPassword, password)
+<span style="color:#ff79c6">if</span> err <span style="color:#ff79c6">!=</span> <span style="color:#ff79c6">nil</span> {
+    <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">nil</span>, err
+}
+err = <span style="color:#ff79c6">&lt;-</span>resChannel
+<span style="color:#ff79c6">if</span> err <span style="color:#ff79c6">!=</span> <span style="color:#ff79c6">nil</span> {
+    <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">nil</span>, err
+}
+(<span style="color:#ff79c6">...</span>)</code></pre></div>
 <p>Obviously, a proper password storage and authentication is going to be much, much more complicated :) Also, the problem of protecting yourself from DoS or DDoS is much more complex, and a lot of measures need to be taken, not only at the application layer. Still, I consider this pattern of putting a controllable upper bound on resources consumed by certain module in the application <strong>without breaking it into microservices</strong> very useful, especially when combined with proper profiling and monitoring.</p>
 
         </div>
@@ -273,9 +254,6 @@
     
     </span>
   </p>
-
-  
-  
 
   
 
@@ -316,11 +294,14 @@
       
       
       <a target="_blank" href="https://twitter.com/maciejmroz/" title="https://twitter.com/maciejmroz/"><i class="fa fa-twitter fa-3x"></i></a>
-       
+      
+         
+      
       <a target="_blank" href="https://www.linkedin.com/in/mrozmaciej/" title="https://www.linkedin.com/in/mrozmaciej/"><i class="fa fa-linkedin fa-3x"></i></a>
       
       
       <a target="_blank" href="https://www.facebook.com/maciej.mroz/" title="https://www.facebook.com/maciej.mroz/"><i class="fa fa-facebook fa-3x"></i></a>
+      
       
       
 
@@ -374,55 +355,66 @@
         <h1>Recent Posts</h1>
         <ul id="recent_posts">
           
-            <li class="post">
-              <a href="/2017/02/05/implementing-password-storage-with-golang/">Implementing password storage with Golang</a>
-            </li>
           
-            <li class="post">
-              <a href="/2016/12/27/going-for-simplicity-with-go/">Going for simplicity with Go</a>
-            </li>
+            
+              <li class="post">
+                <a href="/2017/02/05/implementing-password-storage-with-golang/">Implementing password storage with Golang</a>
+              </li>
+            
           
-            <li class="post">
-              <a href="/2016/11/26/moving-the-blog-to-hugo/">Moving the blog to Hugo</a>
-            </li>
+            
           
-            <li class="post">
-              <a href="/2015/01/01/beyond-virtualization/">Beyond virtualization</a>
-            </li>
+            
+              <li class="post">
+                <a href="/2016/12/27/going-for-simplicity-with-go/">Going for simplicity with Go</a>
+              </li>
+            
           
-            <li class="post">
-              <a href="/2014/11/04/ltv-of-a-service/">LTV of a service</a>
-            </li>
+            
+              <li class="post">
+                <a href="/2016/11/26/moving-the-blog-to-hugo/">Moving the blog to Hugo</a>
+              </li>
+            
           
-            <li class="post">
-              <a href="/2013/09/22/functional-programming-trojan-horse/">Functional programming trojan horse</a>
-            </li>
+            
+              <li class="post">
+                <a href="/2015/01/01/beyond-virtualization/">Beyond virtualization</a>
+              </li>
+            
+          
+            
+              <li class="post">
+                <a href="/2014/11/04/ltv-of-a-service/">LTV of a service</a>
+              </li>
+            
           
         </ul>
       </section>
     
   
-
 </aside>
 
   </div>
 </div>
 
-<footer role="contentinfo">
-  <p>Copyright &copy; 2017 Maciej Mróz - <a href="https://maciejmroz.com/license/">License</a> -
-  <span class="credit">Powered by <a target="_blank" href="https://gohugo.io">Hugo</a> and <a target="_blank" href="https://github.com/parsiya/hugo-octopress/">Hugo-Octopress</a> theme.
-</p>
+    <footer role="contentinfo">
+      <p>Copyright &copy; 2021 Maciej Mróz - <a href="https://maciejmroz.com/license/">License</a> -
+        <span class="credit">Powered by <a target="_blank" href="https://gohugo.io">Hugo</a> and <a target="_blank" href="https://github.com/parsiya/hugo-octopress/">Hugo-Octopress</a> theme.
+      </p>
+    </footer>
 
-</footer>
+    
+    
+    
 
-
-<script>
-  var _gaq=[['_setAccount','UA-88050305-1'],['_trackPageview']];
-  (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
-  g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
-  s.parentNode.insertBefore(g,s)}(document,'script'));
-</script>
-
-</body>
+    
+      <script>
+        var _gaq=[['_setAccount','UA-88050305-1'],['_trackPageview']];
+        (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+        g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+        s.parentNode.insertBefore(g,s)}(document,'script'));
+      </script>
+    
+  </body>
 </html>
 

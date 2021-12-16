@@ -1,39 +1,19 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Maciej Mróz Personal Blog</title>
-    <link>https://maciejmroz.com/tags/a/b-testing/index.xml</link>
-    <description>Recent content on Maciej Mróz Personal Blog</description>
+    <title>A/B Testing on Maciej Mróz Personal Blog</title>
+    <link>https://maciejmroz.com/tags/a/b-testing/</link>
+    <description>Recent content in A/B Testing on Maciej Mróz Personal Blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
-    <atom:link href="https://maciejmroz.com/tags/a/b-testing/index.xml" rel="self" type="application/rss+xml" />
-    
+    <language>en-us</language><atom:link href="https://maciejmroz.com/tags/a/b-testing/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>The rationale behind A/B testing</title>
       <link>https://maciejmroz.com/2013/02/24/the-rationale-behind-ab-testing/</link>
       <pubDate>Sun, 24 Feb 2013 00:00:00 +0000</pubDate>
       
       <guid>https://maciejmroz.com/2013/02/24/the-rationale-behind-ab-testing/</guid>
-      <description>&lt;p&gt;A few days ago, while having a casual conversation over a beer, I was totally shocked when I heard something close to: &amp;ldquo;A/B testing is pointless on small project like ours because testing overhead is too high&amp;rdquo;. Is it? Let&amp;rsquo;s run the numbers :) Assumptions:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;The product costs X to operate monthly. 70% of the costs are development team, and 30% is administrative overhead and other costs like infrastructure, customer support and marketing expenses. The development cost obviously becomes much, much smaller percentage of the costs if the project is successful, but here we are taking about small project that still has to fight for success.&lt;/li&gt;
-&lt;li&gt;Typical cost of implementing a feature is 0.5 month of development team work, so in our case it is 0.35*X.&lt;/li&gt;
-&lt;li&gt;Averaged overhead of making new feature A/B testable is 10%. For a team that&amp;rsquo;s used to A/B testing stuff this is likely accurate number, for team that is not routinely doing it the overhead may be a lot higher, at least initially. If a feature that has base cost of 0.35*X, the A/B testing overhead is 0.035*X.&lt;/li&gt;
-&lt;li&gt;Our alternative to A/B testing is picking the variant manually by product owner intuition. I assume absolutely great PO is right 80% of the time.&lt;/li&gt;
-&lt;li&gt;Positive change brings the revenue up by 3%, negative change (a mistake) makes the revenue go down 2%.&lt;/li&gt;
-&lt;li&gt;The product makes X per month, essentially it&amp;rsquo;s on the edge of getting axed.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;The question: should we A/B test changes in this scenario? Now something very important, and something people tend to overlook a lot: &lt;strong&gt;anything&lt;/strong&gt; you do with the product impacts revenue over a long time. It&amp;rsquo;s not just one month, but possibly event years when the change is active. In order to properly think about A/B testing, we have to take this into account. Let&amp;rsquo;s take 6 month period:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Not running A/B test gives us expected payoff of (0.98*0.2+1.03*0.8)*6*X, which is 6.12*X.&lt;/li&gt;
-&lt;li&gt;Running A/B test means we are almost always right, and gives us payoff of 1.03*6*X, which is 6.18*X.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;We made 0.025*X (0.06 minus cost of A/B test) by running the A/B test! Note that the model I used to illustrate the need for A/B testing is highly simplified. For example, in reality there&amp;rsquo;s is some cost associated with delay introduced by testing, the product performance while tests are running is a mix of good and bad variant, the variants between which we are trying to decide may both be good, both bad, or one may be neutral etc etc. The result of this added complexity is not to abandon A/B testing! The goal is not to break even but to make the product make 10 times as much! Bear in mind that any mistake you make early in the product lifecycle will impact your future revenue. The model above shows A/B testing is profitable even if you play not to lose. If you play to win, A/B testing is something you just &lt;strong&gt;have to&lt;/strong&gt; be doing.&lt;/p&gt;
-</description>
+      <description>A few days ago, while having a casual conversation over a beer, I was totally shocked when I heard something close to: &amp;ldquo;A/B testing is pointless on small project like ours because testing overhead is too high&amp;rdquo;. Is it? Let&amp;rsquo;s run the numbers :) Assumptions:
+ The product costs X to operate monthly. 70% of the costs are development team, and 30% is administrative overhead and other costs like infrastructure, customer support and marketing expenses.</description>
     </item>
     
   </channel>
