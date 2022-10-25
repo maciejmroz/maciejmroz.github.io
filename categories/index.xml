@@ -62,15 +62,6 @@
     </item>
     
     <item>
-      <title>Lifestyle</title>
-      <link>https://maciejmroz.com/categories/lifestyle/</link>
-      <pubDate>Mon, 09 Sep 2013 00:00:00 +0000</pubDate>
-      
-      <guid>https://maciejmroz.com/categories/lifestyle/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>Game Development</title>
       <link>https://maciejmroz.com/categories/game-development/</link>
       <pubDate>Fri, 04 Jan 2013 00:00:00 +0000</pubDate>
@@ -89,29 +80,11 @@
     </item>
     
     <item>
-      <title>Product Development</title>
-      <link>https://maciejmroz.com/categories/product-development/</link>
-      <pubDate>Sun, 18 Nov 2012 00:00:00 +0000</pubDate>
-      
-      <guid>https://maciejmroz.com/categories/product-development/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>Software Engineering</title>
       <link>https://maciejmroz.com/categories/software-engineering/</link>
       <pubDate>Fri, 27 Apr 2012 00:00:00 +0000</pubDate>
       
       <guid>https://maciejmroz.com/categories/software-engineering/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Game Industry</title>
-      <link>https://maciejmroz.com/categories/game-industry/</link>
-      <pubDate>Tue, 17 Apr 2012 00:00:00 +0000</pubDate>
-      
-      <guid>https://maciejmroz.com/categories/game-industry/</guid>
       <description></description>
     </item>
     
@@ -134,29 +107,20 @@
     </item>
     
     <item>
+      <title>Game Industry</title>
+      <link>https://maciejmroz.com/categories/game-industry/</link>
+      <pubDate>Wed, 22 Feb 2012 00:00:00 +0000</pubDate>
+      
+      <guid>https://maciejmroz.com/categories/game-industry/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>Mobile</title>
       <link>https://maciejmroz.com/categories/mobile/</link>
       <pubDate>Wed, 22 Feb 2012 00:00:00 +0000</pubDate>
       
       <guid>https://maciejmroz.com/categories/mobile/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Culture</title>
-      <link>https://maciejmroz.com/categories/culture/</link>
-      <pubDate>Mon, 23 Jan 2012 00:00:00 +0000</pubDate>
-      
-      <guid>https://maciejmroz.com/categories/culture/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Media</title>
-      <link>https://maciejmroz.com/categories/media/</link>
-      <pubDate>Mon, 23 Jan 2012 00:00:00 +0000</pubDate>
-      
-      <guid>https://maciejmroz.com/categories/media/</guid>
       <description></description>
     </item>
     

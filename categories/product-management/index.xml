@@ -18,15 +18,5 @@
  If you haven&amp;rsquo;t noticed yet, there&amp;rsquo;s a flaw in this question. The problem is, it simply doesn&amp;rsquo;t make sense from economic point of view.</description>
     </item>
     
-    <item>
-      <title>The rationale behind A/B testing</title>
-      <link>https://maciejmroz.com/2013/02/24/the-rationale-behind-ab-testing/</link>
-      <pubDate>Sun, 24 Feb 2013 00:00:00 +0000</pubDate>
-      
-      <guid>https://maciejmroz.com/2013/02/24/the-rationale-behind-ab-testing/</guid>
-      <description>A few days ago, while having a casual conversation over a beer, I was totally shocked when I heard something close to: &amp;ldquo;A/B testing is pointless on small project like ours because testing overhead is too high&amp;rdquo;. Is it? Let&amp;rsquo;s run the numbers :) Assumptions:
- The product costs X to operate monthly. 70% of the costs are development team, and 30% is administrative overhead and other costs like infrastructure, customer support and marketing expenses.</description>
-    </item>
-    
   </channel>
 </rss>

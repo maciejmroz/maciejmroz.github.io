@@ -65,15 +65,6 @@ Do you really need microservices, containers, service discovery, load balancers,
     </item>
     
     <item>
-      <title>Am I a marketing person now?</title>
-      <link>https://maciejmroz.com/2013/09/09/am-i-a-marketing-person-now/</link>
-      <pubDate>Mon, 09 Sep 2013 00:00:00 +0000</pubDate>
-      
-      <guid>https://maciejmroz.com/2013/09/09/am-i-a-marketing-person-now/</guid>
-      <description>Yesterday I was talking to my Dad on Skype about the book I just finished reading. The book title was &amp;ldquo;Running Lean&amp;rdquo; and it is a very good take on the lean approach to product development/management originally made popular by Eric Ries. What struck me was that while I was talking, my Dad suddenly interrupted me and asked a simple question: &amp;ldquo;Are you a marketing guy now?&amp;rdquo;. Of course I denied, it just sounded completely bizarre and out of place!</description>
-    </item>
-    
-    <item>
       <title>C&#43;&#43;11 Goodness</title>
       <link>https://maciejmroz.com/2013/05/04/c11-goodness/</link>
       <pubDate>Sat, 04 May 2013 00:00:00 +0000</pubDate>
@@ -89,16 +80,6 @@ Do you really need microservices, containers, service discovery, load balancers,
       
       <guid>https://maciejmroz.com/2013/03/09/the-structure-in-unstructured-data/</guid>
       <description>Working with data is something I personally consider one of the coolest things one can do right now in the tech industry. Typically when someone thinks or talks about &amp;ldquo;Big Data&amp;rdquo; it implies petabyte data sets and Hadoop clusters spanning 100+ nodes. The truth is, even a lot smaller data and humbler infrastructure can provide great insights and drive the product/service innovation. To me its really a lot closer to &amp;ldquo;Smart Data&amp;rdquo; than &amp;ldquo;Big Data&amp;rdquo; - it doesn&amp;rsquo;t matter how big your data set is, but how much you are able to do with it, and how quickly.</description>
-    </item>
-    
-    <item>
-      <title>The rationale behind A/B testing</title>
-      <link>https://maciejmroz.com/2013/02/24/the-rationale-behind-ab-testing/</link>
-      <pubDate>Sun, 24 Feb 2013 00:00:00 +0000</pubDate>
-      
-      <guid>https://maciejmroz.com/2013/02/24/the-rationale-behind-ab-testing/</guid>
-      <description>A few days ago, while having a casual conversation over a beer, I was totally shocked when I heard something close to: &amp;ldquo;A/B testing is pointless on small project like ours because testing overhead is too high&amp;rdquo;. Is it? Let&amp;rsquo;s run the numbers :) Assumptions:
- The product costs X to operate monthly. 70% of the costs are development team, and 30% is administrative overhead and other costs like infrastructure, customer support and marketing expenses.</description>
     </item>
     
     <item>
@@ -126,15 +107,6 @@ Do you really need microservices, containers, service discovery, load balancers,
       
       <guid>https://maciejmroz.com/2012/12/01/what-can-one-day-of-coding-bring/</guid>
       <description>We&amp;rsquo;ve had our first internal hackaton recently at Ganymede. We don&amp;rsquo;t have &amp;ldquo;20% time&amp;rdquo; rule or anything like that, so the entire thing was a huge experiment. What we did was to take not one, but two days (Thursday and Friday) off our normal schedule to allow people do some cool stuff.Obviosly, because we are a game development company, most teams decided to a game. With all my responsibilities, I did not commit to any team, but decided to do small project on my own - to last minute I did not actually know if I would be tied up in other stuff or not.</description>
-    </item>
-    
-    <item>
-      <title>Right is not the same as intuitive in product development</title>
-      <link>https://maciejmroz.com/2012/11/18/right-is-not-the-same-as-intuitive-in-product-development/</link>
-      <pubDate>Sun, 18 Nov 2012 00:00:00 +0000</pubDate>
-      
-      <guid>https://maciejmroz.com/2012/11/18/right-is-not-the-same-as-intuitive-in-product-development/</guid>
-      <description>Some introductory note: I&amp;rsquo;ve written this post before reading Lean Startup by Eric Ries. Recently I finally found time to do it and &amp;hellip; I wish this book existed five years ago :) The problems I describe below are not unique. If what you read resonates with you in any way, go and read the book - it explains these ideas in a lot greater detail, touching on some more complicated subjects like product life cycle and company structure.</description>
     </item>
     
     <item>
@@ -167,16 +139,6 @@ Wikipedia lists 10+ different methods falling under &amp;ldquo;Agile&amp;rdquo; 
     </item>
     
     <item>
-      <title>The next console generation ain&#39;t what it used to be</title>
-      <link>https://maciejmroz.com/2012/04/17/the-next-console-generation-aint-what-it-used-to-be/</link>
-      <pubDate>Tue, 17 Apr 2012 00:00:00 +0000</pubDate>
-      
-      <guid>https://maciejmroz.com/2012/04/17/the-next-console-generation-aint-what-it-used-to-be/</guid>
-      <description>The next generation of consoles will most likely come by the end of year 2013. One intersting question arise: how it should look like? Disclaimer: by &amp;ldquo;should&amp;rdquo; I mean &amp;ldquo;actually makes business sense for both platform holders and developers&amp;rdquo; and not &amp;ldquo;what hardcore gamers would like to see&amp;rdquo;. These meanings are at quite a big conflict, as we shall see later :)
-In order to think about next gen we have to take deeper look at the general trends in the entertainment industry.</description>
-    </item>
-    
-    <item>
       <title>The demise of spinning disks</title>
       <link>https://maciejmroz.com/2012/03/18/the-demise-of-spinning-disks/</link>
       <pubDate>Sun, 18 Mar 2012 00:00:00 +0000</pubDate>
@@ -206,50 +168,12 @@ What happended? I faced the truth - mainstream mobile gaming is already on Andro
     </item>
     
     <item>
-      <title>It’s time for Culture 2.0</title>
-      <link>https://maciejmroz.com/2012/01/23/its-time-for-culture-2-0/</link>
-      <pubDate>Mon, 23 Jan 2012 00:00:00 +0000</pubDate>
-      
-      <guid>https://maciejmroz.com/2012/01/23/its-time-for-culture-2-0/</guid>
-      <description>In the USA, SOPA is dead. Poland (and other countries) might not be so lucky with the ACTA. But let’s assume for a while it goes down, too. It’s a good thing, right? I am not so sure about that.
-First, I absolutely agree that intellectual property should be enforced. What I don’t like about the law and the agreement mentioned above is who is responsible for the enforcing, and who is held responsible for the breach of intellectual property.</description>
-    </item>
-    
-    <item>
-      <title>Is HTML5 a viable platform for games?</title>
-      <link>https://maciejmroz.com/2012/01/12/is-html5-a-viable-platform-for-games/</link>
-      <pubDate>Thu, 12 Jan 2012 00:00:00 +0000</pubDate>
-      
-      <guid>https://maciejmroz.com/2012/01/12/is-html5-a-viable-platform-for-games/</guid>
-      <description>If you ever tried to get deeper into it than just looking at press releases about &amp;ldquo;HTML5 companies&amp;rdquo; who just received some VC funding, it is indeed very interesting question. Let&amp;rsquo;s put aside the idea of building entire business on HTML5 tools/engines. What I want to touch to today is the topic of the technology in general, and it&amp;rsquo;s comparison with possible alternatives. Important distinction here - it&amp;rsquo;s about 2D casual games.</description>
-    </item>
-    
-    <item>
-      <title>My 2012 resolution</title>
-      <link>https://maciejmroz.com/2012/01/09/my-2012-resolution/</link>
-      <pubDate>Mon, 09 Jan 2012 00:00:00 +0000</pubDate>
-      
-      <guid>https://maciejmroz.com/2012/01/09/my-2012-resolution/</guid>
-      <description>OMG! Another one who promises to lose weight in 2012, please kill me now! Worry not, it&amp;rsquo;s quite the opposite :) Also, while it might be a bit suprising, there will be only one resolution. I will not promise anyone to lose weight. What&amp;rsquo;s more, I will not promise to: exercise, drink less alcohol, sleep 8 hours a day, control my finances, go to specific place, or do whatever else.</description>
-    </item>
-    
-    <item>
       <title>Some thoughts on the mobile revolution</title>
       <link>https://maciejmroz.com/2012/01/07/some-thoughts-on-the-mobile-revolution/</link>
       <pubDate>Sat, 07 Jan 2012 00:00:00 +0000</pubDate>
       
       <guid>https://maciejmroz.com/2012/01/07/some-thoughts-on-the-mobile-revolution/</guid>
       <description>People keep talking about &amp;ldquo;mobile&amp;rdquo;, how it&amp;rsquo;s going to be very important (i.e. &amp;ldquo;we have mobile first policy&amp;rdquo; &amp;hellip;) but recently it really struck me: most talking about mobile revolution have abolutely no idea. They just don&amp;rsquo;t get it. Which is a bit sad, actually, especially if you think that big media companies are still struggling to make sense of what to do with classic, web-based Internet. Mobile is a revolution can only be understood by mobile users.</description>
-    </item>
-    
-    <item>
-      <title>Onswipe - entering the era of tablet publishing</title>
-      <link>https://maciejmroz.com/2012/01/04/onswipe-entering-the-era-of-tablet-publishing/</link>
-      <pubDate>Wed, 04 Jan 2012 00:00:00 +0000</pubDate>
-      
-      <guid>https://maciejmroz.com/2012/01/04/onswipe-entering-the-era-of-tablet-publishing/</guid>
-      <description>Classic web is dying, even if slowly. I will write longer post about that soon. In the meantime, try to use Flipboard for a while … and you will notice that classic portals/blogs are just dinosaurs. They might not know it yet but it doesn&amp;rsquo;t change the facts.
-If you are using WordPress, there is a cure called Onswipe. It&amp;rsquo;s not perfect (in fact it is buggy as hell) but shows a lot of promise.</description>
     </item>
     
     <item>
@@ -274,33 +198,6 @@ Seems like it was ages ago. I have great memories of these times, and have to ad
     </item>
     
     <item>
-      <title>Is it time to try an Adroid phone now?</title>
-      <link>https://maciejmroz.com/2011/05/08/is-it-time-to-try-an-adroid-phone-now/</link>
-      <pubDate>Sun, 08 May 2011 00:00:00 +0000</pubDate>
-      
-      <guid>https://maciejmroz.com/2011/05/08/is-it-time-to-try-an-adroid-phone-now/</guid>
-      <description>I&amp;rsquo;ve been an IPhone user for loong time. While I did not own the &amp;ldquo;1G&amp;rdquo;, I have my 3G for more than two years now. And, to be honest, it begins to show its age. For quite some time, it wasn&amp;rsquo;t getting any of the new cool stuff in iOS, and iOS version 4 actually should have never been released on iPhone 3G because it makes a lot of stuff run noticeably slower.</description>
-    </item>
-    
-    <item>
-      <title>Reboot, this time only visual :)</title>
-      <link>https://maciejmroz.com/2011/04/17/reboot-this-time-only-visual/</link>
-      <pubDate>Sun, 17 Apr 2011 00:00:00 +0000</pubDate>
-      
-      <guid>https://maciejmroz.com/2011/04/17/reboot-this-time-only-visual/</guid>
-      <description>I just got the invoice for the domain, and decided that if I&amp;rsquo;m paying for it it might at least look half-decent. I no web designer, for me it&amp;rsquo;s mostly difference between &amp;ldquo;it sucks&amp;rdquo; and &amp;ldquo;ok&amp;rdquo;, with rare addition (&amp;lt;1%) of &amp;ldquo;awesome&amp;rdquo;. This theme is &amp;ldquo;ok&amp;rdquo; and I doubt I&amp;rsquo;m going to heavily tweak it, if at all. I am also doing some experiments with Facebook integration - sharing links to post is the first to go, later hopefully commenting with Facebook account and some sort of &amp;ldquo;fanpage connect&amp;rdquo; so that anything appearing here gets automatically propagated to my FB profile.</description>
-    </item>
-    
-    <item>
-      <title>What will happen to Nintendo after the Wii, and more</title>
-      <link>https://maciejmroz.com/2011/04/16/what-will-happen-to-nintendo-after-the-wii-and-more/</link>
-      <pubDate>Sat, 16 Apr 2011 00:00:00 +0000</pubDate>
-      
-      <guid>https://maciejmroz.com/2011/04/16/what-will-happen-to-nintendo-after-the-wii-and-more/</guid>
-      <description>Wii is nearing the end of life. Sure, there is huge installed base of consoles, but I bet that average Wii user does not buy as many games as PS3 or X360 user. Which means that from publisher/developer point of view overall value of all the Nintendo consoles out there is not as great as raw numbers would suggest. Sony and Microsoft are both doing well, and Nintendo is no longer outselling them.</description>
-    </item>
-    
-    <item>
       <title>There is no such thing as best computing device</title>
       <link>https://maciejmroz.com/2011/03/06/the-lines-are-really-getting-blurry/</link>
       <pubDate>Sun, 06 Mar 2011 00:00:00 +0000</pubDate>
@@ -308,44 +205,6 @@ Seems like it was ages ago. I have great memories of these times, and have to ad
       <guid>https://maciejmroz.com/2011/03/06/the-lines-are-really-getting-blurry/</guid>
       <description>The recent releases from Apple (iPad 2 and earlier new laptops) get me thinking a bit about evolution of computing devices and how we actually use them. The past was very simple: loud and powerful desktops, underpowered laptops with short battery life, and feature phones that couldn&amp;rsquo;t really do much. The technology progress changed things a lot.
 As desktops and laptops countinued to improve, smartphones were introduced to the world. It&amp;rsquo;s hard to tell when that happened, but at some point they could do quite a bit.</description>
-    </item>
-    
-    <item>
-      <title>Why PSP2 is going to succeed</title>
-      <link>https://maciejmroz.com/2011/01/30/why-psp2-is-going-to-succeed/</link>
-      <pubDate>Sun, 30 Jan 2011 00:00:00 +0000</pubDate>
-      
-      <guid>https://maciejmroz.com/2011/01/30/why-psp2-is-going-to-succeed/</guid>
-      <description>They actually call it NGP, standing for Next Generation Portable. I wouldn&amp;rsquo;t really be suprised that much if the name was left unchanged in final product. Anyway, I&amp;rsquo;ve seen some posts from respected sites saying that PSP2 is doomed, dead on arrival, etc etc &amp;hellip; which I think is completely wrong thinking. The basic problem is comparing it to a phone, usually the iPhone.
-It is true that games are huge on Apple platform, and they are only going to get bigger.</description>
-    </item>
-    
-    <item>
-      <title>What to expect from iPad 2</title>
-      <link>https://maciejmroz.com/2011/01/20/what-to-expect-from-ipad-2/</link>
-      <pubDate>Thu, 20 Jan 2011 00:00:00 +0000</pubDate>
-      
-      <guid>https://maciejmroz.com/2011/01/20/what-to-expect-from-ipad-2/</guid>
-      <description>Before CES, I&amp;rsquo;d say &amp;ldquo;not much&amp;rdquo;. The thing is, today Apple owns the tablet market (if defined as dedicated hardware running dedicated OS), there is almost no competition out there. But it is on the horizon. Take Motorola Xoom as an example. Hardware specs are way beyond iPad 1.0, and if Android 3.0 is going to be that good as people claim, Apple is going to be in real trouble if they release underpowered device.</description>
-    </item>
-    
-    <item>
-      <title>Hacked :(</title>
-      <link>https://maciejmroz.com/2010/09/09/hacked/</link>
-      <pubDate>Thu, 09 Sep 2010 00:00:00 +0000</pubDate>
-      
-      <guid>https://maciejmroz.com/2010/09/09/hacked/</guid>
-      <description>It had to happen eventually. What can one expect when running ages old WordPress installation? Anyway, someone has injected malicious JavaScript code at the end of every single post. So I deleted everything. Perhaps I overreacted a bit &amp;hellip; I have most of this stuff backed up but I am not going to waste my time recovering the backups. Life goes on.</description>
-    </item>
-    
-    <item>
-      <title>Apple Tablet</title>
-      <link>https://maciejmroz.com/2010/02/06/apple-ipad-first-thoughts/</link>
-      <pubDate>Sat, 06 Feb 2010 11:52:02 +0100</pubDate>
-      
-      <guid>https://maciejmroz.com/2010/02/06/apple-ipad-first-thoughts/</guid>
-      <description>Apple tablet is no longer a mystery. The question now is whether it meets the expectations or fits any real needs :) Basically it is an oversized iPhone - 1024x768 multitouch display, 16-64 GB of flash memory, 1 GHz custom CPU, WiFi, Bluetooth etc, and it runs iPhone OS. I already have an iPhone. Is iPad going to perform better enough to justify buying additional device?
-GMail support with push in the iPhone is most of the time sufficient for me.</description>
     </item>
     
   </channel>

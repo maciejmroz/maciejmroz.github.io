@@ -16,14 +16,5 @@
       <description>Quite a chunk of time has passed since my last update to this blog. While primary reason is my super busy life (on both proffessional and personal fronts) there was also another one I have finally addressed, along with a few extras. The reason was that over the years I simply grew tired of WordPress software. The point to migrate away from it occupied my TODO list for too long. I am not going to bash WP here, I used it for many years, and for that I am grateful to its authors.</description>
     </item>
     
-    <item>
-      <title>Hacked :(</title>
-      <link>https://maciejmroz.com/2010/09/09/hacked/</link>
-      <pubDate>Thu, 09 Sep 2010 00:00:00 +0000</pubDate>
-      
-      <guid>https://maciejmroz.com/2010/09/09/hacked/</guid>
-      <description>It had to happen eventually. What can one expect when running ages old WordPress installation? Anyway, someone has injected malicious JavaScript code at the end of every single post. So I deleted everything. Perhaps I overreacted a bit &amp;hellip; I have most of this stuff backed up but I am not going to waste my time recovering the backups. Life goes on.</description>
-    </item>
-    
   </channel>
 </rss>

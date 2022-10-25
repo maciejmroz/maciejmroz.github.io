@@ -16,14 +16,5 @@
       <description>The common wisdom says: &amp;ldquo;Do not implement password storage on your own&amp;rdquo; &amp;hellip; Considering amount of things that can be done wrong, perhaps relying on one of plenty of external providers is the right thing to do :) If you still want to do this, read OWASP Password Storage Cheat Sheet as a first step. After that, read OWASP Authentication Cheat Sheet - password storage and authentication are close layers and most likely you&amp;rsquo;ll be working on both.</description>
     </item>
     
-    <item>
-      <title>Hacked :(</title>
-      <link>https://maciejmroz.com/2010/09/09/hacked/</link>
-      <pubDate>Thu, 09 Sep 2010 00:00:00 +0000</pubDate>
-      
-      <guid>https://maciejmroz.com/2010/09/09/hacked/</guid>
-      <description>It had to happen eventually. What can one expect when running ages old WordPress installation? Anyway, someone has injected malicious JavaScript code at the end of every single post. So I deleted everything. Perhaps I overreacted a bit &amp;hellip; I have most of this stuff backed up but I am not going to waste my time recovering the backups. Life goes on.</description>
-    </item>
-    
   </channel>
 </rss>

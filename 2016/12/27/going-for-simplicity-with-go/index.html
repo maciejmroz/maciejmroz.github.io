@@ -38,7 +38,7 @@
   <meta name="author" content="Maciej Mróz">
 
   
-  <meta name="generator" content="Hugo 0.83.1" />
+  <meta name="generator" content="Hugo 0.92.2" />
 
   
   
@@ -124,7 +124,7 @@
 <p>Do you really need microservices, containers, service discovery, load balancers, caches, multiple databases, all clustered and replicated accross multiple availability zones? Hint: you are not making any money yet and there&rsquo;s big chance you will not get to the point where you have product/market fit.</p>
 <p>So, let&rsquo;s take a step back and optimize for something else entirely: ease and speed of development. There are many possible ways to approach a problem framed this way. I&rsquo;ll show how to do that using Go language and <a href="https://echo.labstack.com/">Labstack Echo</a> framework.</p>
 <p>I initially thought of putting the code on GitHub, but essentially it&rsquo;s a compilation of few samples from Echo docs, so I&rsquo;ll just paste it here:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#ff79c6">package</span> main
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#ff79c6">package</span> main
 
 <span style="color:#ff79c6">import</span> (
 	<span style="color:#f1fa8c">&#34;flag&#34;</span>
@@ -175,7 +175,7 @@
 <li><strong>No web/application server</strong>. Another piece of software you don&rsquo;t need. Go supports Websockets, HTTP/2 and TLS 1.2 out of the box. Echo makes it trivial to acquire certificate from Let&rsquo;s Encrypt.</li>
 <li><strong>No runtime</strong>. Go is a compiled language and everything is statically linked. You don&rsquo;t need to worry about version of PHP/Python/Ruby/node installed on your server, and whether the libraries are in correct versions. For Go, it&rsquo;s all build time affair, what you deploy is ELF binary + static files (in fact, there are solutions to bundle these togother, too). There is really no need to bother with packaking the app inside a Docker (or rkt, or whatever) container. Just run single binary directly from systemd, with config file like this:</li>
 </ul>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ini" data-lang="ini"><span style="color:#ff79c6">[Unit]</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ini" data-lang="ini"><span style="color:#ff79c6">[Unit]</span>
 <span style="color:#50fa7b">Description</span><span style="color:#ff79c6">=</span><span style="color:#f1fa8c">Go web app</span>
 <span style="color:#50fa7b">Documentation</span><span style="color:#ff79c6">=</span><span style="color:#f1fa8c">https://cs.maciejmroz.com/</span>
 <span style="color:#50fa7b">After</span><span style="color:#ff79c6">=</span><span style="color:#f1fa8c">network.target</span>
@@ -193,13 +193,13 @@
 <ul>
 <li>You don&rsquo;t even need Linux machine/Vagrant VM to build the binary thanks to excellent cross compilation support in Go. It just works, here&rsquo;s the Makefile I use on Mac OS X so I don&rsquo;t need to type too much:</li>
 </ul>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-makefile" data-lang="makefile"><span style="color:#50fa7b">all</span><span style="color:#ff79c6">:</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-makefile" data-lang="makefile"><span style="color:#50fa7b">all</span><span style="color:#ff79c6">:</span>
 	<span style="color:#8be9fd;font-style:italic">GOOS</span><span style="color:#ff79c6">=</span>linux <span style="color:#8be9fd;font-style:italic">GOARCH</span><span style="color:#ff79c6">=</span>amd64 go build -o app-linux-amd64
 </code></pre></div>
 <ul>
 <li>A tip for the less savvy on modern Linux, in order to bind non-root process to port &lt;1024, you need something like this (as root or via sudo, of course :) ):</li>
 </ul>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">setcap <span style="color:#f1fa8c">&#39;cap_net_bind_service=+ep&#39;</span> /opt/app/app-linux-amd64</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">setcap <span style="color:#f1fa8c">&#39;cap_net_bind_service=+ep&#39;</span> /opt/app/app-linux-amd64</code></pre></div>
 <h2 id="what-next">What next?</h2>
 <ul>
 <li>Application level caching is easy - at the simplest you can get any concurrent cache out there and just do it in-process. No HA, remember? Biggest instance on Digital Ocean has 64 GB RAM, on Amazon you can get many, many times more. Eventually you will move towards something like <a href="https://github.com/golang/groupcache">groupcache</a> also solving &ldquo;thundering herd&rdquo; problem properly.</li>
@@ -371,7 +371,7 @@
 </div>
 
     <footer role="contentinfo">
-      <p>Copyright &copy; 2021 Maciej Mróz - <a href="https://maciejmroz.com/license/">License</a> -
+      <p>Copyright &copy; 2022 Maciej Mróz - <a href="https://maciejmroz.com/license/">License</a> -
         <span class="credit">Powered by <a target="_blank" href="https://gohugo.io">Hugo</a> and <a target="_blank" href="https://github.com/parsiya/hugo-octopress/">Hugo-Octopress</a> theme.
       </p>
     </footer>
