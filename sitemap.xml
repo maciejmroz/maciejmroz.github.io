@@ -2,6 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://maciejmroz.com/2022/10/25/a-very-long-break/</loc>
+    <lastmod>2022-10-25T19:42:40+02:00</lastmod>
+  </url><url>
+    <loc>https://maciejmroz.com/</loc>
+    <lastmod>2022-10-25T19:42:40+02:00</lastmod>
+  </url><url>
+    <loc>https://maciejmroz.com/post/</loc>
+    <lastmod>2022-10-25T19:42:40+02:00</lastmod>
+  </url><url>
     <loc>https://maciejmroz.com/categories/</loc>
     <lastmod>2017-02-05T13:17:09+01:00</lastmod>
   </url><url>
@@ -9,12 +18,6 @@
     <lastmod>2017-02-05T13:17:09+01:00</lastmod>
   </url><url>
     <loc>https://maciejmroz.com/2017/02/05/implementing-password-storage-with-golang/</loc>
-    <lastmod>2017-02-05T13:17:09+01:00</lastmod>
-  </url><url>
-    <loc>https://maciejmroz.com/</loc>
-    <lastmod>2017-02-05T13:17:09+01:00</lastmod>
-  </url><url>
-    <loc>https://maciejmroz.com/post/</loc>
     <lastmod>2017-02-05T13:17:09+01:00</lastmod>
   </url><url>
     <loc>https://maciejmroz.com/categories/programming/</loc>
