@@ -6,14 +6,16 @@
     <description>Recent content on Maciej Mróz Personal Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 25 Oct 2022 19:42:40 +0200</lastBuildDate><atom:link href="https://maciejmroz.com/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 08 Aug 2023 19:53:04 +0200</lastBuildDate><atom:link href="https://maciejmroz.com/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>A very long break</title>
-      <link>https://maciejmroz.com/2022/10/25/a-very-long-break/</link>
-      <pubDate>Tue, 25 Oct 2022 19:42:40 +0200</pubDate>
+      <title>My Dog Is a Superhero</title>
+      <link>https://maciejmroz.com/2023/08/08/my-dog-is-a-superhero/</link>
+      <pubDate>Tue, 08 Aug 2023 19:53:04 +0200</pubDate>
       
-      <guid>https://maciejmroz.com/2022/10/25/a-very-long-break/</guid>
-      <description>It&amp;rsquo;s suprising even to myself how long was the break between posts on this site. It&amp;rsquo;s almost as if it got completely abandoned. In a sense, it was. Had a lot things on my plate in past two or three years. Most notable events: got married, changed my job twice, went through COVID, got a dog, moved to new apartment, started to appreciate physical activity, got my diet somewhat in control &amp;hellip; and counting.</description>
+      <guid>https://maciejmroz.com/2023/08/08/my-dog-is-a-superhero/</guid>
+      <description>My dog is not really a superhero ;) Still, the title is catchy and Generative AI can make it look like one:
+What&amp;rsquo;s even cooler is that we can create multiple variants around this theme quite easily:
+These images are all originating from single photo of my french bulldog but were processed using generative AI model (to be technically correct it&amp;rsquo;s a pipeline and not just one model) called Stable Diffusion XL, done using technique called inpainting, which in a nutshell fills the gaps in the image using user supplied mask.</description>
     </item>
     
     <item>
@@ -60,8 +62,8 @@ Do you really need microservices, containers, service discovery, load balancers,
       
       <guid>https://maciejmroz.com/2014/11/04/ltv-of-a-service/</guid>
       <description>A little story today. It goes like this. I drop by one of our teams, and within completely different discussion I get asked this very &amp;ldquo;simple&amp;rdquo; question:
- &amp;ldquo;Can we overlay an actual development team cost on top of product revenues so that we know if we are in the red or in the green?&amp;rdquo;
- If you haven&amp;rsquo;t noticed yet, there&amp;rsquo;s a flaw in this question. The problem is, it simply doesn&amp;rsquo;t make sense from economic point of view.</description>
+&amp;ldquo;Can we overlay an actual development team cost on top of product revenues so that we know if we are in the red or in the green?&amp;rdquo;
+If you haven&amp;rsquo;t noticed yet, there&amp;rsquo;s a flaw in this question. The problem is, it simply doesn&amp;rsquo;t make sense from economic point of view.</description>
     </item>
     
     <item>

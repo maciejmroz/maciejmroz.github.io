@@ -38,7 +38,7 @@
   <meta name="author" content="Maciej Mróz">
 
   
-  <meta name="generator" content="Hugo 0.92.2" />
+  <meta name="generator" content="Hugo 0.110.0">
 
   
   
@@ -128,22 +128,22 @@
 <p>Hugo, similar to other generators, uses Markdown as source file format. I guess the format has been popularized by GitHub (and likely other hosted Git solutions) with automatic rendering of README.md in the repositories. Regardless of the reason, it is well known and liked by hacker types. It has some limitations, but also lets you focus on the content and not its form. With Hugo you can easily work around Markdown limitations by using your own macros that expand to HTML during rendering. So, while 99% of the time sticking to plain Markdown syntax is enough, you are not left alone in the corner cases.</p>
 <h2 id="github-pages">GitHub Pages</h2>
 <p>GitHub has launched <a href="https://pages.github.com/">GitHub Pages</a> quite a while ago. It&rsquo;s totally free service that let&rsquo;s you serve static web content to the world. There are traffic limitations but not at the level that matters for a personal blog. Should you somehow run into these limitations, there are plenty of other options, Amazon S3 among them. For now, sticking to GitHub gives me very nice publishing flow. In your website directory:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">MaciekMBP:hugo maciek$ hugo
-Started building sites ...
-Built site <span style="color:#ff79c6">for</span> language en:
-<span style="color:#bd93f9">0</span> draft content
-<span style="color:#bd93f9">0</span> future content
-<span style="color:#bd93f9">0</span> expired content
-<span style="color:#bd93f9">35</span> pages created
-<span style="color:#bd93f9">0</span> non-page files copied
-<span style="color:#bd93f9">6</span> paginator pages created
-<span style="color:#bd93f9">45</span> tags created
-<span style="color:#bd93f9">17</span> categories created
-total in <span style="color:#bd93f9">227</span> ms
-MaciekMBP:hugo maciek$ <span style="color:#8be9fd;font-style:italic">cd</span> public
-MaciekMBP:public maciek$ git add -A
-MaciekMBP:public maciek$ git commit -m <span style="color:#f1fa8c">&#34;New version info&#34;</span>
-MaciekMBP:public maciek$ git push</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>MaciekMBP:hugo maciek$ hugo
+</span></span><span style="display:flex;"><span>Started building sites ...
+</span></span><span style="display:flex;"><span>Built site <span style="color:#ff79c6">for</span> language en:
+</span></span><span style="display:flex;"><span><span style="color:#bd93f9">0</span> draft content
+</span></span><span style="display:flex;"><span><span style="color:#bd93f9">0</span> future content
+</span></span><span style="display:flex;"><span><span style="color:#bd93f9">0</span> expired content
+</span></span><span style="display:flex;"><span><span style="color:#bd93f9">35</span> pages created
+</span></span><span style="display:flex;"><span><span style="color:#bd93f9">0</span> non-page files copied
+</span></span><span style="display:flex;"><span><span style="color:#bd93f9">6</span> paginator pages created
+</span></span><span style="display:flex;"><span><span style="color:#bd93f9">45</span> tags created
+</span></span><span style="display:flex;"><span><span style="color:#bd93f9">17</span> categories created
+</span></span><span style="display:flex;"><span>total in <span style="color:#bd93f9">227</span> ms
+</span></span><span style="display:flex;"><span>MaciekMBP:hugo maciek$ <span style="color:#8be9fd;font-style:italic">cd</span> public
+</span></span><span style="display:flex;"><span>MaciekMBP:public maciek$ git add -A
+</span></span><span style="display:flex;"><span>MaciekMBP:public maciek$ git commit -m <span style="color:#f1fa8c">&#34;New version info&#34;</span>
+</span></span><span style="display:flex;"><span>MaciekMBP:public maciek$ git push</span></span></code></pre></div>
 <p>That&rsquo;s all, new site version is live!!! Of course you can (and should :) ) use version control tools for your source files, too. For ambitious types: implement building and publishing of your website via continuous integration server :)</p>
 <h2 id="cloudflare">CloudFlare</h2>
 <p>Serving static website from GitHub is very quick, and supports HTTPS within github.io domain. What if you want HTTPS on your own domain? Here is where <a href="https://www.cloudflare.com/">CloudFlare</a> steps in. Within their <strong>free</strong> plan you can get not only free HTTPS, but with great options like: redirecting HTTP straffic to HTTPS, turning on HSTS (HTTP Strict Stransport Security) for the site, or even forcing TLS 1.3 use (beta feature). While going crazy with security on personal blog that&rsquo;s available on GitHub anyway may seem like an overkill, I strongly believe that in the era of <a href="https://letsencrypt.org/">Let&rsquo;s Encrypt</a>, non-encrypted HTTP traffic should just die. Using CloudFlare has an additional advantage of speed: it&rsquo;s not just about encryption, but also a CDN sitting in front of GitHub. To make it even sweeter, CloudFlare fully supports HTTP/2 and SPDY protocols.</p>
@@ -271,7 +271,7 @@ MaciekMBP:public maciek$ git push</code></pre></div>
           
             
               <li class="post">
-                <a href="/2022/10/25/a-very-long-break/">A very long break</a>
+                <a href="/2023/08/08/my-dog-is-a-superhero/">My Dog Is a Superhero</a>
               </li>
             
           
@@ -311,7 +311,7 @@ MaciekMBP:public maciek$ git push</code></pre></div>
 </div>
 
     <footer role="contentinfo">
-      <p>Copyright &copy; 2022 Maciej Mróz - <a href="https://maciejmroz.com/license/">License</a> -
+      <p>Copyright &copy; 2023 Maciej Mróz - <a href="https://maciejmroz.com/license/">License</a> -
         <span class="credit">Powered by <a target="_blank" href="https://gohugo.io">Hugo</a> and <a target="_blank" href="https://github.com/parsiya/hugo-octopress/">Hugo-Octopress</a> theme.
       </p>
     </footer>

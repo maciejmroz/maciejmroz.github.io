@@ -38,7 +38,7 @@
   <meta name="author" content="Maciej Mróz">
 
   
-  <meta name="generator" content="Hugo 0.92.2" />
+  <meta name="generator" content="Hugo 0.110.0">
 
   
   
@@ -111,7 +111,7 @@
     
   </p>
   <h1 class="entry-title">
-    <a href="https://maciejmroz.com/2017/02/05/implementing-password-storage-with-golang/">Implementing password storage with Golang</a>
+     Implementing password storage with Golang 
   </h1>
 </header>
 
@@ -137,105 +137,105 @@
 <p>Now time for the bad news, or to be more specific, bad news and a little example of why Go is an awesome language. The problem is, by using computationally expensive hashing function, you expose your website to an extremely easy denial of service attack. All that needs to be done to put website on its knees is to flood it with login requests - in typical scenario it will consume all your CPU resources and bring all your servers to a halt. And this is vulnerability we introduced ourselves: in the world of thousand requests per second we intentionally made part of the application very, very slow.</p>
 <p>How to deal with it? There are many ways, and probably more than one should be used. Below I&rsquo;ll show how to limit resources used by delegating expensive processing to a configurable pool of goroutines, and show how to introduce backpressure in this design.</p>
 <p>At the highest level, in the service initialization code create channels used to communicate with goroutines and run requested number of them:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#8be9fd;font-style:italic">func</span> <span style="color:#50fa7b">NewAccountService</span>(db <span style="color:#ff79c6">*</span>mgo.Database, BCryptCost <span style="color:#8be9fd">int</span>, BcryptQueueDepth <span style="color:#8be9fd">int</span>, BcryptConcurrency <span style="color:#8be9fd">int</span>) AccountService {
-
-    (<span style="color:#ff79c6">...</span>)
-
-    as <span style="color:#ff79c6">:=</span> <span style="color:#ff79c6">&amp;</span>accountService{
-	    BcryptCost:        BCryptCost,
-	    fromPasswordQueue: <span style="color:#8be9fd;font-style:italic">make</span>(<span style="color:#8be9fd;font-style:italic">chan</span> generateFromPasswordRequest, BcryptQueueDepth),
-	    compareQueue:      <span style="color:#8be9fd;font-style:italic">make</span>(<span style="color:#8be9fd;font-style:italic">chan</span> compareHashAndPasswordRequest, BcryptQueueDepth),
-    }
-
-    <span style="color:#ff79c6">for</span> i <span style="color:#ff79c6">:=</span> <span style="color:#bd93f9">0</span>; i &lt; BcryptConcurrency; i<span style="color:#ff79c6">++</span> {
-	    <span style="color:#ff79c6">go</span> <span style="color:#50fa7b">bcryptRequestHandler</span>(as.fromPasswordQueue, as.compareQueue)
-    }
-
-    <span style="color:#ff79c6">return</span> as
-}</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">func</span> <span style="color:#50fa7b">NewAccountService</span>(db <span style="color:#ff79c6">*</span>mgo.Database, BCryptCost <span style="color:#8be9fd">int</span>, BcryptQueueDepth <span style="color:#8be9fd">int</span>, BcryptConcurrency <span style="color:#8be9fd">int</span>) AccountService {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    (<span style="color:#ff79c6">...</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    as <span style="color:#ff79c6">:=</span> <span style="color:#ff79c6">&amp;</span>accountService{
+</span></span><span style="display:flex;"><span>	    BcryptCost:        BCryptCost,
+</span></span><span style="display:flex;"><span>	    fromPasswordQueue: <span style="color:#8be9fd;font-style:italic">make</span>(<span style="color:#8be9fd;font-style:italic">chan</span> generateFromPasswordRequest, BcryptQueueDepth),
+</span></span><span style="display:flex;"><span>	    compareQueue:      <span style="color:#8be9fd;font-style:italic">make</span>(<span style="color:#8be9fd;font-style:italic">chan</span> compareHashAndPasswordRequest, BcryptQueueDepth),
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">for</span> i <span style="color:#ff79c6">:=</span> <span style="color:#bd93f9">0</span>; i &lt; BcryptConcurrency; i<span style="color:#ff79c6">++</span> {
+</span></span><span style="display:flex;"><span>	    <span style="color:#ff79c6">go</span> <span style="color:#50fa7b">bcryptRequestHandler</span>(as.fromPasswordQueue, as.compareQueue)
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> as
+</span></span><span style="display:flex;"><span>}</span></span></code></pre></div>
 <p>It is important that buffered channels are used above. It allows certain number of requests to be enqueued, and allows us to respond properly when channel is full. Simply blocking on full channel is not desireable because we run a goroutine per request and in case of DoS attack we&rsquo;ll limit the CPU but will continue to leak memory by spawning tons of goroutines (or hit hard limit of the web server and become inaccessible). I&rsquo;ll show how to deal with that later. The request/response types are really simple, as the execution goroutine is very thin wrapper over bcrypt:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#8be9fd;font-style:italic">type</span> generateFromPasswordResult <span style="color:#8be9fd;font-style:italic">struct</span> {
-	hashedPassword []<span style="color:#8be9fd">byte</span>
-	err            <span style="color:#8be9fd">error</span>
-}
-
-<span style="color:#8be9fd;font-style:italic">type</span> generateFromPasswordRequest <span style="color:#8be9fd;font-style:italic">struct</span> {
-	password   []<span style="color:#8be9fd">byte</span>
-	BCryptCost <span style="color:#8be9fd">int</span>
-
-	result <span style="color:#8be9fd;font-style:italic">chan</span> generateFromPasswordResult
-}
-
-<span style="color:#8be9fd;font-style:italic">type</span> compareHashAndPasswordRequest <span style="color:#8be9fd;font-style:italic">struct</span> {
-	password       []<span style="color:#8be9fd">byte</span>
-	hashedPassword []<span style="color:#8be9fd">byte</span>
-
-	result <span style="color:#8be9fd;font-style:italic">chan</span> <span style="color:#8be9fd">error</span>
-}
-
-<span style="color:#8be9fd;font-style:italic">func</span> <span style="color:#50fa7b">bcryptRequestHandler</span>(fromPasswordQueue <span style="color:#8be9fd;font-style:italic">chan</span> generateFromPasswordRequest, compareQueue <span style="color:#8be9fd;font-style:italic">chan</span> compareHashAndPasswordRequest) {
-	<span style="color:#ff79c6">for</span> {
-		<span style="color:#ff79c6">select</span> {
-		<span style="color:#ff79c6">case</span> rq <span style="color:#ff79c6">:=</span> <span style="color:#ff79c6">&lt;-</span>fromPasswordQueue:
-			hashedPassword, err <span style="color:#ff79c6">:=</span> bcrypt.<span style="color:#50fa7b">GenerateFromPassword</span>(rq.password, rq.BCryptCost)
-			rq.result <span style="color:#ff79c6">&lt;-</span> generateFromPasswordResult{hashedPassword, err}
-		<span style="color:#ff79c6">case</span> rq <span style="color:#ff79c6">:=</span> <span style="color:#ff79c6">&lt;-</span>compareQueue:
-			rq.result <span style="color:#ff79c6">&lt;-</span> bcrypt.<span style="color:#50fa7b">CompareHashAndPassword</span>(rq.hashedPassword, rq.password)
-		}
-	}
-}</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">type</span> generateFromPasswordResult <span style="color:#8be9fd;font-style:italic">struct</span> {
+</span></span><span style="display:flex;"><span>	hashedPassword []<span style="color:#8be9fd">byte</span>
+</span></span><span style="display:flex;"><span>	err            <span style="color:#8be9fd">error</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">type</span> generateFromPasswordRequest <span style="color:#8be9fd;font-style:italic">struct</span> {
+</span></span><span style="display:flex;"><span>	password   []<span style="color:#8be9fd">byte</span>
+</span></span><span style="display:flex;"><span>	BCryptCost <span style="color:#8be9fd">int</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	result <span style="color:#8be9fd;font-style:italic">chan</span> generateFromPasswordResult
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">type</span> compareHashAndPasswordRequest <span style="color:#8be9fd;font-style:italic">struct</span> {
+</span></span><span style="display:flex;"><span>	password       []<span style="color:#8be9fd">byte</span>
+</span></span><span style="display:flex;"><span>	hashedPassword []<span style="color:#8be9fd">byte</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	result <span style="color:#8be9fd;font-style:italic">chan</span> <span style="color:#8be9fd">error</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">func</span> <span style="color:#50fa7b">bcryptRequestHandler</span>(fromPasswordQueue <span style="color:#8be9fd;font-style:italic">chan</span> generateFromPasswordRequest, compareQueue <span style="color:#8be9fd;font-style:italic">chan</span> compareHashAndPasswordRequest) {
+</span></span><span style="display:flex;"><span>	<span style="color:#ff79c6">for</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#ff79c6">select</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#ff79c6">case</span> rq <span style="color:#ff79c6">:=</span> <span style="color:#ff79c6">&lt;-</span>fromPasswordQueue:
+</span></span><span style="display:flex;"><span>			hashedPassword, err <span style="color:#ff79c6">:=</span> bcrypt.<span style="color:#50fa7b">GenerateFromPassword</span>(rq.password, rq.BCryptCost)
+</span></span><span style="display:flex;"><span>			rq.result <span style="color:#ff79c6">&lt;-</span> generateFromPasswordResult{hashedPassword, err}
+</span></span><span style="display:flex;"><span>		<span style="color:#ff79c6">case</span> rq <span style="color:#ff79c6">:=</span> <span style="color:#ff79c6">&lt;-</span>compareQueue:
+</span></span><span style="display:flex;"><span>			rq.result <span style="color:#ff79c6">&lt;-</span> bcrypt.<span style="color:#50fa7b">CompareHashAndPassword</span>(rq.hashedPassword, rq.password)
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>}</span></span></code></pre></div>
 <p>Pretty neat thing about Go: you send channel over which response is sent together with the request. While this is a common pattern in Go, people unfamiliar with Go concurrency and CSP model assume that communication topology must be static. In fact, ephemeral constructs like this one are quite normal in Go. You can also see it as a similarity to sending return address along with Akka actor message. After all, these models are computationally equivalent, just with different semantics. By the way, if you look for other platform that easily allows you to pin some processing to a group of threads, yes, JVM is great at this stuff, and no, node.js can&rsquo;t do it :)</p>
 <p>Ok, let&rsquo;s introduce backpressure:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#8be9fd;font-style:italic">func</span> (s <span style="color:#ff79c6">*</span>accountService) <span style="color:#50fa7b">newFromPasswordRequest</span>(password <span style="color:#8be9fd">string</span>) (<span style="color:#8be9fd;font-style:italic">chan</span> generateFromPasswordResult, <span style="color:#8be9fd">error</span>) {
-	<span style="color:#ff79c6">if</span> <span style="color:#8be9fd;font-style:italic">len</span>(s.fromPasswordQueue) <span style="color:#ff79c6">&gt;=</span> <span style="color:#8be9fd;font-style:italic">cap</span>(s.fromPasswordQueue) {
-		<span style="color:#ff79c6">return</span> <span style="color:#ff79c6">nil</span>, ErrOverload
-	}
-	rq <span style="color:#ff79c6">:=</span> generateFromPasswordRequest{
-		password:   []<span style="color:#8be9fd;font-style:italic">byte</span>(password),
-		BCryptCost: s.BcryptCost,
-		result:     <span style="color:#8be9fd;font-style:italic">make</span>(<span style="color:#8be9fd;font-style:italic">chan</span> generateFromPasswordResult, <span style="color:#bd93f9">0</span>),
-	}
-	s.fromPasswordQueue <span style="color:#ff79c6">&lt;-</span> rq
-	<span style="color:#ff79c6">return</span> rq.result, <span style="color:#ff79c6">nil</span>
-}
-
-<span style="color:#8be9fd;font-style:italic">func</span> (s <span style="color:#ff79c6">*</span>accountService) <span style="color:#50fa7b">newCompareRequest</span>(hashedPassword <span style="color:#8be9fd">string</span>, password <span style="color:#8be9fd">string</span>) (<span style="color:#8be9fd;font-style:italic">chan</span> <span style="color:#8be9fd">error</span>, <span style="color:#8be9fd">error</span>) {
-	<span style="color:#ff79c6">if</span> <span style="color:#8be9fd;font-style:italic">len</span>(s.compareQueue) <span style="color:#ff79c6">&gt;=</span> <span style="color:#8be9fd;font-style:italic">cap</span>(s.compareQueue) {
-		<span style="color:#ff79c6">return</span> <span style="color:#ff79c6">nil</span>, ErrOverload
-	}
-	rq <span style="color:#ff79c6">:=</span> compareHashAndPasswordRequest{
-		hashedPassword: []<span style="color:#8be9fd;font-style:italic">byte</span>(hashedPassword),
-		password:       []<span style="color:#8be9fd;font-style:italic">byte</span>(password),
-		result:         <span style="color:#8be9fd;font-style:italic">make</span>(<span style="color:#8be9fd;font-style:italic">chan</span> <span style="color:#8be9fd">error</span>, <span style="color:#bd93f9">0</span>),
-	}
-	s.compareQueue <span style="color:#ff79c6">&lt;-</span> rq
-	<span style="color:#ff79c6">return</span> rq.result, <span style="color:#ff79c6">nil</span>
-}</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">func</span> (s <span style="color:#ff79c6">*</span>accountService) <span style="color:#50fa7b">newFromPasswordRequest</span>(password <span style="color:#8be9fd">string</span>) (<span style="color:#8be9fd;font-style:italic">chan</span> generateFromPasswordResult, <span style="color:#8be9fd">error</span>) {
+</span></span><span style="display:flex;"><span>	<span style="color:#ff79c6">if</span> <span style="color:#8be9fd;font-style:italic">len</span>(s.fromPasswordQueue) <span style="color:#ff79c6">&gt;=</span> <span style="color:#8be9fd;font-style:italic">cap</span>(s.fromPasswordQueue) {
+</span></span><span style="display:flex;"><span>		<span style="color:#ff79c6">return</span> <span style="color:#ff79c6">nil</span>, ErrOverload
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	rq <span style="color:#ff79c6">:=</span> generateFromPasswordRequest{
+</span></span><span style="display:flex;"><span>		password:   []<span style="color:#8be9fd;font-style:italic">byte</span>(password),
+</span></span><span style="display:flex;"><span>		BCryptCost: s.BcryptCost,
+</span></span><span style="display:flex;"><span>		result:     <span style="color:#8be9fd;font-style:italic">make</span>(<span style="color:#8be9fd;font-style:italic">chan</span> generateFromPasswordResult, <span style="color:#bd93f9">0</span>),
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	s.fromPasswordQueue <span style="color:#ff79c6">&lt;-</span> rq
+</span></span><span style="display:flex;"><span>	<span style="color:#ff79c6">return</span> rq.result, <span style="color:#ff79c6">nil</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">func</span> (s <span style="color:#ff79c6">*</span>accountService) <span style="color:#50fa7b">newCompareRequest</span>(hashedPassword <span style="color:#8be9fd">string</span>, password <span style="color:#8be9fd">string</span>) (<span style="color:#8be9fd;font-style:italic">chan</span> <span style="color:#8be9fd">error</span>, <span style="color:#8be9fd">error</span>) {
+</span></span><span style="display:flex;"><span>	<span style="color:#ff79c6">if</span> <span style="color:#8be9fd;font-style:italic">len</span>(s.compareQueue) <span style="color:#ff79c6">&gt;=</span> <span style="color:#8be9fd;font-style:italic">cap</span>(s.compareQueue) {
+</span></span><span style="display:flex;"><span>		<span style="color:#ff79c6">return</span> <span style="color:#ff79c6">nil</span>, ErrOverload
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	rq <span style="color:#ff79c6">:=</span> compareHashAndPasswordRequest{
+</span></span><span style="display:flex;"><span>		hashedPassword: []<span style="color:#8be9fd;font-style:italic">byte</span>(hashedPassword),
+</span></span><span style="display:flex;"><span>		password:       []<span style="color:#8be9fd;font-style:italic">byte</span>(password),
+</span></span><span style="display:flex;"><span>		result:         <span style="color:#8be9fd;font-style:italic">make</span>(<span style="color:#8be9fd;font-style:italic">chan</span> <span style="color:#8be9fd">error</span>, <span style="color:#bd93f9">0</span>),
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	s.compareQueue <span style="color:#ff79c6">&lt;-</span> rq
+</span></span><span style="display:flex;"><span>	<span style="color:#ff79c6">return</span> rq.result, <span style="color:#ff79c6">nil</span>
+</span></span><span style="display:flex;"><span>}</span></span></code></pre></div>
 <p>The functions above return channel or error (unfortunately there&rsquo;s no equivalent of Scala&rsquo;s Either[A,B] type in Go). The magic is in comparison <em>len(channel) &gt;= cap(channel)</em>: if we ever reach channel capacity, just return error indicating overload and let upstream code decide what to do about it (the approach will likely be different in a user facing website and different in a REST service consumed by a machine but in any case should be some sort of &ldquo;try again later&rdquo; signal). From the perspective of code that makes use of our wrappers, things are pretty simple:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#6272a4">//hashing password
-</span><span style="color:#6272a4"></span>(<span style="color:#ff79c6">...</span>)
-resChannel, err <span style="color:#ff79c6">:=</span> s.<span style="color:#50fa7b">newFromPasswordRequest</span>(password)
-<span style="color:#ff79c6">if</span> err <span style="color:#ff79c6">!=</span> <span style="color:#ff79c6">nil</span> {
-    <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">nil</span>, err
-}
-res <span style="color:#ff79c6">:=</span> <span style="color:#ff79c6">&lt;-</span>resChannel
-hashedPassword, err <span style="color:#ff79c6">:=</span> res.hashedPassword, res.err
-<span style="color:#ff79c6">if</span> err <span style="color:#ff79c6">!=</span> <span style="color:#ff79c6">nil</span> {
-    <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">nil</span>, err
-}
-(<span style="color:#ff79c6">...</span>)
-
-<span style="color:#6272a4">//checking password against hashed value
-</span><span style="color:#6272a4"></span>(<span style="color:#ff79c6">...</span>)
-resChannel, err <span style="color:#ff79c6">:=</span> s.<span style="color:#50fa7b">newCompareRequest</span>(account.HashedPassword, password)
-<span style="color:#ff79c6">if</span> err <span style="color:#ff79c6">!=</span> <span style="color:#ff79c6">nil</span> {
-    <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">nil</span>, err
-}
-err = <span style="color:#ff79c6">&lt;-</span>resChannel
-<span style="color:#ff79c6">if</span> err <span style="color:#ff79c6">!=</span> <span style="color:#ff79c6">nil</span> {
-    <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">nil</span>, err
-}
-(<span style="color:#ff79c6">...</span>)</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#6272a4">//hashing password
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>(<span style="color:#ff79c6">...</span>)
+</span></span><span style="display:flex;"><span>resChannel, err <span style="color:#ff79c6">:=</span> s.<span style="color:#50fa7b">newFromPasswordRequest</span>(password)
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">if</span> err <span style="color:#ff79c6">!=</span> <span style="color:#ff79c6">nil</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">nil</span>, err
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>res <span style="color:#ff79c6">:=</span> <span style="color:#ff79c6">&lt;-</span>resChannel
+</span></span><span style="display:flex;"><span>hashedPassword, err <span style="color:#ff79c6">:=</span> res.hashedPassword, res.err
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">if</span> err <span style="color:#ff79c6">!=</span> <span style="color:#ff79c6">nil</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">nil</span>, err
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>(<span style="color:#ff79c6">...</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4">//checking password against hashed value
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>(<span style="color:#ff79c6">...</span>)
+</span></span><span style="display:flex;"><span>resChannel, err <span style="color:#ff79c6">:=</span> s.<span style="color:#50fa7b">newCompareRequest</span>(account.HashedPassword, password)
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">if</span> err <span style="color:#ff79c6">!=</span> <span style="color:#ff79c6">nil</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">nil</span>, err
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>err = <span style="color:#ff79c6">&lt;-</span>resChannel
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">if</span> err <span style="color:#ff79c6">!=</span> <span style="color:#ff79c6">nil</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">nil</span>, err
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>(<span style="color:#ff79c6">...</span>)</span></span></code></pre></div>
 <p>Obviously, a proper password storage and authentication is going to be much, much more complicated :) Also, the problem of protecting yourself from DoS or DDoS is much more complex, and a lot of measures need to be taken, not only at the application layer. Still, I consider this pattern of putting a controllable upper bound on resources consumed by certain module in the application <strong>without breaking it into microservices</strong> very useful, especially when combined with proper profiling and monitoring.</p>
 
         </div>
@@ -263,7 +263,7 @@ err = <span style="color:#ff79c6">&lt;-</span>resChannel
     
 
     
-      <a class="basic-alignment right" href="https://maciejmroz.com/2022/10/25/a-very-long-break/" title="A very long break">A very long break</a>
+      <a class="basic-alignment right" href="https://maciejmroz.com/2023/08/08/my-dog-is-a-superhero/" title="My Dog Is a Superhero">My Dog Is a Superhero</a>
     
   </p>
   
@@ -360,7 +360,7 @@ err = <span style="color:#ff79c6">&lt;-</span>resChannel
           
             
               <li class="post">
-                <a href="/2022/10/25/a-very-long-break/">A very long break</a>
+                <a href="/2023/08/08/my-dog-is-a-superhero/">My Dog Is a Superhero</a>
               </li>
             
           
@@ -400,7 +400,7 @@ err = <span style="color:#ff79c6">&lt;-</span>resChannel
 </div>
 
     <footer role="contentinfo">
-      <p>Copyright &copy; 2022 Maciej Mróz - <a href="https://maciejmroz.com/license/">License</a> -
+      <p>Copyright &copy; 2023 Maciej Mróz - <a href="https://maciejmroz.com/license/">License</a> -
         <span class="credit">Powered by <a target="_blank" href="https://gohugo.io">Hugo</a> and <a target="_blank" href="https://github.com/parsiya/hugo-octopress/">Hugo-Octopress</a> theme.
       </p>
     </footer>

@@ -38,7 +38,7 @@
   <meta name="author" content="Maciej Mróz">
 
   
-  <meta name="generator" content="Hugo 0.92.2" />
+  <meta name="generator" content="Hugo 0.110.0">
 
   
   
@@ -124,48 +124,48 @@
 <p>Do you really need microservices, containers, service discovery, load balancers, caches, multiple databases, all clustered and replicated accross multiple availability zones? Hint: you are not making any money yet and there&rsquo;s big chance you will not get to the point where you have product/market fit.</p>
 <p>So, let&rsquo;s take a step back and optimize for something else entirely: ease and speed of development. There are many possible ways to approach a problem framed this way. I&rsquo;ll show how to do that using Go language and <a href="https://echo.labstack.com/">Labstack Echo</a> framework.</p>
 <p>I initially thought of putting the code on GitHub, but essentially it&rsquo;s a compilation of few samples from Echo docs, so I&rsquo;ll just paste it here:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#ff79c6">package</span> main
-
-<span style="color:#ff79c6">import</span> (
-	<span style="color:#f1fa8c">&#34;flag&#34;</span>
-
-	<span style="color:#f1fa8c">&#34;golang.org/x/crypto/acme/autocert&#34;</span>
-
-	<span style="color:#f1fa8c">&#34;github.com/labstack/echo&#34;</span>
-	<span style="color:#f1fa8c">&#34;github.com/labstack/echo/middleware&#34;</span>
-)
-
-<span style="color:#8be9fd;font-style:italic">func</span> <span style="color:#50fa7b">redirectHTTP</span>() {
-	e <span style="color:#ff79c6">:=</span> echo.<span style="color:#50fa7b">New</span>()
-	e.<span style="color:#50fa7b">Use</span>(middleware.<span style="color:#50fa7b">HTTPSRedirect</span>())
-	<span style="color:#ff79c6">go</span> <span style="color:#8be9fd;font-style:italic">func</span>() { e.Logger.<span style="color:#50fa7b">Fatal</span>(e.<span style="color:#50fa7b">Start</span>(<span style="color:#f1fa8c">&#34;:80&#34;</span>)) }()
-}
-
-<span style="color:#8be9fd;font-style:italic">func</span> <span style="color:#50fa7b">main</span>() {
-
-	devFlagPtr <span style="color:#ff79c6">:=</span> flag.<span style="color:#50fa7b">Bool</span>(<span style="color:#f1fa8c">&#34;dev&#34;</span>, <span style="color:#ff79c6">false</span>, <span style="color:#f1fa8c">&#34;Run on dev port, no TLS&#34;</span>)
-	flag.<span style="color:#50fa7b">Parse</span>()
-
-	e <span style="color:#ff79c6">:=</span> echo.<span style="color:#50fa7b">New</span>()
-	e.<span style="color:#50fa7b">Use</span>(middleware.<span style="color:#50fa7b">Gzip</span>())
-
-	e.<span style="color:#50fa7b">Static</span>(<span style="color:#f1fa8c">&#34;/css&#34;</span>, <span style="color:#f1fa8c">&#34;static/css&#34;</span>)
-	e.<span style="color:#50fa7b">Static</span>(<span style="color:#f1fa8c">&#34;/fonts&#34;</span>, <span style="color:#f1fa8c">&#34;static/fonts&#34;</span>)
-	e.<span style="color:#50fa7b">Static</span>(<span style="color:#f1fa8c">&#34;/js&#34;</span>, <span style="color:#f1fa8c">&#34;static/js&#34;</span>)
-	e.<span style="color:#50fa7b">File</span>(<span style="color:#f1fa8c">&#34;/&#34;</span>, <span style="color:#f1fa8c">&#34;static/index.html&#34;</span>)
-
-	<span style="color:#ff79c6">if</span> <span style="color:#ff79c6">*</span>devFlagPtr {
-		e.Logger.<span style="color:#50fa7b">Fatal</span>(e.<span style="color:#50fa7b">Start</span>(<span style="color:#f1fa8c">&#34;:1323&#34;</span>))
-	} <span style="color:#ff79c6">else</span> {
-		<span style="color:#50fa7b">redirectHTTP</span>()
-		e.<span style="color:#50fa7b">Use</span>(middleware.<span style="color:#50fa7b">SecureWithConfig</span>(middleware.SecureConfig{
-			HSTSMaxAge: <span style="color:#bd93f9">63072000</span>,
-		}))
-		e.AutoTLSManager.Cache = autocert.<span style="color:#50fa7b">DirCache</span>(<span style="color:#f1fa8c">&#34;.&#34;</span>)
-		e.AutoTLSManager.HostPolicy = autocert.<span style="color:#50fa7b">HostWhitelist</span>(<span style="color:#f1fa8c">&#34;cs.maciejmroz.com&#34;</span>)
-		e.Logger.<span style="color:#50fa7b">Fatal</span>(e.<span style="color:#50fa7b">StartAutoTLS</span>(<span style="color:#f1fa8c">&#34;:443&#34;</span>))
-	}
-}</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff79c6">package</span> main
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> (
+</span></span><span style="display:flex;"><span>	<span style="color:#f1fa8c">&#34;flag&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#f1fa8c">&#34;golang.org/x/crypto/acme/autocert&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#f1fa8c">&#34;github.com/labstack/echo&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#f1fa8c">&#34;github.com/labstack/echo/middleware&#34;</span>
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">func</span> <span style="color:#50fa7b">redirectHTTP</span>() {
+</span></span><span style="display:flex;"><span>	e <span style="color:#ff79c6">:=</span> echo.<span style="color:#50fa7b">New</span>()
+</span></span><span style="display:flex;"><span>	e.<span style="color:#50fa7b">Use</span>(middleware.<span style="color:#50fa7b">HTTPSRedirect</span>())
+</span></span><span style="display:flex;"><span>	<span style="color:#ff79c6">go</span> <span style="color:#8be9fd;font-style:italic">func</span>() { e.Logger.<span style="color:#50fa7b">Fatal</span>(e.<span style="color:#50fa7b">Start</span>(<span style="color:#f1fa8c">&#34;:80&#34;</span>)) }()
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">func</span> <span style="color:#50fa7b">main</span>() {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	devFlagPtr <span style="color:#ff79c6">:=</span> flag.<span style="color:#50fa7b">Bool</span>(<span style="color:#f1fa8c">&#34;dev&#34;</span>, <span style="color:#ff79c6">false</span>, <span style="color:#f1fa8c">&#34;Run on dev port, no TLS&#34;</span>)
+</span></span><span style="display:flex;"><span>	flag.<span style="color:#50fa7b">Parse</span>()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	e <span style="color:#ff79c6">:=</span> echo.<span style="color:#50fa7b">New</span>()
+</span></span><span style="display:flex;"><span>	e.<span style="color:#50fa7b">Use</span>(middleware.<span style="color:#50fa7b">Gzip</span>())
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	e.<span style="color:#50fa7b">Static</span>(<span style="color:#f1fa8c">&#34;/css&#34;</span>, <span style="color:#f1fa8c">&#34;static/css&#34;</span>)
+</span></span><span style="display:flex;"><span>	e.<span style="color:#50fa7b">Static</span>(<span style="color:#f1fa8c">&#34;/fonts&#34;</span>, <span style="color:#f1fa8c">&#34;static/fonts&#34;</span>)
+</span></span><span style="display:flex;"><span>	e.<span style="color:#50fa7b">Static</span>(<span style="color:#f1fa8c">&#34;/js&#34;</span>, <span style="color:#f1fa8c">&#34;static/js&#34;</span>)
+</span></span><span style="display:flex;"><span>	e.<span style="color:#50fa7b">File</span>(<span style="color:#f1fa8c">&#34;/&#34;</span>, <span style="color:#f1fa8c">&#34;static/index.html&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff79c6">if</span> <span style="color:#ff79c6">*</span>devFlagPtr {
+</span></span><span style="display:flex;"><span>		e.Logger.<span style="color:#50fa7b">Fatal</span>(e.<span style="color:#50fa7b">Start</span>(<span style="color:#f1fa8c">&#34;:1323&#34;</span>))
+</span></span><span style="display:flex;"><span>	} <span style="color:#ff79c6">else</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#50fa7b">redirectHTTP</span>()
+</span></span><span style="display:flex;"><span>		e.<span style="color:#50fa7b">Use</span>(middleware.<span style="color:#50fa7b">SecureWithConfig</span>(middleware.SecureConfig{
+</span></span><span style="display:flex;"><span>			HSTSMaxAge: <span style="color:#bd93f9">63072000</span>,
+</span></span><span style="display:flex;"><span>		}))
+</span></span><span style="display:flex;"><span>		e.AutoTLSManager.Cache = autocert.<span style="color:#50fa7b">DirCache</span>(<span style="color:#f1fa8c">&#34;.&#34;</span>)
+</span></span><span style="display:flex;"><span>		e.AutoTLSManager.HostPolicy = autocert.<span style="color:#50fa7b">HostWhitelist</span>(<span style="color:#f1fa8c">&#34;cs.maciejmroz.com&#34;</span>)
+</span></span><span style="display:flex;"><span>		e.Logger.<span style="color:#50fa7b">Fatal</span>(e.<span style="color:#50fa7b">StartAutoTLS</span>(<span style="color:#f1fa8c">&#34;:443&#34;</span>))
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>}</span></span></code></pre></div>
 <p>What you see above is a concurrent http server serving content over HTTPS with certificate obtained automatically from <a href="https://letsencrypt.org/">Let&rsquo;s Encrypt</a>, also bound to port 80 redirecting everything there to 443 (where <a href="https://en.wikipedia.org/wiki/HTTP_Strict_Transport_Security">HSTS</a> headers are served), all with support for TLS 1.2 and HTTP/2. When deployed to Digital Ocean droplet, it is reachable over IPv6 and gets A+ grade from <a href="https://www.ssllabs.com/">SSL Labs</a>.</p>
 <p>There are more considerations if you want to put <a href="https://blog.gopheracademy.com/advent-2016/exposing-go-on-the-internet/">Go-based website in production</a> but this is nice starting point for something more featured.</p>
 <h2 id="where-are-we">Where are we?</h2>
@@ -175,31 +175,31 @@
 <li><strong>No web/application server</strong>. Another piece of software you don&rsquo;t need. Go supports Websockets, HTTP/2 and TLS 1.2 out of the box. Echo makes it trivial to acquire certificate from Let&rsquo;s Encrypt.</li>
 <li><strong>No runtime</strong>. Go is a compiled language and everything is statically linked. You don&rsquo;t need to worry about version of PHP/Python/Ruby/node installed on your server, and whether the libraries are in correct versions. For Go, it&rsquo;s all build time affair, what you deploy is ELF binary + static files (in fact, there are solutions to bundle these togother, too). There is really no need to bother with packaking the app inside a Docker (or rkt, or whatever) container. Just run single binary directly from systemd, with config file like this:</li>
 </ul>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ini" data-lang="ini"><span style="color:#ff79c6">[Unit]</span>
-<span style="color:#50fa7b">Description</span><span style="color:#ff79c6">=</span><span style="color:#f1fa8c">Go web app</span>
-<span style="color:#50fa7b">Documentation</span><span style="color:#ff79c6">=</span><span style="color:#f1fa8c">https://cs.maciejmroz.com/</span>
-<span style="color:#50fa7b">After</span><span style="color:#ff79c6">=</span><span style="color:#f1fa8c">network.target</span>
-
-<span style="color:#ff79c6">[Service]</span>
-<span style="color:#50fa7b">User</span><span style="color:#ff79c6">=</span><span style="color:#f1fa8c">app</span>
-<span style="color:#50fa7b">WorkingDirectory</span><span style="color:#ff79c6">=</span><span style="color:#f1fa8c">/opt/app/</span>
-<span style="color:#50fa7b">LimitNOFILE</span><span style="color:#ff79c6">=</span><span style="color:#f1fa8c">4096</span>
-<span style="color:#50fa7b">ExecStart</span><span style="color:#ff79c6">=</span><span style="color:#f1fa8c">/opt/app/app-linux-amd64</span>
-<span style="color:#50fa7b">Restart</span><span style="color:#ff79c6">=</span><span style="color:#f1fa8c">on-failure</span>
-<span style="color:#50fa7b">StartLimitInterval</span><span style="color:#ff79c6">=</span><span style="color:#f1fa8c">60</span>
-
-<span style="color:#ff79c6">[Install]</span>
-<span style="color:#50fa7b">WantedBy</span><span style="color:#ff79c6">=</span><span style="color:#f1fa8c">multi-user.target</span></code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#ff79c6">[Unit]</span>
+</span></span><span style="display:flex;"><span><span style="color:#50fa7b">Description</span><span style="color:#ff79c6">=</span><span style="color:#f1fa8c">Go web app</span>
+</span></span><span style="display:flex;"><span><span style="color:#50fa7b">Documentation</span><span style="color:#ff79c6">=</span><span style="color:#f1fa8c">https://cs.maciejmroz.com/</span>
+</span></span><span style="display:flex;"><span><span style="color:#50fa7b">After</span><span style="color:#ff79c6">=</span><span style="color:#f1fa8c">network.target</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">[Service]</span>
+</span></span><span style="display:flex;"><span><span style="color:#50fa7b">User</span><span style="color:#ff79c6">=</span><span style="color:#f1fa8c">app</span>
+</span></span><span style="display:flex;"><span><span style="color:#50fa7b">WorkingDirectory</span><span style="color:#ff79c6">=</span><span style="color:#f1fa8c">/opt/app/</span>
+</span></span><span style="display:flex;"><span><span style="color:#50fa7b">LimitNOFILE</span><span style="color:#ff79c6">=</span><span style="color:#f1fa8c">4096</span>
+</span></span><span style="display:flex;"><span><span style="color:#50fa7b">ExecStart</span><span style="color:#ff79c6">=</span><span style="color:#f1fa8c">/opt/app/app-linux-amd64</span>
+</span></span><span style="display:flex;"><span><span style="color:#50fa7b">Restart</span><span style="color:#ff79c6">=</span><span style="color:#f1fa8c">on-failure</span>
+</span></span><span style="display:flex;"><span><span style="color:#50fa7b">StartLimitInterval</span><span style="color:#ff79c6">=</span><span style="color:#f1fa8c">60</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">[Install]</span>
+</span></span><span style="display:flex;"><span><span style="color:#50fa7b">WantedBy</span><span style="color:#ff79c6">=</span><span style="color:#f1fa8c">multi-user.target</span></span></span></code></pre></div>
 <ul>
 <li>You don&rsquo;t even need Linux machine/Vagrant VM to build the binary thanks to excellent cross compilation support in Go. It just works, here&rsquo;s the Makefile I use on Mac OS X so I don&rsquo;t need to type too much:</li>
 </ul>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-makefile" data-lang="makefile"><span style="color:#50fa7b">all</span><span style="color:#ff79c6">:</span>
-	<span style="color:#8be9fd;font-style:italic">GOOS</span><span style="color:#ff79c6">=</span>linux <span style="color:#8be9fd;font-style:italic">GOARCH</span><span style="color:#ff79c6">=</span>amd64 go build -o app-linux-amd64
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-makefile" data-lang="makefile"><span style="display:flex;"><span><span style="color:#50fa7b">all</span><span style="color:#ff79c6">:</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#8be9fd;font-style:italic">GOOS</span><span style="color:#ff79c6">=</span>linux <span style="color:#8be9fd;font-style:italic">GOARCH</span><span style="color:#ff79c6">=</span>amd64 go build -o app-linux-amd64
+</span></span></code></pre></div>
 <ul>
 <li>A tip for the less savvy on modern Linux, in order to bind non-root process to port &lt;1024, you need something like this (as root or via sudo, of course :) ):</li>
 </ul>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">setcap <span style="color:#f1fa8c">&#39;cap_net_bind_service=+ep&#39;</span> /opt/app/app-linux-amd64</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>setcap <span style="color:#f1fa8c">&#39;cap_net_bind_service=+ep&#39;</span> /opt/app/app-linux-amd64</span></span></code></pre></div>
 <h2 id="what-next">What next?</h2>
 <ul>
 <li>Application level caching is easy - at the simplest you can get any concurrent cache out there and just do it in-process. No HA, remember? Biggest instance on Digital Ocean has 64 GB RAM, on Amazon you can get many, many times more. Eventually you will move towards something like <a href="https://github.com/golang/groupcache">groupcache</a> also solving &ldquo;thundering herd&rdquo; problem properly.</li>
@@ -331,7 +331,7 @@
           
             
               <li class="post">
-                <a href="/2022/10/25/a-very-long-break/">A very long break</a>
+                <a href="/2023/08/08/my-dog-is-a-superhero/">My Dog Is a Superhero</a>
               </li>
             
           
@@ -371,7 +371,7 @@
 </div>
 
     <footer role="contentinfo">
-      <p>Copyright &copy; 2022 Maciej Mróz - <a href="https://maciejmroz.com/license/">License</a> -
+      <p>Copyright &copy; 2023 Maciej Mróz - <a href="https://maciejmroz.com/license/">License</a> -
         <span class="credit">Powered by <a target="_blank" href="https://gohugo.io">Hugo</a> and <a target="_blank" href="https://github.com/parsiya/hugo-octopress/">Hugo-Octopress</a> theme.
       </p>
     </footer>
